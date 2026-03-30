@@ -2,21 +2,22 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { signOut, useSession } from "next-auth/react";
 
 const defaultNavigation = [
   { href: "/", label: "Home" },
   { href: "/races", label: "Races" },
+  { href: "/championships", label: "Championships" },
   { href: "/search", label: "Search" },
+  { href: "/my-tracking", label: "My Tracking" },
   { href: "/submit-race", label: "Submit Race" }
 ];
 
-const comingSoonNavigation = [
-  { href: "/coming-soon", label: "Coming Soon" },
-  { href: "/coming-soon#waitlist", label: "Join Waitlist", primary: true }
-];
+const comingSoonNavigation = [{ label: "Coming Soon", static: true }];
 
 export function SiteHeader() {
   const pathname = usePathname();
+  const { data: session, status } = useSession();
   const isComingSoon = pathname === "/coming-soon";
   const navigation = isComingSoon ? comingSoonNavigation : defaultNavigation;
 
@@ -37,21 +38,62 @@ export function SiteHeader() {
           </div>
         </Link>
 
-        <nav className="flex flex-wrap items-center gap-2 text-sm text-apex-muted">
-          {navigation.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`rounded-full px-4 py-2 transition duration-200 hover:-translate-y-0.5 ${
-                "primary" in item && item.primary
-                  ? "bg-slate-900 font-semibold text-white hover:bg-apex-blue"
-                  : "hover:bg-slate-900 hover:text-white"
-              }`}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+        <div className="flex flex-wrap items-center justify-end gap-3">
+          <nav className="flex flex-wrap items-center gap-2 text-sm text-apex-muted">
+            {navigation.map((item) => (
+              "href" in item ? (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`rounded-full px-4 py-2 transition duration-200 hover:-translate-y-0.5 ${
+                    "primary" in item && item.primary
+                      ? "bg-slate-900 font-semibold text-white hover:bg-apex-blue"
+                      : "hover:bg-slate-900 hover:text-white"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              ) : (
+                <span
+                  key={item.label}
+                  className="px-4 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-apex-muted"
+                >
+                  {item.label}
+                </span>
+              )
+            ))}
+          </nav>
+
+          {isComingSoon ? null : status === "authenticated" && session?.user ? (
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-apex-slate">
+                {session.user.name ?? session.user.email}
+              </span>
+              <button
+                type="button"
+                onClick={() => signOut({ callbackUrl: "/" })}
+                className="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition duration-200 hover:bg-apex-blue"
+              >
+                Sign Out
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex-wrap items-center gap-2">
+              <Link
+                href="/login"
+                className="rounded-full px-4 py-2 text-sm transition duration-200 hover:-translate-y-0.5 hover:bg-slate-900 hover:text-white"
+              >
+                Log In
+              </Link>
+              <Link
+                href="/signup"
+                className="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition duration-200 hover:bg-apex-blue"
+              >
+                Sign Up
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );

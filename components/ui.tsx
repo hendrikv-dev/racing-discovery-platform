@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Dot, Gauge, MapPinned, Timer } from "lucide-react";
-import { Race, RaceStatus, Racer, Track } from "@/data/site";
+import { Championship, Race, RaceStatus, Racer, Track } from "@/data/site";
 
 export function SectionHeading({
   eyebrow,
@@ -158,5 +158,34 @@ export function TrackCard({ track }: { track: Track }) {
         <p className="mt-4 text-sm leading-6 text-apex-muted">{track.history}</p>
       </div>
     </Link>
+  );
+}
+
+export function ChampionshipCard({ championship }: { championship: Championship }) {
+  return (
+    <div className="glass-border group overflow-hidden rounded-[20px] bg-white/90 shadow-panel transition duration-200 hover:-translate-y-1">
+      <div className="relative h-56 overflow-hidden">
+        <Image
+          src={championship.image}
+          alt={`${championship.name} championship visual`}
+          fill
+          className="object-cover transition duration-300 group-hover:scale-105"
+          sizes="(max-width: 768px) 100vw, 33vw"
+        />
+        <div className={`absolute inset-0 bg-gradient-to-tr ${championship.accent}`} />
+      </div>
+      <div className="p-5">
+        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-apex-muted">
+          {championship.category}
+        </p>
+        <h3 className="mt-2 text-xl font-bold text-apex-slate">{championship.name}</h3>
+        <p className="mt-2 text-sm leading-6 text-apex-muted">{championship.description}</p>
+        <div className="mt-5 flex flex-wrap gap-3 text-sm text-apex-slate">
+          <span className="rounded-full bg-slate-100 px-3 py-2">{championship.season}</span>
+          <span className="rounded-full bg-slate-100 px-3 py-2">{championship.region}</span>
+          <span className="rounded-full bg-slate-100 px-3 py-2">{championship.raceCount} races</span>
+        </div>
+      </div>
+    </div>
   );
 }

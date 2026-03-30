@@ -7,17 +7,25 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prisma:generate": "prisma generate"
+    "prisma:generate": "prisma generate",
+    "db:seed": "node prisma/seed.js"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^2.7.4",
     "@prisma/client": "6.6.0",
+    "bcryptjs": "^2.4.3",
     "lucide-react": "0.511.0",
     "next": "^15.5.14",
+    "next-auth": "^5.0.0-beta.25",
     "prisma": "6.6.0",
     "react": "19.0.0",
     "react-dom": "19.0.0"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "22.14.0",
     "@types/react": "19.0.12",
     "@types/react-dom": "19.0.4",

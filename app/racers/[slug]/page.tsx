@@ -1,7 +1,10 @@
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
+import { auth } from "@/auth";
+import { FollowButton } from "@/components/tracking/follow-button";
 import { MetricCard, SectionHeading } from "@/components/ui";
-import { racers } from "@/data/site";
+import { getRacerBySlug } from "@/lib/discovery";
 
 export default async function RacerProfilePage({
   params
@@ -9,7 +12,8 @@ export default async function RacerProfilePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const racer = racers.find((entry) => entry.slug === slug);
+  const session = await auth();
+  const racer = await getRacerBySlug(slug, session?.user?.id);
 
   if (!racer) {
     notFound();
@@ -40,9 +44,25 @@ export default async function RacerProfilePage({
                 {racer.team} • {racer.nationality} • Car #{racer.number}
               </p>
               <p className="mt-6 max-w-xl text-sm leading-7 text-apex-muted">
-                A biometric-style dossier centered on pace, precision, and competitive arc across
-                recent race weekends.
+                Personalized racer follow controls now persist to the tracking tables in Prisma.
               </p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <FollowButton
+                  entity="racers"
+                  entityId={racer.id}
+                  initialTracked={racer.isTracked}
+                  activeLabel="Following"
+                  inactiveLabel="Follow Racer"
+                />
+                {racer.championshipSlug ? (
+                  <Link
+                    href={`/championships/${racer.championshipSlug}`}
+                    className="rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-apex-slate transition duration-200 hover:-translate-y-0.5"
+                  >
+                    View Championship
+                  </Link>
+                ) : null}
+              </div>
             </div>
             <div className="mt-8 grid gap-4 sm:grid-cols-3">
               <MetricCard
@@ -73,38 +93,44 @@ export default async function RacerProfilePage({
             description="Vehicle focus for the current competitive package, built around technical identity and race fit."
           />
           <div className="rounded-[24px] bg-slate-950 p-6 text-white">
-            <p className="text-sm uppercase tracking-[0.28em] text-blue-200">Machine Notes</p>
-            <p className="mt-5 text-lg font-semibold">Hybrid power deployment optimized for late-corner exit.</p>
+            <p className="text-sm uppercase tracking-[0.28em] text-blue-200">Championship Context</p>
+            <p className="mt-5 text-lg font-semibold">
+              {racer.championshipName ?? "Independent competitor context"}
+            </p>
             <p className="mt-3 text-sm leading-7 text-slate-300">
-              Aero efficiency, tire window control, and energy harvesting balance define the setup
-              philosophy for this package.
+              Racer profiles can now connect back to championship pages for stronger discovery
+              loops and saved tracking flows.
             </p>
           </div>
         </div>
 
         <div className="glass-border rounded-[28px] bg-white/80 p-6 shadow-panel">
           <SectionHeading
-            eyebrow="Engagement History"
-            title="Recent race results"
-            description="Tabular event history designed for quick comparison and form analysis."
+            eyebrow="Racer Snapshot"
+            title="Current profile data"
+            description="The detail view now reads the persisted racer record instead of static-only scaffolding."
           />
           <div className="overflow-hidden rounded-[24px] border border-slate-200">
             <table className="min-w-full divide-y divide-slate-200 text-left text-sm">
-              <thead className="bg-slate-50 text-apex-muted">
-                <tr>
-                  <th className="px-4 py-3 font-medium">Event</th>
-                  <th className="px-4 py-3 font-medium">Result</th>
-                  <th className="px-4 py-3 font-medium">Gap</th>
-                </tr>
-              </thead>
               <tbody className="divide-y divide-slate-100 bg-white">
-                {racer.recentResults.map((result) => (
-                  <tr key={result.event}>
-                    <td className="px-4 py-4 font-medium text-apex-slate">{result.event}</td>
-                    <td className="px-4 py-4 text-apex-slate">{result.position}</td>
-                    <td className="px-4 py-4 text-apex-muted">{result.delta}</td>
-                  </tr>
-                ))}
+                <tr>
+                  <td className="px-4 py-4 font-medium text-apex-slate">Team</td>
+                  <td className="px-4 py-4 text-apex-muted">{racer.team}</td>
+                </tr>
+                <tr>
+                  <td className="px-4 py-4 font-medium text-apex-slate">Nationality</td>
+                  <td className="px-4 py-4 text-apex-muted">{racer.nationality}</td>
+                </tr>
+                <tr>
+                  <td className="px-4 py-4 font-medium text-apex-slate">Championship</td>
+                  <td className="px-4 py-4 text-apex-muted">
+                    {racer.championshipName ?? "Not assigned"}
+                  </td>
+                </tr>
+                <tr>
+                  <td className="px-4 py-4 font-medium text-apex-slate">Vehicle</td>
+                  <td className="px-4 py-4 text-apex-muted">{racer.vehicle}</td>
+                </tr>
               </tbody>
             </table>
           </div>
