@@ -8,6 +8,9 @@ const nextConfig: NextConfig = {
         hostname: "images.unsplash.com"
       }
     ]
+  },
+  outputFileTracingIncludes: {
+    "/*": ["./prisma/dev.db", "./prisma/schema.prisma"]
   }
 };
 
