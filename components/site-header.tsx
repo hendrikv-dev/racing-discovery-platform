@@ -21,7 +21,10 @@ export function SiteHeader() {
   const pathname = usePathname();
   const { data: session, status } = useSession();
   const isComingSoon = pathname === "/coming-soon";
-  const navigation = isComingSoon ? comingSoonNavigation : defaultNavigation;
+  const isAuthenticated = status === "authenticated" && Boolean(session?.user);
+  const navigation = isComingSoon
+    ? comingSoonNavigation
+    : defaultNavigation.filter((item) => item.href !== "/my-tracking" || isAuthenticated);
 
   return (
     <header className="glass-border sticky top-4 z-50 mb-8 rounded-[20px] bg-white/80 px-5 py-4 shadow-panel backdrop-blur-xl">
@@ -74,7 +77,7 @@ export function SiteHeader() {
             ))}
           </nav>
 
-          {isComingSoon ? null : status === "authenticated" && session?.user ? (
+          {isComingSoon ? null : isAuthenticated && session?.user ? (
             <div className="flex flex-wrap items-center gap-2">
               {isAdminEmail(session.user.email) ? (
                 <Link
@@ -96,7 +99,7 @@ export function SiteHeader() {
               </button>
             </div>
           ) : (
-            <div className="flex flex-wrap items-center gap-2">
+            <nav className="flex flex-wrap items-center gap-2 text-sm text-apex-muted">
               <Link
                 href="/login"
                 className="rounded-full px-4 py-2 text-sm transition duration-200 hover:-translate-y-0.5 hover:bg-slate-900 hover:text-white"
@@ -109,7 +112,7 @@ export function SiteHeader() {
               >
                 Sign Up
               </Link>
-            </div>
+            </nav>
           )}
         </div>
       </div>
