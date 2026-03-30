@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { DiscoveryRace } from "@/lib/discovery";
+import { EmptyState } from "@/components/states";
 
 function toDateKey(value: string) {
   return value.slice(0, 10);
@@ -130,6 +131,10 @@ export function CalendarGrid({
 }
 
 export function CalendarView({ races }: { races: DiscoveryRace[] }) {
+  if (races.length === 0) {
+    return <EmptyState title="No races on this calendar" description="Try widening the date range or clearing filters to repopulate the calendar." />;
+  }
+
   const firstRaceDate = races[0] ? new Date(races[0].startDate) : new Date();
   const monthDate = new Date(Date.UTC(firstRaceDate.getUTCFullYear(), firstRaceDate.getUTCMonth(), 1));
   const defaultSelected = races[0] ? toDateKey(races[0].startDate) : toDateKey(monthDate.toISOString());

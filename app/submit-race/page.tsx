@@ -1,8 +1,14 @@
 import { ShieldCheck } from "lucide-react";
+import { createRaceSubmissionAction } from "@/app/admin/actions";
 import { SectionHeading } from "@/components/ui";
-import { submitFields } from "@/data/site";
+import { prisma } from "@/lib/prisma";
 
-export default function SubmitRacePage() {
+export default async function SubmitRacePage() {
+  const [championships, tracks] = await Promise.all([
+    prisma.championship.findMany({ orderBy: { name: "asc" } }),
+    prisma.track.findMany({ orderBy: { name: "asc" } })
+  ]);
+
   return (
     <div className="space-y-8">
       <section className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
@@ -21,8 +27,8 @@ export default function SubmitRacePage() {
               <p className="font-semibold">Verified Entry Notice</p>
             </div>
             <p className="mt-3 text-sm leading-7 text-slate-300">
-              Submissions are reviewed against official series schedules, circuit metadata, and
-              contributor history before publication.
+              Submissions are persisted for admin review, approval, and eventual conversion into
+              real race records.
             </p>
           </div>
         </div>
@@ -31,35 +37,76 @@ export default function SubmitRacePage() {
           <SectionHeading
             eyebrow="Verification Flow"
             title="Race submission form"
-            description="Capture event name, date, series, and context in a high-confidence intake workflow."
+            description="Capture event details, source notes, and optional map coordinates for the review queue."
           />
-          <form className="grid gap-4">
+          <form action={createRaceSubmissionAction} className="grid gap-4">
             <div className="grid gap-4 md:grid-cols-2">
-              {submitFields.map((field) => (
-                <label key={field.label} className="block">
-                  <span className="mb-2 block text-sm font-medium text-apex-slate">{field.label}</span>
-                  <input
-                    className="w-full rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition duration-200 focus:border-apex-blue focus:bg-white"
-                    placeholder={field.hint}
-                  />
-                </label>
-              ))}
+              <label className="block">
+                <span className="mb-2 block text-sm font-medium text-apex-slate">Event Name</span>
+                <input name="eventName" required className="w-full rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition duration-200 focus:border-apex-blue focus:bg-white" placeholder="Official race title" />
+              </label>
+              <label className="block">
+                <span className="mb-2 block text-sm font-medium text-apex-slate">Series</span>
+                <input name="series" required className="w-full rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition duration-200 focus:border-apex-blue focus:bg-white" placeholder="Formula Alpha, GT Masters, etc." />
+              </label>
+              <label className="block">
+                <span className="mb-2 block text-sm font-medium text-apex-slate">Event Date</span>
+                <input name="eventDate" type="datetime-local" required className="w-full rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition duration-200 focus:border-apex-blue focus:bg-white" />
+              </label>
+              <label className="block">
+                <span className="mb-2 block text-sm font-medium text-apex-slate">Circuit</span>
+                <input name="circuit" required className="w-full rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition duration-200 focus:border-apex-blue focus:bg-white" placeholder="Venue or street course" />
+              </label>
+              <label className="block">
+                <span className="mb-2 block text-sm font-medium text-apex-slate">Championship</span>
+                <select name="championshipId" className="w-full rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition duration-200 focus:border-apex-blue focus:bg-white">
+                  <option value="">Optional championship</option>
+                  {championships.map((championship) => (
+                    <option key={championship.id} value={championship.id}>{championship.name}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="block">
+                <span className="mb-2 block text-sm font-medium text-apex-slate">Track Match</span>
+                <select name="trackId" className="w-full rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition duration-200 focus:border-apex-blue focus:bg-white">
+                  <option value="">Optional track</option>
+                  {tracks.map((track) => (
+                    <option key={track.id} value={track.id}>{track.name}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="block">
+                <span className="mb-2 block text-sm font-medium text-apex-slate">Latitude</span>
+                <input name="latitude" type="number" step="0.0001" className="w-full rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition duration-200 focus:border-apex-blue focus:bg-white" placeholder="Optional map coordinate" />
+              </label>
+              <label className="block">
+                <span className="mb-2 block text-sm font-medium text-apex-slate">Longitude</span>
+                <input name="longitude" type="number" step="0.0001" className="w-full rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition duration-200 focus:border-apex-blue focus:bg-white" placeholder="Optional map coordinate" />
+              </label>
             </div>
             <label className="block">
               <span className="mb-2 block text-sm font-medium text-apex-slate">Description</span>
               <textarea
-                rows={6}
+                name="description"
+                required
+                rows={5}
                 className="w-full rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition duration-200 focus:border-apex-blue focus:bg-white"
                 placeholder="Add context, official notes, and supporting detail."
               />
             </label>
-            <div className="flex items-start gap-3 rounded-[18px] bg-blue-50 p-4 text-sm text-apex-slate">
-              <input type="checkbox" defaultChecked className="mt-1 h-4 w-4 rounded border-slate-300" />
-              <p>
-                I confirm this submission is based on official or directly sourced race information
-                and may be audited before publishing.
-              </p>
-            </div>
+            <label className="block">
+              <span className="mb-2 block text-sm font-medium text-apex-slate">Source Notes</span>
+              <textarea
+                name="sourceNotes"
+                rows={4}
+                className="w-full rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition duration-200 focus:border-apex-blue focus:bg-white"
+                placeholder="Links, official schedule notes, or source references."
+              />
+            </label>
+            <label className="block">
+              <span className="mb-2 block text-sm font-medium text-apex-slate">Contact Email</span>
+              <input name="contactEmail" type="email" className="w-full rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition duration-200 focus:border-apex-blue focus:bg-white" placeholder="Optional follow-up contact" />
+            </label>
             <button className="w-full rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition duration-200 hover:-translate-y-0.5 sm:w-auto">
               Submit for verification
             </button>

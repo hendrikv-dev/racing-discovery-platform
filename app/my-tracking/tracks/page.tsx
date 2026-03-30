@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
+import { EmptyState } from "@/components/states";
 import { MyTrackingNav } from "@/components/tracking/my-tracking-nav";
 import { SectionHeading } from "@/components/ui";
 import { getMyTracking } from "@/lib/discovery";
@@ -30,16 +31,22 @@ export default async function MyTrackedTracksPage() {
           description="Your followed track list with direct links back into the discovery experience."
         />
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {data.tracks.map((track) => (
-            <Link
-              key={track.id}
-              href={`/tracks/${track.slug}`}
-              className="glass-border rounded-[22px] bg-white p-5 shadow-panel transition duration-200 hover:-translate-y-1"
-            >
-              <h2 className="text-xl font-bold text-apex-slate">{track.name}</h2>
-              <p className="mt-2 text-sm text-apex-muted">{track.country}</p>
-            </Link>
-          ))}
+          {data.tracks.length > 0 ? (
+            data.tracks.map((track) => (
+              <Link
+                key={track.id}
+                href={`/tracks/${track.slug}`}
+                className="glass-border rounded-[22px] bg-white p-5 shadow-panel transition duration-200 hover:-translate-y-1"
+              >
+                <h2 className="text-xl font-bold text-apex-slate">{track.name}</h2>
+                <p className="mt-2 text-sm text-apex-muted">{track.country}</p>
+              </Link>
+            ))
+          ) : (
+            <div className="md:col-span-2 xl:col-span-3">
+              <EmptyState title="No tracked tracks yet" description="Follow tracks to create a reusable circuit list." />
+            </div>
+          )}
         </div>
       </section>
     </div>

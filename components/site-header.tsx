@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
+import { isAdminEmail } from "@/lib/admin-config";
 
 const defaultNavigation = [
   { href: "/", label: "Home" },
@@ -66,6 +67,14 @@ export function SiteHeader() {
 
           {isComingSoon ? null : status === "authenticated" && session?.user ? (
             <div className="flex flex-wrap items-center gap-2">
+              {isAdminEmail(session.user.email) ? (
+                <Link
+                  href="/admin"
+                  className="rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-apex-blue transition duration-200 hover:-translate-y-0.5"
+                >
+                  Admin
+                </Link>
+              ) : null}
               <span className="rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-apex-slate">
                 {session.user.name ?? session.user.email}
               </span>

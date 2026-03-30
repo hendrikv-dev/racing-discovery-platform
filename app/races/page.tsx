@@ -12,10 +12,10 @@ import { TimelineView } from "@/components/races/timeline-view";
 import { SectionHeading } from "@/components/ui";
 import { getRaceFilterOptions, getRaceFilters, getRaces } from "@/lib/discovery";
 
-const validViews: RaceViewMode[] = ["list", "calendar", "timeline", "map"];
+const validViews: RaceViewMode[] = ["map", "list", "calendar", "timeline"];
 
 function getActiveView(view?: string): RaceViewMode {
-  return validViews.includes(view as RaceViewMode) ? (view as RaceViewMode) : "list";
+  return validViews.includes(view as RaceViewMode) ? (view as RaceViewMode) : "map";
 }
 
 export default async function RacesPage({

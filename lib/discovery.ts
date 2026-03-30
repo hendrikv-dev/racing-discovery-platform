@@ -22,6 +22,15 @@ export type DiscoveryRace = {
     lat: number;
     lng: number;
   };
+  trackCoordinates: {
+    lat: number;
+    lng: number;
+  } | null;
+  mapCoordinates: {
+    lat: number;
+    lng: number;
+  } | null;
+  mapSource: "race" | "track" | null;
   isTracked: boolean;
 };
 
@@ -54,7 +63,7 @@ export type DiscoveryTrack = {
   coordinates: {
     lat: number;
     lng: number;
-  };
+  } | null;
   raceCount: number;
   isTracked: boolean;
 };
@@ -108,6 +117,49 @@ function formatRaceDate(date: Date) {
     year: "numeric",
     timeZone: "UTC"
   }).format(date);
+}
+
+function hasValidCoordinates(
+  coordinates:
+    | {
+        lat: number;
+        lng: number;
+      }
+    | null
+) {
+  if (!coordinates) {
+    return false;
+  }
+
+  return (
+    Number.isFinite(coordinates.lat) &&
+    Number.isFinite(coordinates.lng) &&
+    !(coordinates.lat === 0 && coordinates.lng === 0)
+  );
+}
+
+function resolveRaceMapCoordinates(
+  raceCoordinates: { lat: number; lng: number },
+  trackCoordinates: { lat: number; lng: number } | null
+) {
+  if (hasValidCoordinates(raceCoordinates)) {
+    return {
+      mapCoordinates: raceCoordinates,
+      mapSource: "race" as const
+    };
+  }
+
+  if (hasValidCoordinates(trackCoordinates)) {
+    return {
+      mapCoordinates: trackCoordinates,
+      mapSource: "track" as const
+    };
+  }
+
+  return {
+    mapCoordinates: null,
+    mapSource: null
+  };
 }
 
 export function getRaceFilters(searchParams: Record<string, string | string[] | undefined>): RaceFilters {
@@ -219,29 +271,46 @@ export async function getRaces(filters: RaceFilters, userId?: string) {
     }
   });
 
-  return races.map((race) => ({
-    id: race.id,
-    slug: race.slug,
-    name: race.name,
-    series: race.series,
-    championshipId: race.championshipId,
-    championshipName: race.championship.name,
-    championshipSlug: race.championship.slug,
-    date: formatRaceDate(race.startDate),
-    startDate: race.startDate.toISOString(),
-    endDate: race.endDate.toISOString(),
-    location: race.location,
-    trackId: race.trackId,
-    trackName: race.track.name,
-    trackSlug: race.track.slug,
-    status: formatRaceStatus(race.status),
-    summary: race.summary,
-    coordinates: {
+  return races.map((race) => {
+    const raceCoordinates = {
       lat: race.latitude,
       lng: race.longitude
-    },
-    isTracked: userId ? race.trackedBy.length > 0 : false
-  })) satisfies DiscoveryRace[];
+    };
+    const trackCoordinates = hasValidCoordinates({
+      lat: race.track.latitude,
+      lng: race.track.longitude
+    })
+      ? {
+          lat: race.track.latitude,
+          lng: race.track.longitude
+        }
+      : null;
+    const { mapCoordinates, mapSource } = resolveRaceMapCoordinates(raceCoordinates, trackCoordinates);
+
+    return {
+      id: race.id,
+      slug: race.slug,
+      name: race.name,
+      series: race.series,
+      championshipId: race.championshipId,
+      championshipName: race.championship.name,
+      championshipSlug: race.championship.slug,
+      date: formatRaceDate(race.startDate),
+      startDate: race.startDate.toISOString(),
+      endDate: race.endDate.toISOString(),
+      location: race.location,
+      trackId: race.trackId,
+      trackName: race.track.name,
+      trackSlug: race.track.slug,
+      status: formatRaceStatus(race.status),
+      summary: race.summary,
+      coordinates: raceCoordinates,
+      trackCoordinates,
+      mapCoordinates,
+      mapSource,
+      isTracked: userId ? race.trackedBy.length > 0 : false
+    };
+  }) satisfies DiscoveryRace[];
 }
 
 export async function getRaceBySlug(slug: string, userId?: string) {
@@ -264,6 +333,21 @@ export async function getRaceBySlug(slug: string, userId?: string) {
     return null;
   }
 
+  const raceCoordinates = {
+    lat: race.latitude,
+    lng: race.longitude
+  };
+  const trackCoordinates = hasValidCoordinates({
+    lat: race.track.latitude,
+    lng: race.track.longitude
+  })
+    ? {
+        lat: race.track.latitude,
+        lng: race.track.longitude
+      }
+    : null;
+  const { mapCoordinates, mapSource } = resolveRaceMapCoordinates(raceCoordinates, trackCoordinates);
+
   return {
     id: race.id,
     slug: race.slug,
@@ -281,10 +365,10 @@ export async function getRaceBySlug(slug: string, userId?: string) {
     trackSlug: race.track.slug,
     status: formatRaceStatus(race.status),
     summary: race.summary,
-    coordinates: {
-      lat: race.latitude,
-      lng: race.longitude
-    },
+    coordinates: raceCoordinates,
+    trackCoordinates,
+    mapCoordinates,
+    mapSource,
     isTracked: userId ? race.trackedBy.length > 0 : false
   } satisfies DiscoveryRace;
 }
@@ -390,29 +474,46 @@ export async function getChampionshipBySlug(slug: string, userId?: string) {
         null,
       isTracked: userId ? championship.trackedBy.length > 0 : false
     } satisfies DiscoveryChampionship,
-    races: championship.races.map((race) => ({
-      id: race.id,
-      slug: race.slug,
-      name: race.name,
-      series: race.series,
-      championshipId: race.championshipId,
-      championshipName: race.championship.name,
-      championshipSlug: race.championship.slug,
-      date: formatRaceDate(race.startDate),
-      startDate: race.startDate.toISOString(),
-      endDate: race.endDate.toISOString(),
-      location: race.location,
-      trackId: race.trackId,
-      trackName: race.track.name,
-      trackSlug: race.track.slug,
-      status: formatRaceStatus(race.status),
-      summary: race.summary,
-      coordinates: {
+    races: championship.races.map((race) => {
+      const raceCoordinates = {
         lat: race.latitude,
         lng: race.longitude
-      },
-      isTracked: userId ? race.trackedBy.length > 0 : false
-    })) satisfies DiscoveryRace[],
+      };
+      const trackCoordinates = hasValidCoordinates({
+        lat: race.track.latitude,
+        lng: race.track.longitude
+      })
+        ? {
+            lat: race.track.latitude,
+            lng: race.track.longitude
+          }
+        : null;
+      const { mapCoordinates, mapSource } = resolveRaceMapCoordinates(raceCoordinates, trackCoordinates);
+
+      return {
+        id: race.id,
+        slug: race.slug,
+        name: race.name,
+        series: race.series,
+        championshipId: race.championshipId,
+        championshipName: race.championship.name,
+        championshipSlug: race.championship.slug,
+        date: formatRaceDate(race.startDate),
+        startDate: race.startDate.toISOString(),
+        endDate: race.endDate.toISOString(),
+        location: race.location,
+        trackId: race.trackId,
+        trackName: race.track.name,
+        trackSlug: race.track.slug,
+        status: formatRaceStatus(race.status),
+        summary: race.summary,
+        coordinates: raceCoordinates,
+        trackCoordinates,
+        mapCoordinates,
+        mapSource,
+        isTracked: userId ? race.trackedBy.length > 0 : false
+      };
+    }) satisfies DiscoveryRace[],
     racers: championship.racers.map((racer) => ({
       id: racer.id,
       slug: racer.slug,
@@ -461,10 +562,12 @@ export async function getTracks(userId?: string) {
     lapRecord: track.lapRecord,
     image: track.image,
     history: track.history,
-    coordinates: {
-      lat: track.latitude,
-      lng: track.longitude
-    },
+    coordinates: hasValidCoordinates({ lat: track.latitude, lng: track.longitude })
+      ? {
+          lat: track.latitude,
+          lng: track.longitude
+        }
+      : null,
     raceCount: track.races.length,
     isTracked: userId ? track.trackedBy.length > 0 : false
   })) satisfies DiscoveryTrack[];
@@ -513,36 +616,58 @@ export async function getTrackBySlug(slug: string, userId?: string) {
       lapRecord: track.lapRecord,
       image: track.image,
       history: track.history,
-      coordinates: {
-        lat: track.latitude,
-        lng: track.longitude
-      },
+      coordinates: hasValidCoordinates({ lat: track.latitude, lng: track.longitude })
+        ? {
+            lat: track.latitude,
+            lng: track.longitude
+          }
+        : null,
       raceCount: track.races.length,
       isTracked: userId ? track.trackedBy.length > 0 : false
     } satisfies DiscoveryTrack,
-    races: track.races.map((race) => ({
-      id: race.id,
-      slug: race.slug,
-      name: race.name,
-      series: race.series,
-      championshipId: race.championshipId,
-      championshipName: race.championship.name,
-      championshipSlug: race.championship.slug,
-      date: formatRaceDate(race.startDate),
-      startDate: race.startDate.toISOString(),
-      endDate: race.endDate.toISOString(),
-      location: race.location,
-      trackId: race.trackId,
-      trackName: race.track.name,
-      trackSlug: race.track.slug,
-      status: formatRaceStatus(race.status),
-      summary: race.summary,
-      coordinates: {
+    races: track.races.map((race) => {
+      const raceCoordinates = {
         lat: race.latitude,
         lng: race.longitude
-      },
-      isTracked: userId ? race.trackedBy.length > 0 : false
-    })) satisfies DiscoveryRace[]
+      };
+      const fallbackTrackCoordinates = hasValidCoordinates({
+        lat: race.track.latitude,
+        lng: race.track.longitude
+      })
+        ? {
+            lat: race.track.latitude,
+            lng: race.track.longitude
+          }
+        : null;
+      const { mapCoordinates, mapSource } = resolveRaceMapCoordinates(
+        raceCoordinates,
+        fallbackTrackCoordinates
+      );
+
+      return {
+        id: race.id,
+        slug: race.slug,
+        name: race.name,
+        series: race.series,
+        championshipId: race.championshipId,
+        championshipName: race.championship.name,
+        championshipSlug: race.championship.slug,
+        date: formatRaceDate(race.startDate),
+        startDate: race.startDate.toISOString(),
+        endDate: race.endDate.toISOString(),
+        location: race.location,
+        trackId: race.trackId,
+        trackName: race.track.name,
+        trackSlug: race.track.slug,
+        status: formatRaceStatus(race.status),
+        summary: race.summary,
+        coordinates: raceCoordinates,
+        trackCoordinates: fallbackTrackCoordinates,
+        mapCoordinates,
+        mapSource,
+        isTracked: userId ? race.trackedBy.length > 0 : false
+      };
+    }) satisfies DiscoveryRace[]
   };
 }
 
@@ -703,6 +828,24 @@ export async function getMyTracking(userId: string) {
       status: formatRaceStatus(race.status),
       summary: race.summary,
       coordinates: { lat: race.latitude, lng: race.longitude },
+      trackCoordinates: hasValidCoordinates({
+        lat: race.track.latitude,
+        lng: race.track.longitude
+      })
+        ? { lat: race.track.latitude, lng: race.track.longitude }
+        : null,
+      mapCoordinates: resolveRaceMapCoordinates(
+        { lat: race.latitude, lng: race.longitude },
+        hasValidCoordinates({ lat: race.track.latitude, lng: race.track.longitude })
+          ? { lat: race.track.latitude, lng: race.track.longitude }
+          : null
+      ).mapCoordinates,
+      mapSource: resolveRaceMapCoordinates(
+        { lat: race.latitude, lng: race.longitude },
+        hasValidCoordinates({ lat: race.track.latitude, lng: race.track.longitude })
+          ? { lat: race.track.latitude, lng: race.track.longitude }
+          : null
+      ).mapSource,
       isTracked: true
     })) satisfies DiscoveryRace[],
     championships: user.trackedChampionships.map(({ championship }) => ({
@@ -748,10 +891,12 @@ export async function getMyTracking(userId: string) {
       lapRecord: track.lapRecord,
       image: track.image,
       history: track.history,
-      coordinates: {
-        lat: track.latitude,
-        lng: track.longitude
-      },
+      coordinates: hasValidCoordinates({ lat: track.latitude, lng: track.longitude })
+        ? {
+            lat: track.latitude,
+            lng: track.longitude
+          }
+        : null,
       raceCount: track.races.length,
       isTracked: true
     })) satisfies DiscoveryTrack[]

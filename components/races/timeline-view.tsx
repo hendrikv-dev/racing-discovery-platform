@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { DiscoveryRace } from "@/lib/discovery";
+import { EmptyState } from "@/components/states";
 
 function getMonthLabel(date: string) {
   return new Intl.DateTimeFormat("en-US", {
@@ -18,6 +19,10 @@ function getDateLabel(date: string) {
 }
 
 export function TimelineView({ races }: { races: DiscoveryRace[] }) {
+  if (races.length === 0) {
+    return <EmptyState title="No races in the timeline" description="The timeline will fill in once races match the active filters." />;
+  }
+
   const nextUpcomingRace =
     races.find((race) => race.status === "Upcoming" || race.status === "Live")?.id ?? null;
   const groups = races.reduce<Record<string, DiscoveryRace[]>>((accumulator, race) => {

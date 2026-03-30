@@ -13,6 +13,13 @@ enum RaceStatus {
   COMPLETED
 }
 
+enum RaceSubmissionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CONVERTED
+}
+
 model User {
   id                    String                @id @default(cuid())
   name                  String?
@@ -78,6 +85,7 @@ model Championship {
   updatedAt   DateTime             @updatedAt
   races       Race[]
   racers      Racer[]
+  submissions RaceSubmission[]
   trackedBy   TrackedChampionship[]
 }
 
@@ -96,6 +104,7 @@ model Track {
   createdAt  DateTime       @default(now())
   updatedAt  DateTime       @updatedAt
   races      Race[]
+  submissions RaceSubmission[]
   trackedBy  TrackedTrack[]
 }
 
@@ -137,6 +146,7 @@ model Race {
   updatedAt      DateTime       @updatedAt
   championship   Championship   @relation(fields: [championshipId], references: [id], onDelete: Cascade)
   track          Track          @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  submission     RaceSubmission?
   trackedBy      TrackedRace[]
 }
 
@@ -188,4 +198,28 @@ model WaitlistSubscriber {
   id        String   @id @default(cuid())
   email     String   @unique
   createdAt DateTime @default(now())
+}
+
+model RaceSubmission {
+  id             String               @id @default(cuid())
+  eventName      String
+  series         String
+  eventDate      DateTime
+  circuit        String
+  description    String
+  sourceNotes    String?
+  contactEmail   String?
+  status         RaceSubmissionStatus @default(PENDING)
+  approvedAt     DateTime?
+  convertedAt    DateTime?
+  championshipId String?
+  trackId        String?
+  raceId         String?              @unique
+  latitude       Float?
+  longitude      Float?
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  championship   Championship?        @relation(fields: [championshipId], references: [id], onDelete: SetNull)
+  track          Track?               @relation(fields: [trackId], references: [id], onDelete: SetNull)
+  race           Race?                @relation(fields: [raceId], references: [id], onDelete: SetNull)
 }

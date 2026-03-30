@@ -1,4 +1,4 @@
-const { PrismaClient, RaceStatus } = require("@prisma/client");
+const { PrismaClient, RaceStatus, RaceSubmissionStatus } = require("@prisma/client");
 const { hash } = require("bcryptjs");
 
 const prisma = new PrismaClient();
@@ -179,6 +179,33 @@ const races = [
   }
 ];
 
+const submissions = [
+  {
+    eventName: "Catalunya Sprint",
+    series: "Formula Alpha",
+    eventDate: new Date("2026-06-10T13:00:00.000Z"),
+    circuit: "Circuit de Barcelona-Catalunya",
+    description: "Official sprint weekend added for midsummer calendar compression.",
+    sourceNotes: "Submitted from series bulletin and paddock release notes.",
+    contactEmail: "contributor@example.com",
+    status: RaceSubmissionStatus.APPROVED,
+    latitude: 41.57,
+    longitude: 2.2611
+  },
+  {
+    eventName: "Spa Twilight 500",
+    series: "GT Masters",
+    eventDate: new Date("2026-07-18T17:30:00.000Z"),
+    circuit: "Spa-Francorchamps",
+    description: "Endurance-style twilight event proposed for the updated GT Masters calendar.",
+    sourceNotes: "Community submission pending official confirmation.",
+    contactEmail: "trackwatch@example.com",
+    status: RaceSubmissionStatus.PENDING,
+    latitude: 50.4372,
+    longitude: 5.9714
+  }
+];
+
 async function main() {
   await prisma.session.deleteMany();
   await prisma.account.deleteMany();
@@ -186,6 +213,7 @@ async function main() {
   await prisma.trackedRacer.deleteMany();
   await prisma.trackedTrack.deleteMany();
   await prisma.trackedChampionship.deleteMany();
+  await prisma.raceSubmission.deleteMany();
   await prisma.race.deleteMany();
   await prisma.racer.deleteMany();
   await prisma.track.deleteMany();
@@ -292,6 +320,10 @@ async function main() {
         ).id
       }
     ]
+  });
+
+  await prisma.raceSubmission.createMany({
+    data: submissions
   });
 
   console.log("Seed complete");

@@ -46,3 +46,16 @@ body {
   background-size: cover;
   background-position: center;
 }
+
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  background: #0f172a;
+  font-family: inherit;
+}
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: rgba(255, 255, 255, 0.96);
+  color: #0f172a;
+}

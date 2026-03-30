@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowUpRight, Radar, ShieldCheck, Waves } from "lucide-react";
+import { ArrowUpRight, MapPinned, Radar, ShieldCheck, Waves } from "lucide-react";
 import { MetricCard, RaceCard, RacerCard, SectionHeading, TrackCard } from "@/components/ui";
 import { championshipSummary, races, racers, tracks } from "@/data/site";
 
@@ -87,6 +87,56 @@ export default function HomePage() {
           {races.map((race) => (
             <RaceCard key={race.slug} race={race} />
           ))}
+        </div>
+      </section>
+
+      <section className="glass-border overflow-hidden rounded-[28px] bg-white/85 shadow-panel">
+        <div className="grid gap-0 lg:grid-cols-[0.95fr_1.05fr]">
+          <div className="relative min-h-[300px] bg-slate-950 p-6 text-white sm:p-8">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.28),_transparent_45%),linear-gradient(135deg,_rgba(15,23,42,0.98),_rgba(15,23,42,0.84))]" />
+            <div className="absolute inset-0 opacity-30 [background-image:linear-gradient(rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:56px_56px]" />
+            <div className="relative flex h-full flex-col justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-blue-200">
+                  Explore By Location
+                </p>
+                <h2 className="mt-4 max-w-lg text-3xl font-bold tracking-tight">
+                  Geographic discovery is now part of the product, not a hidden extra.
+                </h2>
+                <p className="mt-4 max-w-xl text-sm leading-7 text-slate-300">
+                  Jump straight into race map view or browse circuits by their real-world venue
+                  locations.
+                </p>
+              </div>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Link
+                  href="/races?view=map"
+                  className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-950 transition duration-200 hover:-translate-y-0.5"
+                >
+                  Race Map View
+                  <MapPinned className="h-4 w-4" />
+                </Link>
+                <Link
+                  href="/tracks?view=map"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm font-semibold text-white transition duration-200 hover:bg-white/15"
+                >
+                  Track Map View
+                </Link>
+              </div>
+            </div>
+          </div>
+          <div className="grid gap-4 p-6 sm:p-8">
+            {[
+              ["Global race map", "Map markers reflect filtered race discovery and fall back to track coordinates when needed."],
+              ["Circuit venue map", "Track map view keeps physical venues visible even when some records are still list-only."],
+              ["Detail-page location previews", "Race and track pages now carry their own location sections so place context stays visible."]
+            ].map(([title, copy]) => (
+              <div key={title} className="rounded-[22px] bg-slate-50 p-5">
+                <p className="text-lg font-semibold text-apex-slate">{title}</p>
+                <p className="mt-2 text-sm leading-6 text-apex-muted">{copy}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
+import { EmptyState } from "@/components/states";
 import { MyTrackingNav } from "@/components/tracking/my-tracking-nav";
 import { MetricCard, SectionHeading } from "@/components/ui";
 import { getMyTracking } from "@/lib/discovery";
@@ -83,19 +84,25 @@ export default async function MyTrackingPage() {
           href="/my-tracking/races"
         />
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {data.races.slice(0, 3).map((race) => (
-            <Link
-              key={race.id}
-              href={`/races/${race.slug}`}
-              className="glass-border rounded-[22px] bg-white p-5 shadow-panel transition duration-200 hover:-translate-y-1"
-            >
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-apex-muted">
-                {race.championshipName}
-              </p>
-              <h2 className="mt-2 text-xl font-bold text-apex-slate">{race.name}</h2>
-              <p className="mt-3 text-sm text-apex-muted">{race.location}</p>
-            </Link>
-          ))}
+          {data.races.length > 0 ? (
+            data.races.slice(0, 3).map((race) => (
+              <Link
+                key={race.id}
+                href={`/races/${race.slug}`}
+                className="glass-border rounded-[22px] bg-white p-5 shadow-panel transition duration-200 hover:-translate-y-1"
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-apex-muted">
+                  {race.championshipName}
+                </p>
+                <h2 className="mt-2 text-xl font-bold text-apex-slate">{race.name}</h2>
+                <p className="mt-3 text-sm text-apex-muted">{race.location}</p>
+              </Link>
+            ))
+          ) : (
+            <div className="md:col-span-2 xl:col-span-3">
+              <EmptyState title="No tracked races yet" description="Track a race from the discovery pages and it will appear here." />
+            </div>
+          )}
         </div>
       </section>
     </div>
