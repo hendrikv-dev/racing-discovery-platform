@@ -162,8 +162,7 @@ export function CalendarView({ races }: { races: DiscoveryRace[] }) {
             </h2>
           </div>
           <p className="max-w-md text-sm leading-6 text-apex-muted">
-            Events are placed on their date cells using `startDate`, and the selected day reveals
-            its full event list.
+            Jump straight from the month view into the exact day you want to watch.
           </p>
         </div>
         <CalendarGrid
@@ -194,7 +193,7 @@ export function CalendarView({ races }: { races: DiscoveryRace[] }) {
               </Link>
             ))
           ) : (
-            <p className="text-sm text-apex-muted">No races on the selected day.</p>
+            <p className="text-sm text-apex-muted">No races are scheduled for that day.</p>
           )}
         </div>
       </div>

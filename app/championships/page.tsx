@@ -26,12 +26,12 @@ export default async function ChampionshipsPage() {
           <MetricCard
             label="Championships"
             value={String(championships.length).padStart(2, "0")}
-            detail="Active series now available in the platform."
+            detail="Series ready to explore right now."
           />
           <MetricCard
             label="Tracked Series"
             value={String(championships.filter((championship) => championship.isTracked).length).padStart(2, "0")}
-            detail="Series already saved by the current session."
+            detail="Series you can jump back into quickly."
           />
         </div>
       </section>

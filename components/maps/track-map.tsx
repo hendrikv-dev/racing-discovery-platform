@@ -21,8 +21,8 @@ export function TrackMap({
   if (mappedTracks.length === 0) {
     return (
       <MapEmptyState
-        title="Track map becomes available with coordinates"
-        description="Track cards remain visible even without coordinates, but markers only appear when a track has a valid latitude and longitude."
+        title="Track map coming soon for these venues"
+        description="You can still browse every circuit below while location details are being added."
       />
     );
   }
@@ -32,13 +32,12 @@ export function TrackMap({
       <p className="text-xs font-semibold uppercase tracking-[0.28em] text-blue-200">Explore By Map</p>
       <h2 className="mt-3 text-2xl font-bold">Physical venues, clearly mapped</h2>
       <p className="mt-3 max-w-lg text-sm leading-7 text-slate-300">
-        Every visible marker is a real circuit venue. Select a track from the list or map to focus
-        its location and jump into the detail page.
+        Pick a circuit from the map or list to see where it sits and jump straight into track details.
       </p>
       {missingCount > 0 ? (
         <p className="mt-3 text-xs uppercase tracking-[0.24em] text-blue-200">
-          {missingCount} track{missingCount === 1 ? "" : "s"} remain in the list only because they
-          do not yet have valid map coordinates.
+          {missingCount} track{missingCount === 1 ? "" : "s"} still show in the list while map
+          locations are being added.
         </p>
       ) : null}
       <div className="mt-6">

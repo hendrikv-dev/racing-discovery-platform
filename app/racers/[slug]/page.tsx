@@ -44,7 +44,7 @@ export default async function RacerProfilePage({
                 {racer.team} • {racer.nationality} • Car #{racer.number}
               </p>
               <p className="mt-6 max-w-xl text-sm leading-7 text-apex-muted">
-                Personalized racer follow controls now persist to the tracking tables in Prisma.
+                Follow this racer to keep their profile close on race weekend.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <FollowButton
@@ -90,7 +90,7 @@ export default async function RacerProfilePage({
           <SectionHeading
             eyebrow="Machine Gallery"
             title={racer.vehicle}
-            description="Vehicle focus for the current competitive package, built around technical identity and race fit."
+            description="Get a quick read on the machine this racer brings into the weekend."
           />
           <div className="rounded-[24px] bg-slate-950 p-6 text-white">
             <p className="text-sm uppercase tracking-[0.28em] text-blue-200">Championship Context</p>
@@ -98,8 +98,7 @@ export default async function RacerProfilePage({
               {racer.championshipName ?? "Independent competitor context"}
             </p>
             <p className="mt-3 text-sm leading-7 text-slate-300">
-              Racer profiles can now connect back to championship pages for stronger discovery
-              loops and saved tracking flows.
+              Jump from a racer you follow straight into the championship story around them.
             </p>
           </div>
         </div>
@@ -108,7 +107,7 @@ export default async function RacerProfilePage({
           <SectionHeading
             eyebrow="Racer Snapshot"
             title="Current profile data"
-            description="The detail view now reads the persisted racer record instead of static-only scaffolding."
+            description="Scan the details that matter before you jump back into the calendar."
           />
           <div className="overflow-hidden rounded-[24px] border border-slate-200">
             <table className="min-w-full divide-y divide-slate-200 text-left text-sm">

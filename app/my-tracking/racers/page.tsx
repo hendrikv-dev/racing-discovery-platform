@@ -28,7 +28,7 @@ export default async function MyTrackedRacersPage() {
         <SectionHeading
           eyebrow="Followed Racers"
           title="Saved driver profiles"
-          description="Every racer you follow from the tracking system."
+          description="Keep your favorite racers in one place so they are easy to revisit before every weekend."
         />
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {data.racers.length > 0 ? (

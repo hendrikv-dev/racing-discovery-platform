@@ -72,8 +72,8 @@ export default async function TrackDetailsPage({
           />
         ) : (
           <MapEmptyState
-            title="Location map becomes available with coordinates"
-            description="This track still appears in discovery, but its map preview is hidden until latitude and longitude are added."
+            title="Location preview coming soon"
+            description="This venue will show up here as soon as its map location is available."
           />
         )}
         <div className="glass-border rounded-[28px] bg-white/80 p-6 shadow-panel">
@@ -82,8 +82,7 @@ export default async function TrackDetailsPage({
           </p>
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-apex-slate">Physical venue context</h2>
           <p className="mt-3 text-sm leading-7 text-apex-muted">
-            This section keeps the circuit grounded as a real venue, not just a record in the
-            directory.
+            See where the circuit sits before you dive into race weekends hosted there.
           </p>
           <div className="mt-5 flex flex-wrap gap-3 text-sm text-apex-slate">
             <span className="rounded-full bg-slate-100 px-3 py-2">{data.track.country}</span>

@@ -52,9 +52,9 @@ export default async function RaceDetailPage({
         <MetricCard
           label="Date Window"
           value={formatDateRange(race.startDate, race.endDate)}
-          detail="Race start and end dates from Prisma."
+          detail="Know exactly when the weekend begins and ends."
         />
-        <MetricCard label="Location" value={race.location} detail="Mapped race location for discovery views." />
+        <MetricCard label="Location" value={race.location} detail="See where to follow the action." />
         <MetricCard
           label="Coordinates"
           value={
@@ -64,8 +64,8 @@ export default async function RaceDetailPage({
           }
           detail={
             race.mapSource === "track"
-              ? "Using track coordinates as the geographic fallback."
-              : "Used by the map experience."
+              ? "Located by the host circuit."
+              : "Ready for map view."
           }
         />
       </section>
@@ -79,14 +79,14 @@ export default async function RaceDetailPage({
               lng: race.mapCoordinates.lng,
               title: race.name,
               subtitle: `${race.location} • ${race.trackName}`,
-              meta: race.mapSource === "track" ? "Track coordinates" : "Race coordinates"
+              meta: race.mapSource === "track" ? "Located by venue" : "Shown on the race map"
             }}
             className="h-[320px] lg:h-[380px]"
           />
         ) : (
           <MapEmptyState
             title="Race location preview unavailable"
-            description="This race will appear on the map once either race coordinates or track coordinates are available."
+            description="A location preview will appear here as soon as the race or its venue is mapped."
           />
         )}
 
@@ -96,8 +96,7 @@ export default async function RaceDetailPage({
           </p>
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-apex-slate">Where this race happens</h2>
           <p className="mt-3 text-sm leading-7 text-apex-muted">
-            Geographic discovery now carries through to the race detail view so event context stays
-            tied to a real venue and place.
+            Keep the weekend grounded in a real venue so it is easier to plan what to watch and follow.
           </p>
           <div className="mt-5 flex flex-wrap gap-3 text-sm text-apex-slate">
             <span className="rounded-full bg-slate-100 px-3 py-2">{race.trackName}</span>

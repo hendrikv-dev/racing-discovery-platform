@@ -28,7 +28,7 @@ export default async function MyTrackedChampionshipsPage() {
         <SectionHeading
           eyebrow="Followed Championships"
           title="Saved title fights"
-          description="All championships followed by the authenticated user."
+          description="Keep every followed series in one place and jump back in faster."
         />
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {data.championships.length > 0 ? (

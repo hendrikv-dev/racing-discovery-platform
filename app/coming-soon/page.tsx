@@ -1,6 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
-import { CalendarRange, MapPinned, MoveRight, Users2 } from "lucide-react";
+import { CalendarRange, MapPinned, Users2 } from "lucide-react";
 import { WaitlistForm } from "@/components/coming-soon/waitlist-form";
 
 const heroHighlights = [
@@ -48,7 +47,7 @@ export default function ComingSoonPage() {
                 </h1>
                 <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-200">
                   Racing Platform brings race schedules, competitor profiles, and track intel
-                  together in one clean destination built for fans, racers, and teams.
+                  together in one clean destination for fans, racers, and teams.
                 </p>
                 <p className="mt-4 max-w-2xl text-base leading-7 text-slate-300">
                   Instead of piecing together updates across league sites, news feeds, and social
@@ -82,8 +81,8 @@ export default function ComingSoonPage() {
                 Join the waitlist for launch.
               </h2>
               <p className="mt-3 text-sm leading-7 text-apex-muted">
-                Get first access when Racing Platform launches, plus early product updates on the
-                races, racers, and track discovery experience we are building for motorsports fans.
+                Get first access when Racing Platform launches, plus updates on new races, driver
+                tracking, and track discovery as they go live.
               </p>
               <div className="mt-6">
                 <WaitlistForm buttonLabel="Get Early Access" />
@@ -109,10 +108,6 @@ export default function ComingSoonPage() {
             <a href="mailto:hello@racingplatform.app" className="transition hover:text-apex-blue">
               hello@racingplatform.app
             </a>
-            <Link href="/" className="inline-flex items-center gap-2 transition hover:text-apex-blue">
-              Main site
-              <MoveRight className="h-4 w-4" />
-            </Link>
           </div>
         </div>
       </footer>

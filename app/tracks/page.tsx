@@ -22,7 +22,7 @@ export default async function TracksPage({
           <SectionHeading
             eyebrow="Track Discovery"
             title="Explore circuits in list or map view"
-            description="Track cards and map markers both read from the same coordinate-backed Prisma records."
+            description="Browse iconic venues by name or jump straight into their place on the map."
           />
           <div className="flex flex-wrap gap-2">
             <Link
@@ -50,8 +50,7 @@ export default async function TracksPage({
         <div className="mt-5 flex flex-wrap items-center gap-3 rounded-[22px] bg-slate-50 px-4 py-4">
           <MapPinned className="h-5 w-5 text-apex-blue" />
           <p className="text-sm text-apex-muted">
-            Every mapped marker represents a real circuit venue. Tracks without coordinates remain
-            visible in the list and are called out clearly.
+            Use map view to spot circuits by location, then open the venue you want to explore.
           </p>
         </div>
       </section>

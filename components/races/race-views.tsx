@@ -10,7 +10,7 @@ import { TrackRaceButton } from "@/components/tracking/track-race-button";
 export type RaceViewMode = "map" | "list" | "calendar" | "timeline";
 
 const viewLabels: Array<{ value: RaceViewMode; label: string; description: string }> = [
-  { value: "map", label: "Map", description: "See races as real places first, then inspect the filtered list alongside the map." },
+  { value: "map", label: "Map", description: "Find race weekends by location and compare nearby events faster." },
   { value: "list", label: "List", description: "Card-based discovery for scanning the full race slate." },
   { value: "calendar", label: "Calendar", description: "Month grid with event chips on the race dates." },
   { value: "timeline", label: "Timeline", description: "Chronological grouping with the next race highlighted." }
@@ -80,9 +80,9 @@ function RaceListCard({
       </div>
       <div className="mt-4 flex flex-wrap gap-2 text-xs uppercase tracking-[0.18em] text-apex-muted">
         {race.mapCoordinates ? (
-          <span>{race.mapSource === "track" ? "Map uses track coordinates" : "Map uses race coordinates"}</span>
+          <span>{race.mapSource === "track" ? "Located by venue" : "Shown on map"}</span>
         ) : (
-          <span>No map coordinates available</span>
+          <span>Map preview coming soon</span>
         )}
       </div>
       <div className="mt-5 flex flex-wrap items-center justify-between gap-3">

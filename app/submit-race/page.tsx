@@ -18,8 +18,7 @@ export default async function SubmitRacePage() {
           </p>
           <h1 className="mt-4 text-4xl font-bold tracking-tight">Submit a verified race entry</h1>
           <p className="mt-4 text-sm leading-7 text-slate-300">
-            Structured intake for community-driven updates, built to preserve editorial quality and
-            data trust across the platform.
+            Share a race we should add so more fans can discover it faster.
           </p>
           <div className="mt-8 rounded-[24px] border border-white/10 bg-white/10 p-5">
             <div className="flex items-center gap-3">
@@ -27,8 +26,7 @@ export default async function SubmitRacePage() {
               <p className="font-semibold">Verified Entry Notice</p>
             </div>
             <p className="mt-3 text-sm leading-7 text-slate-300">
-              Submissions are persisted for admin review, approval, and eventual conversion into
-              real race records.
+              Every submission is reviewed before it appears in the race calendar.
             </p>
           </div>
         </div>
@@ -37,7 +35,7 @@ export default async function SubmitRacePage() {
           <SectionHeading
             eyebrow="Verification Flow"
             title="Race submission form"
-            description="Capture event details, source notes, and optional map coordinates for the review queue."
+            description="Send the key details we need to review and publish the race confidently."
           />
           <form action={createRaceSubmissionAction} className="grid gap-4">
             <div className="grid gap-4 md:grid-cols-2">

@@ -30,8 +30,8 @@ export default async function MyTrackingPage() {
             {data.user.name ?? data.user.email}&apos;s dashboard
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-300">
-            Your tracked races, followed championships, saved racers, and favorite circuits all now
-            live behind authenticated session state.
+            Keep upcoming races, followed series, saved racers, and favorite circuits together in
+            one place.
           </p>
           <div className="mt-6">
             <MyTrackingNav pathname="/my-tracking" />
@@ -72,7 +72,7 @@ export default async function MyTrackingPage() {
           value={String(
             data.races.length + data.championships.length + data.racers.length + data.tracks.length
           ).padStart(2, "0")}
-          detail="Combined tracked entities across the platform."
+          detail="Everything you want to come back to quickly."
         />
       </section>
 

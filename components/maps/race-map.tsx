@@ -21,8 +21,8 @@ export function RaceMap({
   if (mappedRaces.length === 0) {
     return (
       <MapEmptyState
-        title="Map view needs race or track coordinates"
-        description="No visible race markers are available right now. Add race coordinates or rely on track coordinates to bring these events onto the map."
+        title="Map view opens up as race locations are added"
+        description="Clear filters or come back soon to explore these race weekends by location."
         note="No blank map here"
       />
     );
@@ -33,13 +33,12 @@ export function RaceMap({
       <p className="text-xs font-semibold uppercase tracking-[0.28em] text-blue-200">Map View</p>
       <h2 className="mt-3 text-2xl font-bold">Explore races by location</h2>
       <p className="mt-3 max-w-lg text-sm leading-7 text-slate-300">
-        Click a marker to inspect a race. Race coordinates are used first, and track coordinates
-        are used as a fallback when the race itself does not have a direct map position.
+        Click a marker to see where a weekend takes place and move straight into the race details.
       </p>
       {missingCount > 0 ? (
         <p className="mt-3 text-xs uppercase tracking-[0.24em] text-blue-200">
-          {missingCount} filtered race{missingCount === 1 ? "" : "s"} hidden from map because no
-          usable coordinates were found.
+          {missingCount} filtered race{missingCount === 1 ? "" : "s"} still show in the list while
+          location details are being filled in.
         </p>
       ) : null}
       <div className="mt-6">
@@ -50,7 +49,7 @@ export function RaceMap({
             lng: race.mapCoordinates!.lng,
             title: race.name,
             subtitle: `${race.location} • ${race.trackName}`,
-            meta: race.mapSource === "track" ? "Track coordinates" : race.championshipName
+            meta: race.mapSource === "track" ? "Located by venue" : race.championshipName
           }))}
           selectedId={selectedRaceId}
           onSelect={onSelectRace}

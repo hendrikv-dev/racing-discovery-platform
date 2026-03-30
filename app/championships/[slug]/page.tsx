@@ -85,12 +85,12 @@ export default async function ChampionshipDetailPage({
         <MetricCard
           label="Race Count"
           value={String(data.championship.raceCount).padStart(2, "0")}
-          detail="Races currently linked to this championship."
+          detail="See how much action this title fight still has ahead."
         />
         <MetricCard
           label="Related Racers"
           value={String(data.championship.racerCount).padStart(2, "0")}
-          detail="Racers currently associated to this title fight."
+          detail="See who to watch across the season."
         />
       </section>
 
@@ -98,7 +98,7 @@ export default async function ChampionshipDetailPage({
         <SectionHeading
           eyebrow="Race Schedule"
           title="Races in this championship"
-          description="Calendar-linked championship races sourced from the existing Prisma records."
+          description="Move from the title fight into the exact races that shape it."
         />
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {data.races.map((race) => (
@@ -129,7 +129,7 @@ export default async function ChampionshipDetailPage({
         <SectionHeading
           eyebrow="Related Racers"
           title="Competitors in this championship"
-          description="Racer cards tied to the championship relation in Prisma."
+          description="See the drivers shaping this season and open the profiles that matter to you."
         />
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {data.racers.map((racer) => (

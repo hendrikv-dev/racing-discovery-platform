@@ -25,8 +25,8 @@ export default function HomePage() {
                   Discover races, racers, and tracks in one place.
                 </h1>
                 <p className="mt-5 max-w-xl text-sm leading-7 text-slate-200 sm:text-base">
-                  A premium editorial hub built for motorsport fans who want live context, deep
-                  profiles, and circuit intelligence without bouncing between tabs.
+                  Follow the motorsport stories that matter to you without hopping between race
+                  sites, standings pages, and venue guides.
                 </p>
                 <div className="mt-8 flex flex-wrap gap-3">
                   <Link
@@ -45,20 +45,20 @@ export default function HomePage() {
                 </div>
               </div>
               <div className="grid gap-4 pt-10 md:grid-cols-3">
-                <div className="rounded-[20px] border border-white/12 bg-white/10 p-4 backdrop-blur-sm">
-                  <Radar className="h-5 w-5 text-blue-200" />
-                  <p className="mt-4 text-lg font-semibold">Live Session Pulse</p>
-                  <p className="mt-2 text-sm leading-6 text-slate-300">
-                    Active race control, session state, and curated telemetry highlights.
-                  </p>
-                </div>
-                <div className="rounded-[20px] border border-white/12 bg-white/10 p-4 backdrop-blur-sm">
-                  <ShieldCheck className="h-5 w-5 text-blue-200" />
-                  <p className="mt-4 text-lg font-semibold">Verified Data</p>
-                  <p className="mt-2 text-sm leading-6 text-slate-300">
-                    Contributor workflows with audit trails for dependable event records.
-                  </p>
-                </div>
+              <div className="rounded-[20px] border border-white/12 bg-white/10 p-4 backdrop-blur-sm">
+                <Radar className="h-5 w-5 text-blue-200" />
+                <p className="mt-4 text-lg font-semibold">Live Session Pulse</p>
+                <p className="mt-2 text-sm leading-6 text-slate-300">
+                    See what is happening now without digging across multiple feeds.
+                </p>
+              </div>
+              <div className="rounded-[20px] border border-white/12 bg-white/10 p-4 backdrop-blur-sm">
+                <ShieldCheck className="h-5 w-5 text-blue-200" />
+                <p className="mt-4 text-lg font-semibold">Verified Data</p>
+                <p className="mt-2 text-sm leading-6 text-slate-300">
+                    Trust the race details you save, follow, and come back to.
+                </p>
+              </div>
                 <div className="rounded-[20px] border border-white/12 bg-white/10 p-4 backdrop-blur-sm">
                   <Waves className="h-5 w-5 text-blue-200" />
                   <p className="mt-4 text-lg font-semibold">Editorial Motion</p>
@@ -127,9 +127,9 @@ export default function HomePage() {
           </div>
           <div className="grid gap-4 p-6 sm:p-8">
             {[
-              ["Global race map", "Map markers reflect filtered race discovery and fall back to track coordinates when needed."],
-              ["Circuit venue map", "Track map view keeps physical venues visible even when some records are still list-only."],
-              ["Detail-page location previews", "Race and track pages now carry their own location sections so place context stays visible."]
+              ["Global race map", "Start with a map when you want to find the next race by place, not just by series."],
+              ["Circuit venue map", "Compare circuits by location before you dive into the venue details."],
+              ["Detail-page location previews", "See exactly where a race or track sits before you decide what to follow next."]
             ].map(([title, copy]) => (
               <div key={title} className="rounded-[22px] bg-slate-50 p-5">
                 <p className="text-lg font-semibold text-apex-slate">{title}</p>
@@ -157,8 +157,8 @@ export default function HomePage() {
       <section className="glass-border rounded-[28px] bg-white/80 p-6 shadow-panel">
         <SectionHeading
           eyebrow="Legendary Circuits"
-          title="Landscape profiles built around place and pace"
-          description="Circuit details blend layout context, technical specifications, and event history."
+          title="Landscape profiles for the circuits behind the calendar"
+          description="Explore the circuits behind the calendar and jump straight into venue detail."
         />
         <div className="grid gap-4 md:grid-cols-3">
           {tracks.map((track) => (
