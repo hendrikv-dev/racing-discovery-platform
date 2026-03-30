@@ -161,6 +161,7 @@ function racerScore(
   racer: {
     name: string;
     team: string;
+    bio: string | null;
     championship: { name: string } | null;
   },
   query: string
@@ -168,14 +169,20 @@ function racerScore(
   return Math.min(
     createTextScore(racer.name, query),
     createTextScore(racer.team, query),
+    racer.bio ? createTextScore(racer.bio, query) : 3,
     racer.championship ? createTextScore(racer.championship.name, query) : 3
   );
 }
 
-function trackScore(track: { name: string; country: string; history: string }, query: string) {
+function trackScore(
+  track: { name: string; location: string; country: string; trackType: string; history: string },
+  query: string
+) {
   return Math.min(
     createTextScore(track.name, query),
+    createTextScore(track.location, query),
     createTextScore(track.country, query),
+    createTextScore(track.trackType, query),
     createTextScore(track.history, query)
   );
 }
@@ -241,6 +248,7 @@ function buildChampionshipScopedRacerWhere(
       OR: [
         { name: { contains: query } },
         { team: { contains: query } },
+        { bio: { contains: query } },
         { nationality: { contains: query } },
         { vehicle: { contains: query } },
         { championship: { name: { contains: query } } }
@@ -261,7 +269,9 @@ function buildTrackWhere(query: string): Prisma.TrackWhereInput {
   return {
     OR: [
       { name: { contains: query } },
+      { location: { contains: query } },
       { country: { contains: query } },
+      { trackType: { contains: query } },
       { history: { contains: query } },
       { length: { contains: query } }
     ]
@@ -414,8 +424,8 @@ export async function searchDiscovery(params: SearchParams): Promise<SearchResul
       id: track.id,
       slug: track.slug,
       name: track.name,
-      location: track.country,
-      trackType: `${track.length} • ${track.turns} turns`,
+      location: `${track.location}, ${track.country}`,
+      trackType: track.trackType,
       href: `/tracks/${track.slug}`
     })) satisfies SearchTrackResult[];
 

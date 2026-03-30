@@ -93,12 +93,15 @@ model Track {
   id         String         @id @default(cuid())
   slug       String         @unique
   name       String
+  location   String
   country    String
+  trackType  String
   length     String
   turns      Int
   lapRecord  String
   image      String
   history    String
+  website    String?
   latitude   Float
   longitude  Float
   createdAt  DateTime       @default(now())
@@ -118,6 +121,7 @@ model Racer {
   championships Int
   victories     Int
   podiums       Int
+  bio           String?
   image         String
   vehicle       String
   verified      Boolean        @default(false)
@@ -125,6 +129,7 @@ model Racer {
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   championship  Championship?  @relation(fields: [championshipId], references: [id], onDelete: SetNull)
+  raceEntries   RaceEntry[]
   trackedBy     TrackedRacer[]
 }
 
@@ -147,7 +152,20 @@ model Race {
   championship   Championship   @relation(fields: [championshipId], references: [id], onDelete: Cascade)
   track          Track          @relation(fields: [trackId], references: [id], onDelete: Cascade)
   submission     RaceSubmission?
+  entries        RaceEntry[]
   trackedBy      TrackedRace[]
+}
+
+model RaceEntry {
+  id             String   @id @default(cuid())
+  raceId         String
+  racerId        String
+  finishPosition Int?
+  createdAt      DateTime @default(now())
+  race           Race     @relation(fields: [raceId], references: [id], onDelete: Cascade)
+  racer          Racer    @relation(fields: [racerId], references: [id], onDelete: Cascade)
+
+  @@unique([raceId, racerId])
 }
 
 model TrackedRace {

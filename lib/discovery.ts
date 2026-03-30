@@ -54,12 +54,15 @@ export type DiscoveryTrack = {
   id: string;
   slug: string;
   name: string;
+  location: string;
   country: string;
+  trackType: string;
   length: string;
   turns: number;
   lapRecord: string;
   image: string;
   history: string;
+  website: string | null;
   coordinates: {
     lat: number;
     lng: number;
@@ -78,6 +81,7 @@ export type DiscoveryRacer = {
   championships: number;
   victories: number;
   podiums: number;
+  bio: string | null;
   image: string;
   vehicle: string;
   verified: boolean;
@@ -524,6 +528,7 @@ export async function getChampionshipBySlug(slug: string, userId?: string) {
       championships: racer.championships,
       victories: racer.victories,
       podiums: racer.podiums,
+      bio: racer.bio,
       image: racer.image,
       vehicle: racer.vehicle,
       verified: racer.verified,
@@ -556,12 +561,15 @@ export async function getTracks(userId?: string) {
     id: track.id,
     slug: track.slug,
     name: track.name,
+    location: track.location,
     country: track.country,
+    trackType: track.trackType,
     length: track.length,
     turns: track.turns,
     lapRecord: track.lapRecord,
     image: track.image,
     history: track.history,
+    website: track.website,
     coordinates: hasValidCoordinates({ lat: track.latitude, lng: track.longitude })
       ? {
           lat: track.latitude,
@@ -610,12 +618,15 @@ export async function getTrackBySlug(slug: string, userId?: string) {
       id: track.id,
       slug: track.slug,
       name: track.name,
+      location: track.location,
       country: track.country,
+      trackType: track.trackType,
       length: track.length,
       turns: track.turns,
       lapRecord: track.lapRecord,
       image: track.image,
       history: track.history,
+      website: track.website,
       coordinates: hasValidCoordinates({ lat: track.latitude, lng: track.longitude })
         ? {
             lat: track.latitude,
@@ -696,6 +707,7 @@ export async function getRacers(userId?: string) {
     championships: racer.championships,
     victories: racer.victories,
     podiums: racer.podiums,
+    bio: racer.bio,
     image: racer.image,
     vehicle: racer.vehicle,
     verified: racer.verified,
@@ -735,6 +747,7 @@ export async function getRacerBySlug(slug: string, userId?: string) {
     championships: racer.championships,
     victories: racer.victories,
     podiums: racer.podiums,
+    bio: racer.bio,
     image: racer.image,
     vehicle: racer.vehicle,
     verified: racer.verified,
@@ -873,6 +886,7 @@ export async function getMyTracking(userId: string) {
       championships: racer.championships,
       victories: racer.victories,
       podiums: racer.podiums,
+      bio: racer.bio,
       image: racer.image,
       vehicle: racer.vehicle,
       verified: racer.verified,
@@ -885,12 +899,15 @@ export async function getMyTracking(userId: string) {
       id: track.id,
       slug: track.slug,
       name: track.name,
+      location: track.location,
       country: track.country,
+      trackType: track.trackType,
       length: track.length,
       turns: track.turns,
       lapRecord: track.lapRecord,
       image: track.image,
       history: track.history,
+      website: track.website,
       coordinates: hasValidCoordinates({ lat: track.latitude, lng: track.longitude })
         ? {
             lat: track.latitude,
@@ -900,5 +917,36 @@ export async function getMyTracking(userId: string) {
       raceCount: track.races.length,
       isTracked: true
     })) satisfies DiscoveryTrack[]
+  };
+}
+
+export async function getHomepageData(userId?: string) {
+  const [championshipCount, upcomingRaces, trackCount, upcomingMappedRaces] = await Promise.all([
+    prisma.championship.count(),
+    getRaces({ status: "UPCOMING" }, userId),
+    prisma.track.count(),
+    getRaces({ status: "UPCOMING" }, userId)
+  ]);
+
+  return {
+    metrics: [
+      {
+        label: "Active Championships",
+        value: String(championshipCount).padStart(2, "0"),
+        detail: "Series to explore across sprint, GT, endurance, touring, and club racing."
+      },
+      {
+        label: "Upcoming Races",
+        value: String(upcomingRaces.length).padStart(2, "0"),
+        detail: "Future race weekends already loaded across multiple months and regions."
+      },
+      {
+        label: "Mapped Tracks",
+        value: String(trackCount).padStart(2, "0"),
+        detail: "Real venues with coordinates ready for map-based discovery."
+      }
+    ],
+    upcomingRaces: upcomingRaces.slice(0, 6),
+    mapPreviewRaces: upcomingMappedRaces.filter((race) => race.mapCoordinates).slice(0, 6)
   };
 }
