@@ -25,8 +25,11 @@ export function SiteHeader() {
 
   return (
     <header className="glass-border sticky top-4 z-50 mb-8 rounded-[20px] bg-white/80 px-5 py-4 shadow-panel backdrop-blur-xl">
-      <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-        <Link href={isComingSoon ? "/coming-soon" : "/"} className="flex items-center gap-3">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <Link
+          href={isComingSoon ? "/coming-soon" : "/"}
+          className="flex shrink-0 items-center gap-3 self-start"
+        >
           <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-apex-slate text-sm font-semibold uppercase tracking-[0.3em] text-white">
             RP
           </div>
@@ -40,13 +43,12 @@ export function SiteHeader() {
           </div>
         </Link>
 
-        {isComingSoon ? null : (
-          <div className="w-full xl:max-w-[360px]">
-            <SearchTypeahead />
-          </div>
-        )}
-
-        <div className="flex flex-wrap items-center justify-end gap-3">
+        <div className="flex flex-1 flex-wrap items-center justify-end gap-3">
+          {isComingSoon ? null : (
+            <div className="min-w-0 w-full md:w-auto md:min-w-[220px] md:max-w-[280px]">
+              <SearchTypeahead />
+            </div>
+          )}
           <nav className="flex flex-wrap items-center gap-2 text-sm text-apex-muted">
             {navigation.map((item) => (
               "href" in item ? (
