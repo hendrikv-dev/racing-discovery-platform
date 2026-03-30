@@ -1,96 +1,55 @@
-import Link from "next/link";
-import { Search } from "lucide-react";
-import { quickFilters, racers, races, tracks } from "@/data/site";
+import { SearchFilters } from "@/components/search/search-filters";
+import { SearchEmptyState, SearchResults } from "@/components/search/search-results";
+import { EmptyState } from "@/components/states";
+import { SectionHeading } from "@/components/ui";
+import { getSearchFilterOptions, getSearchParams, searchDiscovery } from "@/lib/search";
 
-function SearchBlock({
-  title,
-  items
+export default async function SearchPage({
+  searchParams
 }: {
-  title: string;
-  items: Array<{ label: string; detail: string; href: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  return (
-    <div className="glass-border rounded-[24px] bg-white/85 p-5 shadow-panel">
-      <h2 className="text-xl font-bold text-apex-slate">{title}</h2>
-      <div className="mt-4 space-y-3">
-        {items.map((item) => (
-          <Link
-            key={item.label}
-            href={item.href}
-            className="block rounded-[18px] bg-slate-50 px-4 py-4 transition duration-200 hover:-translate-y-0.5 hover:bg-slate-100"
-          >
-            <p className="font-semibold text-apex-slate">{item.label}</p>
-            <p className="mt-1 text-sm text-apex-muted">{item.detail}</p>
-          </Link>
-        ))}
-      </div>
-    </div>
-  );
-}
+  const resolvedSearchParams = await searchParams;
+  const params = getSearchParams(resolvedSearchParams);
+  const [search, filterOptions] = await Promise.all([
+    searchDiscovery(params),
+    getSearchFilterOptions()
+  ]);
 
-export default function SearchPage() {
+  const hasQuery = search.query.length >= 2;
+  const hasFilters = Boolean(
+    search.filters.championship ||
+      search.filters.status ||
+      search.filters.start ||
+      search.filters.end ||
+      (search.filters.type && search.filters.type !== "all")
+  );
+
   return (
     <div className="space-y-8">
       <section className="glass-border rounded-[28px] bg-white/80 p-6 shadow-panel">
-        <p className="text-xs font-semibold uppercase tracking-[0.32em] text-apex-muted">
-          Global Search
-        </p>
-        <h1 className="mt-3 text-4xl font-bold tracking-tight text-apex-slate md:text-5xl">
-          Unified discovery across races, racers, and tracks
-        </h1>
-        <div className="mt-6 grid gap-4 lg:grid-cols-[1fr_auto]">
-          <label className="glass-border flex items-center gap-3 rounded-[20px] bg-slate-50 px-4 py-3">
-            <Search className="h-5 w-5 text-apex-muted" />
-            <input
-              aria-label="Search all content"
-              defaultValue="silver"
-              className="w-full bg-transparent text-sm outline-none placeholder:text-apex-muted"
-              placeholder="Search across the platform"
-            />
-          </label>
-          <div className="flex flex-wrap gap-2">
-            {quickFilters.map((filter, index) => (
-              <button
-                key={filter}
-                className={`rounded-full px-4 py-2 text-sm font-medium transition duration-200 ${
-                  index === 0
-                    ? "bg-slate-900 text-white"
-                    : "bg-slate-100 text-apex-slate hover:-translate-y-0.5"
-                }`}
-              >
-                {filter}
-              </button>
-            ))}
-          </div>
-        </div>
+        <SectionHeading
+          eyebrow="Global Search"
+          title="Find races, racers, tracks, and championships"
+          description={
+            hasQuery
+              ? `${search.counts.total} result${search.counts.total === 1 ? "" : "s"} for "${search.query}".`
+              : "Search the full platform and narrow the results as you go."
+          }
+        />
+        <SearchFilters defaults={params} championships={filterOptions.championships} />
       </section>
 
-      <section className="grid gap-4 lg:grid-cols-3">
-        <SearchBlock
-          title="Races"
-          items={races.map((race) => ({
-            label: race.name,
-            detail: `${race.series} • ${race.location} • ${race.status}`,
-            href: "/races"
-          }))}
+      {!hasQuery ? (
+        <EmptyState
+          title="Start with a race, racer, track, or championship"
+          description="Type at least two characters to search across the platform."
         />
-        <SearchBlock
-          title="Racers"
-          items={racers.map((racer) => ({
-            label: racer.name,
-            detail: `${racer.team} • ${racer.nationality}`,
-            href: `/racers/${racer.slug}`
-          }))}
-        />
-        <SearchBlock
-          title="Tracks"
-          items={tracks.map((track) => ({
-            label: track.name,
-            detail: `${track.country} • ${track.length} • ${track.turns} turns`,
-            href: `/tracks/${track.slug}`
-          }))}
-        />
-      </section>
+      ) : search.counts.total === 0 ? (
+        <SearchEmptyState query={search.query} hasFilters={hasFilters} />
+      ) : (
+        <SearchResults search={search} activeType={search.filters.type} />
+      )}
     </div>
   );
 }

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
+import { SearchTypeahead } from "@/components/search/search-typeahead";
 import { isAdminEmail } from "@/lib/admin-config";
 
 const defaultNavigation = [
@@ -24,7 +25,7 @@ export function SiteHeader() {
 
   return (
     <header className="glass-border sticky top-4 z-50 mb-8 rounded-[20px] bg-white/80 px-5 py-4 shadow-panel backdrop-blur-xl">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
         <Link href={isComingSoon ? "/coming-soon" : "/"} className="flex items-center gap-3">
           <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-apex-slate text-sm font-semibold uppercase tracking-[0.3em] text-white">
             RP
@@ -38,6 +39,12 @@ export function SiteHeader() {
             </p>
           </div>
         </Link>
+
+        {isComingSoon ? null : (
+          <div className="w-full xl:max-w-[360px]">
+            <SearchTypeahead />
+          </div>
+        )}
 
         <div className="flex flex-wrap items-center justify-end gap-3">
           <nav className="flex flex-wrap items-center gap-2 text-sm text-apex-muted">
