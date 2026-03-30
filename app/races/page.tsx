@@ -38,7 +38,7 @@ export default async function RacesPage({
         <SectionHeading
           eyebrow="Race Discovery"
           title="Search, filter, and track the race calendar"
-          description="Query-param-driven race discovery with combinable filters for championship, date range, status, location, and track."
+          description="Find upcoming weekends fast, switch views instantly, and sort by what is closest when you want nearby races first."
         />
         <RaceFilters defaults={filters} options={filterOptions} />
       </section>
@@ -55,6 +55,9 @@ export default async function RacesPage({
             <div className="mt-3">
               <RaceViewDescription activeView={activeView} />
             </div>
+            {filters.sort === "nearest" && filters.lat && filters.lng ? (
+              <p className="mt-3 text-sm font-medium text-apex-blue">Nearest races</p>
+            ) : null}
           </div>
           <RaceViewTabs activeView={activeView} filters={filters} />
         </div>

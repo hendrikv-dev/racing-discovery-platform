@@ -321,8 +321,89 @@ export async function searchDiscovery(params: SearchParams): Promise<SearchResul
   const query = normalizeQuery(params.q);
   const type = normalizeType(params.type);
   const limit = normalizeLimit(params.limit, type === "all" ? 12 : 24);
+  const shouldSearch = (candidate: SearchType) => type === "all" || type === candidate;
 
   if (query.length < 2) {
+    const [featuredRaces, featuredRacers, featuredTracks, featuredChampionships] = await Promise.all([
+      shouldSearch("races")
+        ? prisma.race.findMany({
+            where: {
+              status: {
+                in: [RaceStatus.UPCOMING, RaceStatus.LIVE]
+              }
+            },
+            include: {
+              track: { select: { name: true, slug: true } },
+              championship: { select: { name: true, slug: true } }
+            },
+            orderBy: [{ startDate: "asc" }],
+            take: limit
+          })
+        : Promise.resolve([]),
+      shouldSearch("racers")
+        ? prisma.racer.findMany({
+            include: {
+              championship: { select: { name: true, slug: true } }
+            },
+            orderBy: [{ podiums: "desc" }, { victories: "desc" }, { name: "asc" }],
+            take: limit
+          })
+        : Promise.resolve([]),
+      shouldSearch("tracks")
+        ? prisma.track.findMany({
+            orderBy: [{ races: { _count: "desc" } }, { name: "asc" }],
+            take: limit
+          })
+        : Promise.resolve([]),
+      shouldSearch("championships")
+        ? prisma.championship.findMany({
+            orderBy: [{ races: { _count: "desc" } }, { name: "asc" }],
+            take: limit
+          })
+        : Promise.resolve([])
+    ]);
+
+    const races = featuredRaces.map((race) => ({
+      id: race.id,
+      slug: race.slug,
+      name: race.name,
+      date: formatRaceDate(race.startDate),
+      startDate: race.startDate.toISOString(),
+      endDate: race.endDate.toISOString(),
+      status: formatRaceStatus(race.status),
+      trackName: race.track.name,
+      championshipName: race.championship.name,
+      championshipSlug: race.championship.slug,
+      href: `/races/${race.slug}`
+    })) satisfies SearchRaceResult[];
+
+    const racers = featuredRacers.map((racer) => ({
+      id: racer.id,
+      slug: racer.slug,
+      name: racer.name,
+      team: racer.team,
+      championshipName: racer.championship?.name ?? null,
+      href: `/racers/${racer.slug}`
+    })) satisfies SearchRacerResult[];
+
+    const tracks = featuredTracks.map((track) => ({
+      id: track.id,
+      slug: track.slug,
+      name: track.name,
+      location: `${track.location}, ${track.country}`,
+      trackType: track.trackType,
+      href: `/tracks/${track.slug}`
+    })) satisfies SearchTrackResult[];
+
+    const championships = featuredChampionships.map((championship) => ({
+      id: championship.id,
+      slug: championship.slug,
+      name: championship.name,
+      category: championship.category,
+      description: championship.description,
+      href: `/championships/${championship.slug}`
+    })) satisfies SearchChampionshipResult[];
+
     return {
       query,
       filters: {
@@ -333,22 +414,20 @@ export async function searchDiscovery(params: SearchParams): Promise<SearchResul
         end: params.end
       },
       counts: {
-        races: 0,
-        racers: 0,
-        tracks: 0,
-        championships: 0,
-        total: 0
+        races: races.length,
+        racers: racers.length,
+        tracks: tracks.length,
+        championships: championships.length,
+        total: races.length + racers.length + tracks.length + championships.length
       },
       results: {
-        races: [],
-        racers: [],
-        tracks: [],
-        championships: []
+        races,
+        racers,
+        tracks,
+        championships
       }
     };
   }
-
-  const shouldSearch = (candidate: SearchType) => type === "all" || type === candidate;
 
   const [raceRows, racerRows, trackRows, championshipRows] = await Promise.all([
     shouldSearch("races")

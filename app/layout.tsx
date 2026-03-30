@@ -4,6 +4,7 @@ import "./globals.css";
 import "leaflet/dist/leaflet.css";
 import { auth } from "@/auth";
 import { AuthSessionProvider } from "@/components/auth/session-provider";
+import { ToastProvider } from "@/components/feedback/toast-provider";
 import { SiteHeader } from "@/components/site-header";
 
 export const metadata: Metadata = {
@@ -22,10 +23,12 @@ export default async function RootLayout({
     <html lang="en">
       <body className="apex-shell antialiased">
         <AuthSessionProvider session={session}>
-          <div className="mx-auto flex min-h-screen max-w-[1200px] flex-col px-4 pb-10 pt-4 sm:px-6 lg:px-8">
-            <SiteHeader />
-            <main className="flex-1">{children}</main>
-          </div>
+          <ToastProvider>
+            <div className="mx-auto flex min-h-screen max-w-[1200px] flex-col px-4 pb-10 pt-4 sm:px-6 lg:px-8">
+              <SiteHeader />
+              <main className="flex-1">{children}</main>
+            </div>
+          </ToastProvider>
         </AuthSessionProvider>
       </body>
     </html>

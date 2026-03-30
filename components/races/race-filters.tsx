@@ -15,6 +15,9 @@ type RaceFilterProps = {
     location?: string;
     track?: string;
     view?: string;
+    sort?: string;
+    lat?: string;
+    lng?: string;
   };
   options: {
     championships: Array<{ slug: string; name: string }>;
@@ -35,7 +38,8 @@ export function RaceFilters({ defaults, options }: RaceFilterProps) {
     start: defaults.start ?? "",
     end: defaults.end ?? "",
     location: defaults.location ?? "",
-    track: defaults.track ?? ""
+    track: defaults.track ?? "",
+    sort: defaults.sort ?? ""
   });
 
   function updateUrl(values: typeof formValues) {
@@ -48,6 +52,11 @@ export function RaceFilters({ defaults, options }: RaceFilterProps) {
         params.delete(key);
       }
     });
+
+    if (values.sort !== "nearest") {
+      params.delete("lat");
+      params.delete("lng");
+    }
 
     if (defaults.view) {
       params.set("view", defaults.view);
@@ -81,7 +90,8 @@ export function RaceFilters({ defaults, options }: RaceFilterProps) {
         start: "",
         end: "",
         location: "",
-        track: ""
+        track: "",
+        sort: ""
       });
     });
   }
@@ -138,7 +148,15 @@ export function RaceFilters({ defaults, options }: RaceFilterProps) {
         </select>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+        <select
+          value={formValues.sort}
+          onChange={(event) => setFormValues((current) => ({ ...current, sort: event.target.value }))}
+          className="rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-apex-slate outline-none transition duration-200 focus:border-apex-blue focus:bg-white"
+        >
+          <option value="">Sort by upcoming</option>
+          <option value="nearest">Sort by nearest</option>
+        </select>
         <input
           type="date"
           value={formValues.start}
@@ -184,7 +202,7 @@ export function RaceFilters({ defaults, options }: RaceFilterProps) {
           onClick={handleReset}
           className="rounded-full bg-slate-100 px-5 py-3 text-sm font-semibold text-apex-slate transition duration-200 hover:-translate-y-0.5"
         >
-          Reset
+          Clear All Filters
         </button>
       </div>
     </form>

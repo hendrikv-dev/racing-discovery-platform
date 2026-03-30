@@ -70,6 +70,11 @@ export function TimelineView({ races }: { races: DiscoveryRace[] }) {
                       </span>
                     </div>
                     <p className="mt-3 text-sm leading-6 text-apex-muted">{race.location}</p>
+                    {race.isTracked ? (
+                      <p className="mt-3 text-xs font-semibold uppercase tracking-[0.2em] text-apex-blue">
+                        Tracked race
+                      </p>
+                    ) : null}
                     <Link
                       href={`/races/${race.slug}`}
                       className="mt-5 inline-flex rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition duration-200 hover:bg-apex-blue"

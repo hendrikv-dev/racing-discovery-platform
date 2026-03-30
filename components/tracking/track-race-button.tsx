@@ -3,6 +3,7 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useState, useTransition } from "react";
+import { useToast } from "@/components/feedback/toast-provider";
 
 export function TrackRaceButton({
   raceId,
@@ -15,6 +16,7 @@ export function TrackRaceButton({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { status } = useSession();
+  const { showToast } = useToast();
   const [tracked, setTracked] = useState(initialTracked);
   const [isPending, startTransition] = useTransition();
 
@@ -43,6 +45,7 @@ export function TrackRaceButton({
 
       if (response.ok) {
         setTracked((current) => !current);
+        showToast(tracked ? "Race removed from your tracking" : "Race added to your tracking");
         router.refresh();
       }
     });

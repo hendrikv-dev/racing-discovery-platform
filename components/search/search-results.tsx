@@ -117,7 +117,7 @@ export function SearchEmptyState({
     <div className="glass-border rounded-[24px] bg-white/80 p-8 text-center shadow-panel">
       <h2 className="text-2xl font-bold text-apex-slate">No results found for &quot;{query}&quot;</h2>
       <p className="mt-3 text-sm leading-6 text-apex-muted">
-        Try a different search term{hasFilters ? " or clear one or more filters." : "."}
+        No results. Try a different search{hasFilters ? " or clear a filter." : "."}
       </p>
     </div>
   );

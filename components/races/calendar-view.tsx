@@ -37,7 +37,11 @@ export function CalendarEventChip({
       type="button"
       onClick={onSelect}
       className={`w-full rounded-[12px] px-2 py-1 text-left text-xs font-semibold transition duration-200 ${
-        selected ? "bg-slate-900 text-white" : "bg-blue-50 text-apex-blue hover:bg-blue-100"
+        selected
+          ? "bg-slate-900 text-white"
+          : race.isTracked
+            ? "bg-blue-100 text-apex-blue hover:bg-blue-200"
+            : "bg-blue-50 text-apex-blue hover:bg-blue-100"
       }`}
     >
       {race.name}
@@ -190,6 +194,11 @@ export function CalendarView({ races }: { races: DiscoveryRace[] }) {
                 <p className="mt-1 text-sm text-apex-muted">
                   {race.championshipName} • {race.trackName} • {race.location}
                 </p>
+                {race.isTracked ? (
+                  <p className="mt-2 text-xs font-semibold uppercase tracking-[0.18em] text-apex-blue">
+                    Tracked race
+                  </p>
+                ) : null}
               </Link>
             ))
           ) : (

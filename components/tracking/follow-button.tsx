@@ -3,6 +3,7 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useState, useTransition } from "react";
+import { useToast } from "@/components/feedback/toast-provider";
 
 type FollowEntity = "championships" | "racers" | "tracks";
 
@@ -23,6 +24,7 @@ export function FollowButton({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { status } = useSession();
+  const { showToast } = useToast();
   const [tracked, setTracked] = useState(initialTracked);
   const [isPending, startTransition] = useTransition();
 
@@ -51,6 +53,9 @@ export function FollowButton({
 
       if (response.ok) {
         setTracked((current) => !current);
+        showToast(
+          tracked ? `${activeLabel} removed` : `${inactiveLabel.replace(/^Follow /, "")} added to tracking`
+        );
         router.refresh();
       }
     });

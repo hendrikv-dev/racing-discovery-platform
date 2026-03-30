@@ -31,6 +31,7 @@ export type DiscoveryRace = {
     lng: number;
   } | null;
   mapSource: "race" | "track" | null;
+  distanceKm?: number | null;
   isTracked: boolean;
 };
 
@@ -100,6 +101,9 @@ export type RaceFilters = {
   end?: string;
   location?: string;
   track?: string;
+  sort?: string;
+  lat?: string;
+  lng?: string;
   view?: string;
 };
 
@@ -166,6 +170,23 @@ function resolveRaceMapCoordinates(
   };
 }
 
+function getDistanceKm(
+  origin: { lat: number; lng: number },
+  destination: { lat: number; lng: number }
+) {
+  const earthRadiusKm = 6371;
+  const toRadians = (value: number) => (value * Math.PI) / 180;
+  const latDelta = toRadians(destination.lat - origin.lat);
+  const lngDelta = toRadians(destination.lng - origin.lng);
+  const startLat = toRadians(origin.lat);
+  const endLat = toRadians(destination.lat);
+
+  const a =
+    Math.sin(latDelta / 2) ** 2 +
+    Math.cos(startLat) * Math.cos(endLat) * Math.sin(lngDelta / 2) ** 2;
+  return earthRadiusKm * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
 export function getRaceFilters(searchParams: Record<string, string | string[] | undefined>): RaceFilters {
   const getValue = (key: keyof RaceFilters) => {
     const value = searchParams[key];
@@ -181,6 +202,9 @@ export function getRaceFilters(searchParams: Record<string, string | string[] | 
     end: getValue("end"),
     location: getValue("location"),
     track: getValue("track"),
+    sort: getValue("sort"),
+    lat: getValue("lat"),
+    lng: getValue("lng"),
     view: getValue("view")
   };
 }
@@ -259,6 +283,15 @@ export async function getRaceFilterOptions() {
 }
 
 export async function getRaces(filters: RaceFilters, userId?: string) {
+  const hasOrigin =
+    filters.sort === "nearest" &&
+    typeof filters.lat === "string" &&
+    typeof filters.lng === "string" &&
+    Number.isFinite(Number(filters.lat)) &&
+    Number.isFinite(Number(filters.lng));
+  const origin = hasOrigin
+    ? { lat: Number(filters.lat), lng: Number(filters.lng) }
+    : null;
   const races = await prisma.race.findMany({
     where: getRaceWhere(filters),
     orderBy: [{ startDate: "asc" }],
@@ -275,7 +308,7 @@ export async function getRaces(filters: RaceFilters, userId?: string) {
     }
   });
 
-  return races.map((race) => {
+  const mappedRaces = races.map((race) => {
     const raceCoordinates = {
       lat: race.latitude,
       lng: race.longitude
@@ -290,6 +323,7 @@ export async function getRaces(filters: RaceFilters, userId?: string) {
         }
       : null;
     const { mapCoordinates, mapSource } = resolveRaceMapCoordinates(raceCoordinates, trackCoordinates);
+    const distanceKm = origin && mapCoordinates ? getDistanceKm(origin, mapCoordinates) : null;
 
     return {
       id: race.id,
@@ -312,9 +346,30 @@ export async function getRaces(filters: RaceFilters, userId?: string) {
       trackCoordinates,
       mapCoordinates,
       mapSource,
+      distanceKm,
       isTracked: userId ? race.trackedBy.length > 0 : false
     };
   }) satisfies DiscoveryRace[];
+
+  if (filters.sort === "nearest") {
+    return [...mappedRaces].sort((left, right) => {
+      if (left.distanceKm != null && right.distanceKm != null) {
+        return left.distanceKm - right.distanceKm;
+      }
+
+      if (left.distanceKm != null) {
+        return -1;
+      }
+
+      if (right.distanceKm != null) {
+        return 1;
+      }
+
+      return new Date(left.startDate).getTime() - new Date(right.startDate).getTime();
+    });
+  }
+
+  return mappedRaces;
 }
 
 export async function getRaceBySlug(slug: string, userId?: string) {
@@ -921,12 +976,16 @@ export async function getMyTracking(userId: string) {
 }
 
 export async function getHomepageData(userId?: string) {
-  const [championshipCount, upcomingRaces, trackCount, upcomingMappedRaces] = await Promise.all([
+  const [championshipCount, upcomingRaces, trackCount, upcomingMappedRaces, tracking] = await Promise.all([
     prisma.championship.count(),
     getRaces({ status: "UPCOMING" }, userId),
     prisma.track.count(),
-    getRaces({ status: "UPCOMING" }, userId)
+    getRaces({ status: "UPCOMING" }, userId),
+    userId ? getMyTracking(userId) : Promise.resolve(null)
   ]);
+
+  const nextTrackedRace =
+    tracking?.races.find((race) => race.status === "Upcoming" || race.status === "Live") ?? null;
 
   return {
     metrics: [
@@ -947,6 +1006,7 @@ export async function getHomepageData(userId?: string) {
       }
     ],
     upcomingRaces: upcomingRaces.slice(0, 6),
-    mapPreviewRaces: upcomingMappedRaces.filter((race) => race.mapCoordinates).slice(0, 6)
+    mapPreviewRaces: upcomingMappedRaces.filter((race) => race.mapCoordinates).slice(0, 6),
+    nextTrackedRace
   };
 }

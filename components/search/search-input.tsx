@@ -8,7 +8,8 @@ export function SearchInput({
   placeholder,
   className = "",
   autoFocus = false,
-  onKeyDown
+  onKeyDown,
+  onFocus
 }: {
   value: string;
   onChange: (value: string) => void;
@@ -16,6 +17,7 @@ export function SearchInput({
   className?: string;
   autoFocus?: boolean;
   onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
+  onFocus?: React.FocusEventHandler<HTMLInputElement>;
 }) {
   return (
     <label
@@ -28,6 +30,7 @@ export function SearchInput({
         onChange={(event) => onChange(event.target.value)}
         autoFocus={autoFocus}
         onKeyDown={onKeyDown}
+        onFocus={onFocus}
         className="w-full bg-transparent text-sm outline-none placeholder:text-apex-muted"
         placeholder={placeholder}
       />

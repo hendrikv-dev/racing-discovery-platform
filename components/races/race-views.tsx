@@ -11,9 +11,9 @@ export type RaceViewMode = "map" | "list" | "calendar" | "timeline";
 
 const viewLabels: Array<{ value: RaceViewMode; label: string; description: string }> = [
   { value: "map", label: "Map", description: "Find race weekends by location and compare nearby events faster." },
-  { value: "list", label: "List", description: "Card-based discovery for scanning the full race slate." },
-  { value: "calendar", label: "Calendar", description: "Month grid with event chips on the race dates." },
-  { value: "timeline", label: "Timeline", description: "Chronological grouping with the next race highlighted." }
+  { value: "list", label: "List", description: "Scan the full slate, compare weekends fast, and keep tracked races in view." },
+  { value: "calendar", label: "Calendar", description: "See what is happening on each date and open the exact day you want." },
+  { value: "timeline", label: "Timeline", description: "Follow the season chronologically and spot the next key race quickly." }
 ];
 
 function getViewHref(view: RaceViewMode, filters: RaceFilters) {
@@ -77,6 +77,12 @@ function RaceListCard({
         <span className="rounded-full bg-slate-100 px-3 py-2">{formatDateRange(race.startDate, race.endDate)}</span>
         <span className="rounded-full bg-slate-100 px-3 py-2">{race.trackName}</span>
         <span className="rounded-full bg-slate-100 px-3 py-2">{race.location}</span>
+        {race.isTracked ? (
+          <span className="rounded-full bg-blue-50 px-3 py-2 font-semibold text-apex-blue">Tracked</span>
+        ) : null}
+        {typeof race.distanceKm === "number" ? (
+          <span className="rounded-full bg-slate-100 px-3 py-2">{Math.round(race.distanceKm)} km away</span>
+        ) : null}
       </div>
       <div className="mt-4 flex flex-wrap gap-2 text-xs uppercase tracking-[0.18em] text-apex-muted">
         {race.mapCoordinates ? (

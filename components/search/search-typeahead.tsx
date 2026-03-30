@@ -38,20 +38,38 @@ function DropdownLink({
   href,
   title,
   detail,
+  query,
   onNavigate
 }: {
   href: string;
   title: string;
   detail: string;
+  query: string;
   onNavigate: () => void;
 }) {
+  const needle = query.trim().toLowerCase();
+  const index = needle ? title.toLowerCase().indexOf(needle) : -1;
+  const hasMatch = index >= 0;
+
   return (
     <Link
       href={href}
       onClick={onNavigate}
       className="block rounded-[16px] px-3 py-3 transition duration-200 hover:bg-slate-50"
     >
-      <p className="font-medium text-apex-slate">{title}</p>
+      <p className="font-medium text-apex-slate">
+        {hasMatch ? (
+          <>
+            {title.slice(0, index)}
+            <mark className="rounded bg-blue-100 px-0.5 text-apex-slate">
+              {title.slice(index, index + needle.length)}
+            </mark>
+            {title.slice(index + needle.length)}
+          </>
+        ) : (
+          title
+        )}
+      </p>
       <p className="mt-1 text-sm text-apex-muted">{detail}</p>
     </Link>
   );
@@ -97,16 +115,15 @@ export function SearchTypeahead() {
   useEffect(() => {
     const activeQuery = debouncedQuery.trim();
 
-    if (activeQuery.length < 2) {
-      setResults(null);
-      setIsLoading(false);
-      return;
-    }
-
     let cancelled = false;
     setIsLoading(true);
 
-    fetch(`/api/search?q=${encodeURIComponent(activeQuery)}&limit=4`)
+    const url =
+      activeQuery.length >= 2
+        ? `/api/search?q=${encodeURIComponent(activeQuery)}&limit=4`
+        : "/api/search?limit=4";
+
+    fetch(url)
       .then((response) => response.json())
       .then((payload: SearchResults) => {
         if (!cancelled) {
@@ -144,8 +161,9 @@ export function SearchTypeahead() {
         value={query}
         onChange={(value) => {
           setQuery(value);
-          setIsOpen(value.trim().length >= 2);
+          setIsOpen(true);
         }}
+        onFocus={() => setIsOpen(true)}
         onKeyDown={(event) => {
           if (event.key === "Enter") {
             event.preventDefault();
@@ -159,7 +177,9 @@ export function SearchTypeahead() {
       {isOpen ? (
         <div className="glass-border absolute left-0 right-0 top-[calc(100%+10px)] z-50 overflow-hidden rounded-[22px] bg-white/95 shadow-panel backdrop-blur-xl">
           {isLoading ? (
-            <p className="px-4 py-4 text-sm text-apex-muted">Searching...</p>
+            <p className="px-4 py-4 text-sm text-apex-muted">
+              {query.trim().length >= 2 ? "Searching..." : "Loading top results..."}
+            </p>
           ) : results && summaryCount > 0 ? (
             <>
               {results.results.races.length > 0 ? (
@@ -170,6 +190,7 @@ export function SearchTypeahead() {
                       href={race.href}
                       title={race.name}
                       detail={`${race.date} • ${race.trackName} • ${race.championshipName}`}
+                      query={query}
                       onNavigate={() => setIsOpen(false)}
                     />
                   ))}
@@ -187,6 +208,7 @@ export function SearchTypeahead() {
                           ? `${racer.team} • ${racer.championshipName}`
                           : racer.team
                       }
+                      query={query}
                       onNavigate={() => setIsOpen(false)}
                     />
                   ))}
@@ -200,6 +222,7 @@ export function SearchTypeahead() {
                       href={track.href}
                       title={track.name}
                       detail={track.location}
+                      query={query}
                       onNavigate={() => setIsOpen(false)}
                     />
                   ))}
@@ -213,6 +236,7 @@ export function SearchTypeahead() {
                       href={championship.href}
                       title={championship.name}
                       detail={championship.category}
+                      query={query}
                       onNavigate={() => setIsOpen(false)}
                     />
                   ))}
@@ -231,7 +255,7 @@ export function SearchTypeahead() {
           ) : (
             <div className="px-4 py-4">
               <p className="text-sm text-apex-muted">
-                No matches yet. Try a different search term.
+                No results. Try a different search.
               </p>
             </div>
           )}

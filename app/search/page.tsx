@@ -1,6 +1,5 @@
 import { SearchFilters } from "@/components/search/search-filters";
 import { SearchEmptyState, SearchResults } from "@/components/search/search-results";
-import { EmptyState } from "@/components/states";
 import { SectionHeading } from "@/components/ui";
 import { getSearchFilterOptions, getSearchParams, searchDiscovery } from "@/lib/search";
 
@@ -34,17 +33,21 @@ export default async function SearchPage({
           description={
             hasQuery
               ? `${search.counts.total} result${search.counts.total === 1 ? "" : "s"} for "${search.query}".`
-              : "Search the full platform and narrow the results as you go."
+              : "Top results across the platform, with filters ready when you want to narrow the field."
           }
         />
         <SearchFilters defaults={params} championships={filterOptions.championships} />
       </section>
 
       {!hasQuery ? (
-        <EmptyState
-          title="Start with a race, racer, track, or championship"
-          description="Type at least two characters to search across the platform."
-        />
+        <div className="space-y-4">
+          <SectionHeading
+            eyebrow="Top Results"
+            title="Top results"
+            description="A quick way to jump into the races, drivers, tracks, and championships getting attention right now."
+          />
+          <SearchResults search={search} activeType={search.filters.type} />
+        </div>
       ) : search.counts.total === 0 ? (
         <SearchEmptyState query={search.query} hasFilters={hasFilters} />
       ) : (

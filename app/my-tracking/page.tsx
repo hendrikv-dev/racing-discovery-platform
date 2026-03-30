@@ -6,6 +6,17 @@ import { MyTrackingNav } from "@/components/tracking/my-tracking-nav";
 import { MetricCard, SectionHeading } from "@/components/ui";
 import { getMyTracking } from "@/lib/discovery";
 
+function getCountdownLabel(startDate: string) {
+  const diff = new Date(startDate).getTime() - Date.now();
+
+  if (diff <= 0) {
+    return "Happening now";
+  }
+
+  const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+  return `In ${days} day${days === 1 ? "" : "s"}`;
+}
+
 export default async function MyTrackingPage() {
   const session = await auth();
 
@@ -18,6 +29,10 @@ export default async function MyTrackingPage() {
   if (!data) {
     redirect("/login?callbackUrl=/my-tracking");
   }
+
+  const nextRace = data.races.find((race) => race.status === "Upcoming" || race.status === "Live") ?? null;
+  const upcomingRaces = data.races.filter((race) => race.status === "Upcoming" || race.status === "Live");
+  const pastRaces = data.races.filter((race) => race.status === "Completed");
 
   return (
     <div className="space-y-8">
@@ -64,8 +79,8 @@ export default async function MyTrackingPage() {
         />
         <MetricCard
           label="First Upcoming Race"
-          value={data.races[0]?.name ?? "None"}
-          detail="Your next tracked race at a glance."
+          value={nextRace?.name ?? "None"}
+          detail="The next event waiting on your board."
         />
         <MetricCard
           label="Saved Total"
@@ -78,14 +93,45 @@ export default async function MyTrackingPage() {
 
       <section className="glass-border rounded-[28px] bg-white/85 p-6 shadow-panel">
         <SectionHeading
-          eyebrow="Tracked Races"
-          title="Upcoming races on your board"
-          description="Saved race entries stay sorted by their upcoming schedule."
+          eyebrow="Next Race"
+          title="Your next tracked race"
+          description="Come back here to pick up the next event you already care about."
           href="/my-tracking/races"
         />
+        {nextRace ? (
+          <Link
+            href={`/races/${nextRace.slug}`}
+            className="glass-border block rounded-[24px] bg-white p-6 shadow-panel transition duration-200 hover:-translate-y-1"
+          >
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-apex-muted">
+                  {nextRace.championshipName}
+                </p>
+                <h2 className="mt-2 text-3xl font-bold text-apex-slate">{nextRace.name}</h2>
+                <p className="mt-3 text-sm text-apex-muted">
+                  {nextRace.trackName} • {nextRace.location}
+                </p>
+              </div>
+              <div className="rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-apex-blue">
+                {getCountdownLabel(nextRace.startDate)}
+              </div>
+            </div>
+          </Link>
+        ) : (
+          <EmptyState title="No upcoming tracked races yet" description="Track a race to keep the next weekend you care about front and center." />
+        )}
+      </section>
+
+      <section className="glass-border rounded-[28px] bg-white/85 p-6 shadow-panel">
+        <SectionHeading
+          eyebrow="Upcoming"
+          title="Upcoming tracked races"
+          description="Everything on your board that is still ahead."
+        />
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {data.races.length > 0 ? (
-            data.races.slice(0, 3).map((race) => (
+          {upcomingRaces.length > 0 ? (
+            upcomingRaces.map((race) => (
               <Link
                 key={race.id}
                 href={`/races/${race.slug}`}
@@ -95,12 +141,41 @@ export default async function MyTrackingPage() {
                   {race.championshipName}
                 </p>
                 <h2 className="mt-2 text-xl font-bold text-apex-slate">{race.name}</h2>
-                <p className="mt-3 text-sm text-apex-muted">{race.location}</p>
+                <p className="mt-3 text-sm text-apex-muted">{race.trackName} • {race.location}</p>
               </Link>
             ))
           ) : (
             <div className="md:col-span-2 xl:col-span-3">
-              <EmptyState title="No tracked races yet" description="Track a race from the discovery pages and it will appear here." />
+              <EmptyState title="No upcoming tracked races" description="Track a race from discovery pages and it will show up here." />
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section className="glass-border rounded-[28px] bg-white/85 p-6 shadow-panel">
+        <SectionHeading
+          eyebrow="Past"
+          title="Past tracked races"
+          description="Quick access to weekends you may want to revisit."
+        />
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {pastRaces.length > 0 ? (
+            pastRaces.map((race) => (
+              <Link
+                key={race.id}
+                href={`/races/${race.slug}`}
+                className="glass-border rounded-[22px] bg-white p-5 shadow-panel transition duration-200 hover:-translate-y-1"
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-apex-muted">
+                  {race.championshipName}
+                </p>
+                <h2 className="mt-2 text-xl font-bold text-apex-slate">{race.name}</h2>
+                <p className="mt-3 text-sm text-apex-muted">{race.trackName} • {race.location}</p>
+              </Link>
+            ))
+          ) : (
+            <div className="md:col-span-2 xl:col-span-3">
+              <EmptyState title="No past tracked races yet" description="Once tracked races finish, they will stay here for easy return visits." />
             </div>
           )}
         </div>
