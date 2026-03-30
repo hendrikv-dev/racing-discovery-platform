@@ -127,6 +127,23 @@ function formatRaceDate(date: Date) {
   }).format(date);
 }
 
+export function formatRelativeRaceTiming(startDate: string | Date) {
+  const now = new Date();
+  const start = typeof startDate === "string" ? new Date(startDate) : startDate;
+  const diff = start.getTime() - now.getTime();
+  const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+
+  if (days <= 0) {
+    return "today";
+  }
+
+  if (days === 1) {
+    return "tomorrow";
+  }
+
+  return `in ${days} days`;
+}
+
 function hasValidCoordinates(
   coordinates:
     | {
@@ -976,16 +993,56 @@ export async function getMyTracking(userId: string) {
 }
 
 export async function getHomepageData(userId?: string) {
-  const [championshipCount, upcomingRaces, trackCount, upcomingMappedRaces, tracking] = await Promise.all([
+  const [championshipCount, raceCount, upcomingRaces, trackCount, upcomingMappedRaces, tracking, recentRaces, popularTracks] = await Promise.all([
     prisma.championship.count(),
+    prisma.race.count(),
     getRaces({ status: "UPCOMING" }, userId),
     prisma.track.count(),
     getRaces({ status: "UPCOMING" }, userId),
-    userId ? getMyTracking(userId) : Promise.resolve(null)
+    userId ? getMyTracking(userId) : Promise.resolve(null),
+    prisma.race.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 3,
+      include: {
+        championship: true,
+        track: true,
+        trackedBy: userId
+          ? {
+              where: {
+                userId
+              }
+            }
+          : false
+      }
+    }),
+    prisma.track.findMany({
+      take: 3,
+      orderBy: [{ races: { _count: "desc" } }, { name: "asc" }],
+      include: {
+        races: {
+          select: { id: true }
+        },
+        trackedBy: userId
+          ? {
+              where: {
+                userId
+              }
+            }
+          : false
+      }
+    })
   ]);
 
   const nextTrackedRace =
     tracking?.races.find((race) => race.status === "Upcoming" || race.status === "Live") ?? null;
+  const startOfToday = new Date();
+  startOfToday.setUTCHours(0, 0, 0, 0);
+  const endOfWeek = new Date(startOfToday);
+  endOfWeek.setUTCDate(endOfWeek.getUTCDate() + 7);
+  const upcomingThisWeek = upcomingRaces.filter((race) => {
+    const start = new Date(race.startDate);
+    return start >= startOfToday && start < endOfWeek;
+  });
 
   return {
     metrics: [
@@ -1005,7 +1062,71 @@ export async function getHomepageData(userId?: string) {
         detail: "Real venues with coordinates ready for map-based discovery."
       }
     ],
+    statLine: `${raceCount}+ races • ${trackCount}+ tracks • ${championshipCount} championships`,
     upcomingRaces: upcomingRaces.slice(0, 6),
+    upcomingThisWeek: upcomingThisWeek.slice(0, 3),
+    recentlyAdded: recentRaces.map((race) => {
+      const raceCoordinates = {
+        lat: race.latitude,
+        lng: race.longitude
+      };
+      const trackCoordinates = hasValidCoordinates({
+        lat: race.track.latitude,
+        lng: race.track.longitude
+      })
+        ? {
+            lat: race.track.latitude,
+            lng: race.track.longitude
+          }
+        : null;
+      const { mapCoordinates, mapSource } = resolveRaceMapCoordinates(raceCoordinates, trackCoordinates);
+
+      return {
+        id: race.id,
+        slug: race.slug,
+        name: race.name,
+        series: race.series,
+        championshipId: race.championshipId,
+        championshipName: race.championship.name,
+        championshipSlug: race.championship.slug,
+        date: formatRaceDate(race.startDate),
+        startDate: race.startDate.toISOString(),
+        endDate: race.endDate.toISOString(),
+        location: race.location,
+        trackId: race.trackId,
+        trackName: race.track.name,
+        trackSlug: race.track.slug,
+        status: formatRaceStatus(race.status),
+        summary: race.summary,
+        coordinates: raceCoordinates,
+        trackCoordinates,
+        mapCoordinates,
+        mapSource,
+        isTracked: userId ? race.trackedBy.length > 0 : false
+      };
+    }) satisfies DiscoveryRace[],
+    popularTracks: popularTracks.map((track) => ({
+      id: track.id,
+      slug: track.slug,
+      name: track.name,
+      location: track.location,
+      country: track.country,
+      trackType: track.trackType,
+      length: track.length,
+      turns: track.turns,
+      lapRecord: track.lapRecord,
+      image: track.image,
+      history: track.history,
+      website: track.website,
+      coordinates: hasValidCoordinates({ lat: track.latitude, lng: track.longitude })
+        ? {
+            lat: track.latitude,
+            lng: track.longitude
+          }
+        : null,
+      raceCount: track.races.length,
+      isTracked: userId ? track.trackedBy.length > 0 : false
+    })) satisfies DiscoveryTrack[],
     mapPreviewRaces: upcomingMappedRaces.filter((race) => race.mapCoordinates).slice(0, 6),
     nextTrackedRace
   };

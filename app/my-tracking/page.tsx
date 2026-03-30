@@ -4,18 +4,7 @@ import { auth } from "@/auth";
 import { EmptyState } from "@/components/states";
 import { MyTrackingNav } from "@/components/tracking/my-tracking-nav";
 import { MetricCard, SectionHeading } from "@/components/ui";
-import { getMyTracking } from "@/lib/discovery";
-
-function getCountdownLabel(startDate: string) {
-  const diff = new Date(startDate).getTime() - Date.now();
-
-  if (diff <= 0) {
-    return "Happening now";
-  }
-
-  const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-  return `In ${days} day${days === 1 ? "" : "s"}`;
-}
+import { formatRelativeRaceTiming, getMyTracking } from "@/lib/discovery";
 
 export default async function MyTrackingPage() {
   const session = await auth();
@@ -114,7 +103,7 @@ export default async function MyTrackingPage() {
                 </p>
               </div>
               <div className="rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-apex-blue">
-                {getCountdownLabel(nextRace.startDate)}
+                {formatRelativeRaceTiming(nextRace.startDate)}
               </div>
             </div>
           </Link>

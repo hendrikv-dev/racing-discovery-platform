@@ -56,6 +56,8 @@ export async function createChampionshipAction(formData: FormData) {
   revalidatePath("/admin");
   revalidatePath("/admin/championships");
   revalidatePath("/championships");
+  revalidatePath("/");
+  revalidatePath("/search");
 }
 
 export async function updateChampionshipAction(formData: FormData) {
@@ -78,6 +80,8 @@ export async function updateChampionshipAction(formData: FormData) {
 
   revalidatePath("/admin/championships");
   revalidatePath("/championships");
+  revalidatePath("/");
+  revalidatePath("/search");
 }
 
 export async function deleteChampionshipAction(formData: FormData) {
@@ -90,6 +94,8 @@ export async function deleteChampionshipAction(formData: FormData) {
 
   revalidatePath("/admin/championships");
   revalidatePath("/championships");
+  revalidatePath("/");
+  revalidatePath("/search");
 }
 
 export async function updateRaceAdminAction(formData: FormData) {
@@ -117,6 +123,8 @@ export async function updateRaceAdminAction(formData: FormData) {
 
   revalidatePath("/admin/races");
   revalidatePath("/races");
+  revalidatePath("/");
+  revalidatePath("/search");
 }
 
 export async function updateRacerAdminAction(formData: FormData) {
@@ -133,6 +141,7 @@ export async function updateRacerAdminAction(formData: FormData) {
 
   revalidatePath("/admin/racers");
   revalidatePath("/championships");
+  revalidatePath("/search");
 }
 
 export async function updateTrackAdminAction(formData: FormData) {
@@ -149,6 +158,8 @@ export async function updateTrackAdminAction(formData: FormData) {
 
   revalidatePath("/admin/tracks");
   revalidatePath("/tracks");
+  revalidatePath("/");
+  revalidatePath("/search");
 }
 
 export async function createRaceSubmissionAction(formData: FormData) {
@@ -196,6 +207,7 @@ export async function updateSubmissionStatusAction(formData: FormData) {
   });
 
   revalidatePath("/admin/submissions");
+  revalidatePath("/");
 }
 
 export async function convertSubmissionToRaceAction(formData: FormData) {
@@ -255,4 +267,7 @@ export async function convertSubmissionToRaceAction(formData: FormData) {
 
   revalidatePath("/admin/submissions");
   revalidatePath("/races");
+  revalidatePath("/");
+  revalidatePath("/search");
+  revalidatePath("/championships");
 }

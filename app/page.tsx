@@ -4,47 +4,7 @@ import { auth } from "@/auth";
 import { FindNearYouButton } from "@/components/home/find-near-you-button";
 import { InteractiveMap } from "@/components/maps/interactive-map";
 import { SectionHeading, StatusBadge } from "@/components/ui";
-import { getHomepageData } from "@/lib/discovery";
-
-const whatYouCanDo = [
-  {
-    icon: MapPinned,
-    title: "Find races near you",
-    description:
-      "Jump into the map and spot race weekends happening close to you."
-  },
-  {
-    icon: Trophy,
-    title: "Explore tracks and championships",
-    description:
-      "Follow the venues, series, and rivalries that make each weekend worth watching."
-  },
-  {
-    icon: CalendarDays,
-    title: "Plan your calendar",
-    description:
-      "Use calendar and timeline views to see what is coming up this month and beyond."
-  },
-  {
-    icon: Search,
-    title: "Follow what matters",
-    description:
-      "Track races, racers, tracks, and championships so the next event is always easy to find."
-  }
-];
-
-function getCountdownLabel(startDate: string) {
-  const now = new Date();
-  const start = new Date(startDate);
-  const diff = start.getTime() - now.getTime();
-
-  if (diff <= 0) {
-    return "happening now";
-  }
-
-  const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-  return `in ${days} day${days === 1 ? "" : "s"}`;
-}
+import { formatRelativeRaceTiming, getHomepageData } from "@/lib/discovery";
 
 export default async function HomePage() {
   const session = await auth();
@@ -71,7 +31,7 @@ export default async function HomePage() {
                   Find races. Follow drivers. Never miss an event.
                 </h1>
                 <p className="mt-5 max-w-2xl text-sm leading-7 text-slate-200 sm:text-base">
-                  Explore upcoming races, discover tracks, and follow the series you care about.
+                  Explore races, tracks, and championships — all in one place.
                 </p>
                 <div className="mt-8 flex flex-wrap gap-3">
                   <Link
@@ -80,13 +40,8 @@ export default async function HomePage() {
                   >
                     Browse Races
                   </Link>
-                  <Link
-                    href="/races?view=map"
-                    className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm font-semibold text-white transition duration-200 hover:bg-white/15"
-                  >
-                    Explore Map
-                  </Link>
                 </div>
+                <p className="mt-5 text-sm font-medium text-blue-100">{home.statLine}</p>
               </div>
 
               <div className="mt-10 grid gap-4 md:grid-cols-3">
@@ -117,7 +72,7 @@ export default async function HomePage() {
                 {home.nextTrackedRace.name}
               </h2>
               <p className="mt-3 text-sm leading-7 text-apex-muted">
-                {home.nextTrackedRace.trackName} in {home.nextTrackedRace.location} {getCountdownLabel(home.nextTrackedRace.startDate)}.
+                {home.nextTrackedRace.trackName} in {home.nextTrackedRace.location} {formatRelativeRaceTiming(home.nextTrackedRace.startDate)}.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
@@ -193,19 +148,38 @@ export default async function HomePage() {
       </section>
 
       <section className="glass-border rounded-[28px] bg-white/80 p-6 shadow-panel">
-        <SectionHeading
-          eyebrow="Capabilities"
-          title="What you can do"
-          description="Everything on the platform is built to help you decide what to watch next."
-        />
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          {whatYouCanDo.map((item) => (
-            <div key={item.title} className="rounded-[22px] bg-slate-50 p-5">
-              <item.icon className="h-6 w-6 text-apex-blue" />
-              <h3 className="mt-4 text-xl font-bold text-apex-slate">{item.title}</h3>
-              <p className="mt-2 text-sm leading-6 text-apex-muted">{item.description}</p>
+        <div className="grid gap-4 lg:grid-cols-[0.95fr_1.05fr]">
+          <div className="rounded-[24px] bg-slate-950 p-6 text-white">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-blue-200">
+              Track in one place
+            </p>
+            <h2 className="mt-4 text-3xl font-bold tracking-tight">
+              Track races, drivers, and tracks in one place
+            </h2>
+            <p className="mt-4 max-w-xl text-sm leading-7 text-slate-300">
+              Keep the series you follow close, spot the next weekend faster, and come back when the next race is near.
+            </p>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-3">
+            <div className="rounded-[22px] bg-slate-50 p-5">
+              <CalendarDays className="h-6 w-6 text-apex-blue" />
+              <h3 className="mt-4 text-xl font-bold text-apex-slate">Upcoming this week</h3>
+              <p className="mt-2 text-3xl font-bold text-apex-slate">{String(home.upcomingThisWeek.length).padStart(2, "0")}</p>
+              <p className="mt-2 text-sm leading-6 text-apex-muted">Race weekends starting in the next seven days.</p>
             </div>
-          ))}
+            <div className="rounded-[22px] bg-slate-50 p-5">
+              <MapPinned className="h-6 w-6 text-apex-blue" />
+              <h3 className="mt-4 text-xl font-bold text-apex-slate">Mapped venues</h3>
+              <p className="mt-2 text-3xl font-bold text-apex-slate">{home.metrics[2]?.value}</p>
+              <p className="mt-2 text-sm leading-6 text-apex-muted">Tracks ready for fast geographic discovery.</p>
+            </div>
+            <div className="rounded-[22px] bg-slate-50 p-5">
+              <Trophy className="h-6 w-6 text-apex-blue" />
+              <h3 className="mt-4 text-xl font-bold text-apex-slate">Live series mix</h3>
+              <p className="mt-2 text-3xl font-bold text-apex-slate">{home.metrics[0]?.value}</p>
+              <p className="mt-2 text-sm leading-6 text-apex-muted">Championships available to browse and track.</p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -246,6 +220,91 @@ export default async function HomePage() {
                   {race.location}
                 </p>
               </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="grid gap-6 xl:grid-cols-2">
+        <div className="glass-border rounded-[28px] bg-white/80 p-6 shadow-panel">
+          <SectionHeading
+            eyebrow="Signals"
+            title="Upcoming this week"
+            description="A fast way to see what is about to happen next."
+          />
+          <div className="space-y-3">
+            {home.upcomingThisWeek.length > 0 ? (
+              home.upcomingThisWeek.map((race) => (
+                <Link
+                  key={race.id}
+                  href={`/races/${race.slug}`}
+                  className="flex items-center justify-between gap-4 rounded-[20px] bg-slate-50 px-4 py-4 transition duration-200 hover:bg-slate-100"
+                >
+                  <div>
+                    <p className="font-semibold text-apex-slate">{race.name}</p>
+                    <p className="mt-1 text-sm text-apex-muted">
+                      {race.trackName} • {race.championshipName}
+                    </p>
+                  </div>
+                  <span className="text-sm font-semibold text-apex-blue">
+                    {formatRelativeRaceTiming(race.startDate)}
+                  </span>
+                </Link>
+              ))
+            ) : (
+              <p className="text-sm text-apex-muted">New race weekends will appear here as the calendar fills out.</p>
+            )}
+          </div>
+        </div>
+
+        <div className="glass-border rounded-[28px] bg-white/80 p-6 shadow-panel">
+          <SectionHeading
+            eyebrow="Signals"
+            title="Popular tracks"
+            description="A quick look at the venues appearing most often across the schedule."
+          />
+          <div className="space-y-3">
+            {home.popularTracks.map((track) => (
+              <Link
+                key={track.id}
+                href={`/tracks/${track.slug}`}
+                className="flex items-center justify-between gap-4 rounded-[20px] bg-slate-50 px-4 py-4 transition duration-200 hover:bg-slate-100"
+              >
+                <div>
+                  <p className="font-semibold text-apex-slate">{track.name}</p>
+                  <p className="mt-1 text-sm text-apex-muted">
+                    {track.location}, {track.country}
+                  </p>
+                </div>
+                <span className="rounded-full bg-white px-3 py-2 text-sm font-semibold text-apex-slate">
+                  {track.raceCount} races
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="glass-border rounded-[28px] bg-white/80 p-6 shadow-panel">
+        <SectionHeading
+          eyebrow="Signals"
+          title="Recently added races"
+          description="Fresh additions from the latest calendar and admin updates."
+        />
+        <div className="grid gap-4 md:grid-cols-3">
+          {home.recentlyAdded.map((race) => (
+            <Link
+              key={race.id}
+              href={`/races/${race.slug}`}
+              className="glass-border rounded-[22px] bg-white p-5 shadow-panel transition duration-200 hover:-translate-y-1"
+            >
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-apex-muted">
+                {race.championshipName}
+              </p>
+              <h3 className="mt-2 text-xl font-bold text-apex-slate">{race.name}</h3>
+              <p className="mt-3 text-sm text-apex-muted">
+                {race.trackName} • {race.date}
+              </p>
             </Link>
           ))}
         </div>
