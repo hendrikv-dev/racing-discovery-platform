@@ -27,20 +27,20 @@ export function SiteHeader() {
     : defaultNavigation.filter((item) => item.href !== "/my-tracking" || isAuthenticated);
 
   return (
-    <header className="glass-border sticky top-4 z-50 mb-8 rounded-[20px] bg-white/80 px-5 py-4 shadow-panel backdrop-blur-xl">
+    <header className="glass-border sticky top-4 z-50 mb-8 rounded-2xl bg-zinc-900/88 px-5 py-4 shadow-panel backdrop-blur-xl">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <Link
           href={isComingSoon ? "/coming-soon" : "/"}
           className="flex shrink-0 items-center gap-3 self-start"
         >
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-apex-slate text-sm font-semibold uppercase tracking-[0.3em] text-white">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-red-600 text-sm font-semibold uppercase tracking-[0.3em] text-white">
             RP
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-apex-muted">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-400">
               Racing Platform
             </p>
-            <p className="text-lg font-bold text-apex-slate">
+            <p className="text-lg font-semibold text-zinc-50">
               {isComingSoon ? "Launching Soon" : "Racing Platform"}
             </p>
           </div>
@@ -52,16 +52,16 @@ export function SiteHeader() {
               <SearchTypeahead />
             </div>
           )}
-          <nav className="flex flex-wrap items-center gap-2 text-sm text-apex-muted">
+          <nav className="flex flex-wrap items-center gap-2 text-sm text-zinc-300">
             {navigation.map((item) => (
               "href" in item ? (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`rounded-full px-4 py-2 transition duration-200 hover:-translate-y-0.5 ${
-                    "primary" in item && item.primary
-                      ? "bg-slate-900 font-semibold text-white hover:bg-apex-blue"
-                      : "hover:bg-slate-900 hover:text-white"
+                  className={`rounded-xl border px-4 py-2 transition duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 ${
+                    pathname === item.href
+                      ? "border-red-500 bg-red-600 text-white"
+                      : "border-zinc-700 bg-zinc-900 text-zinc-300 hover:bg-zinc-800 hover:border-zinc-600 hover:text-white"
                   }`}
                 >
                   {item.label}
@@ -69,7 +69,7 @@ export function SiteHeader() {
               ) : (
                 <span
                   key={item.label}
-                  className="px-4 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-apex-muted"
+                  className="px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-400"
                 >
                   {item.label}
                 </span>
@@ -82,33 +82,33 @@ export function SiteHeader() {
               {isAdminEmail(session.user.email) ? (
                 <Link
                   href="/admin"
-                  className="rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-apex-blue transition duration-200 hover:-translate-y-0.5"
+                  className="rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm font-semibold text-zinc-100 transition duration-150 hover:border-zinc-600 hover:bg-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
                 >
                   Admin
                 </Link>
               ) : null}
-              <span className="rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-apex-slate">
+              <span className="rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-100">
                 {session.user.name ?? session.user.email}
               </span>
               <button
                 type="button"
                 onClick={() => signOut({ callbackUrl: "/" })}
-                className="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition duration-200 hover:bg-apex-blue"
+                className="inline-flex items-center justify-center rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition duration-150 hover:bg-red-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
               >
                 Sign Out
               </button>
             </div>
           ) : (
-            <nav className="flex flex-wrap items-center gap-2 text-sm text-apex-muted">
+            <nav className="flex flex-wrap items-center gap-2 text-sm text-zinc-300">
               <Link
                 href="/login"
-                className="rounded-full px-4 py-2 text-sm transition duration-200 hover:-translate-y-0.5 hover:bg-slate-900 hover:text-white"
+                className="inline-flex items-center justify-center rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-2 text-sm font-medium text-zinc-100 transition duration-150 hover:bg-zinc-800 hover:border-zinc-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
               >
                 Log In
               </Link>
               <Link
                 href="/signup"
-                className="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition duration-200 hover:bg-apex-blue"
+                className="inline-flex items-center justify-center rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition duration-150 hover:bg-red-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
               >
                 Sign Up
               </Link>

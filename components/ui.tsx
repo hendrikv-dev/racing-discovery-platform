@@ -15,20 +15,20 @@ export function SectionHeading({
   href?: string;
 }) {
   return (
-    <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
       <div className="max-w-2xl">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.32em] text-apex-muted">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-red-500">
           {eyebrow}
         </p>
-        <h2 className="text-3xl font-bold tracking-tight text-apex-slate md:text-4xl">
+        <h2 className="text-3xl font-semibold tracking-tight text-zinc-50 md:text-5xl">
           {title}
         </h2>
-        <p className="mt-3 text-sm leading-6 text-apex-muted md:text-base">{description}</p>
+        <p className="mt-3 max-w-2xl text-base leading-7 text-zinc-300 md:text-lg">{description}</p>
       </div>
       {href ? (
         <Link
           href={href}
-          className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-sm font-medium text-white transition duration-200 hover:-translate-y-0.5"
+          className="inline-flex items-center gap-2 rounded-xl border border-zinc-700 bg-zinc-900/70 px-5 py-3 text-sm font-medium text-zinc-100 transition duration-150 hover:bg-zinc-800 hover:border-zinc-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
         >
           Explore more
           <ArrowRight className="h-4 w-4" />
@@ -40,13 +40,13 @@ export function SectionHeading({
 
 export function StatusBadge({ status }: { status: RaceStatus }) {
   const styles: Record<RaceStatus, string> = {
-    Live: "bg-red-50 text-apex-alert ring-red-100",
-    Upcoming: "bg-blue-50 text-apex-blue ring-blue-100",
-    Completed: "bg-slate-100 text-slate-700 ring-slate-200"
+    Live: "border-red-500/40 bg-red-500/15 text-red-200",
+    Upcoming: "border-red-500/30 bg-red-500/10 text-red-300",
+    Completed: "border-zinc-600 bg-zinc-800 text-zinc-300"
   };
 
   return (
-    <span className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ring-1 ${styles[status]}`}>
+    <span className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium ${styles[status]}`}>
       <Dot className="h-4 w-4" />
       {status}
     </span>
@@ -63,10 +63,10 @@ export function MetricCard({
   detail: string;
 }) {
   return (
-    <div className="glass-border rounded-[20px] bg-white/80 p-5 shadow-panel backdrop-blur-sm">
-      <p className="text-xs font-semibold uppercase tracking-[0.22em] text-apex-muted">{label}</p>
-      <p className="mt-4 text-4xl font-bold text-apex-slate">{value}</p>
-      <p className="mt-2 text-sm leading-6 text-apex-muted">{detail}</p>
+    <div className="glass-border rounded-2xl bg-zinc-900/80 p-5 shadow-[0_8px_30px_rgba(0,0,0,0.18)] backdrop-blur-sm">
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-400">{label}</p>
+      <p className="mt-4 text-4xl font-semibold text-zinc-50">{value}</p>
+      <p className="mt-2 text-sm leading-6 text-zinc-300">{detail}</p>
     </div>
   );
 }

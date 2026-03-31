@@ -97,15 +97,15 @@ export function RaceFilters({ defaults, options }: RaceFilterProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid gap-4">
+    <form onSubmit={handleSubmit} className="glass-border grid gap-4 rounded-2xl bg-zinc-900/70 p-3 shadow-sm md:p-4">
       <div className="grid gap-4 lg:grid-cols-[1.3fr_repeat(3,minmax(0,1fr))]">
-        <label className="glass-border flex items-center gap-3 rounded-[20px] bg-slate-50 px-4 py-3">
-          <Search className="h-5 w-5 text-apex-muted" />
+        <label className="glass-border flex h-11 items-center gap-3 rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3">
+          <Search className="h-5 w-5 text-zinc-400" />
           <input
             aria-label="Search races"
             value={formValues.q}
             onChange={(event) => setFormValues((current) => ({ ...current, q: event.target.value }))}
-            className="w-full bg-transparent text-sm outline-none placeholder:text-apex-muted"
+            className="w-full bg-transparent text-sm text-zinc-100 outline-none placeholder:text-zinc-500"
             placeholder="Search races, championships, tracks"
           />
         </label>
@@ -113,7 +113,7 @@ export function RaceFilters({ defaults, options }: RaceFilterProps) {
         <select
           value={formValues.status}
           onChange={(event) => setFormValues((current) => ({ ...current, status: event.target.value }))}
-          className="rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-apex-slate outline-none transition duration-200 focus:border-apex-blue focus:bg-white"
+          className="h-11 rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 pr-10 text-sm text-zinc-100 outline-none transition duration-150 focus:border-red-500 focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
         >
           <option value="">All statuses</option>
           <option value="LIVE">Live</option>
@@ -124,7 +124,7 @@ export function RaceFilters({ defaults, options }: RaceFilterProps) {
         <select
           value={formValues.championship}
           onChange={(event) => setFormValues((current) => ({ ...current, championship: event.target.value }))}
-          className="rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-apex-slate outline-none transition duration-200 focus:border-apex-blue focus:bg-white"
+          className="h-11 rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 pr-10 text-sm text-zinc-100 outline-none transition duration-150 focus:border-red-500 focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
         >
           <option value="">All championships</option>
           {options.championships.map((championship) => (
@@ -137,7 +137,7 @@ export function RaceFilters({ defaults, options }: RaceFilterProps) {
         <select
           value={formValues.series}
           onChange={(event) => setFormValues((current) => ({ ...current, series: event.target.value }))}
-          className="rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-apex-slate outline-none transition duration-200 focus:border-apex-blue focus:bg-white"
+          className="h-11 rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 pr-10 text-sm text-zinc-100 outline-none transition duration-150 focus:border-red-500 focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
         >
           <option value="">All series</option>
           {options.series.map((series) => (
@@ -152,7 +152,7 @@ export function RaceFilters({ defaults, options }: RaceFilterProps) {
         <select
           value={formValues.sort}
           onChange={(event) => setFormValues((current) => ({ ...current, sort: event.target.value }))}
-          className="rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-apex-slate outline-none transition duration-200 focus:border-apex-blue focus:bg-white"
+          className="h-11 rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 pr-10 text-sm text-zinc-100 outline-none transition duration-150 focus:border-red-500 focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
         >
           <option value="">Sort by upcoming</option>
           <option value="nearest">Sort by nearest</option>
@@ -161,24 +161,24 @@ export function RaceFilters({ defaults, options }: RaceFilterProps) {
           type="date"
           value={formValues.start}
           onChange={(event) => setFormValues((current) => ({ ...current, start: event.target.value }))}
-          className="rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-apex-slate outline-none transition duration-200 focus:border-apex-blue focus:bg-white"
+          className="h-11 rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 text-sm text-zinc-100 outline-none transition duration-150 focus:border-red-500 focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
         />
         <input
           type="date"
           value={formValues.end}
           onChange={(event) => setFormValues((current) => ({ ...current, end: event.target.value }))}
-          className="rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-apex-slate outline-none transition duration-200 focus:border-apex-blue focus:bg-white"
+          className="h-11 rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 text-sm text-zinc-100 outline-none transition duration-150 focus:border-red-500 focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
         />
         <input
           value={formValues.location}
           onChange={(event) => setFormValues((current) => ({ ...current, location: event.target.value }))}
-          className="rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-apex-slate outline-none transition duration-200 focus:border-apex-blue focus:bg-white"
+          className="h-11 rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 text-sm text-zinc-100 outline-none transition duration-150 focus:border-red-500 focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
           placeholder="Filter by location"
         />
         <select
           value={formValues.track}
           onChange={(event) => setFormValues((current) => ({ ...current, track: event.target.value }))}
-          className="rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-apex-slate outline-none transition duration-200 focus:border-apex-blue focus:bg-white"
+          className="h-11 rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 pr-10 text-sm text-zinc-100 outline-none transition duration-150 focus:border-red-500 focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
         >
           <option value="">All tracks</option>
           {options.tracks.map((track) => (
@@ -193,14 +193,14 @@ export function RaceFilters({ defaults, options }: RaceFilterProps) {
         <button
           type="submit"
           disabled={isPending}
-          className="rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition duration-200 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70"
+          className="inline-flex items-center justify-center rounded-xl bg-red-600 px-5 py-3 text-sm font-medium text-white shadow-sm transition duration-150 hover:bg-red-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 disabled:cursor-not-allowed disabled:opacity-70"
         >
           {isPending ? "Applying..." : "Apply Filters"}
         </button>
         <button
           type="button"
           onClick={handleReset}
-          className="rounded-full bg-slate-100 px-5 py-3 text-sm font-semibold text-apex-slate transition duration-200 hover:-translate-y-0.5"
+          className="inline-flex items-center justify-center rounded-xl border border-zinc-700 bg-zinc-900 px-5 py-3 text-sm font-medium text-zinc-100 transition duration-150 hover:bg-zinc-800 hover:border-zinc-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
         >
           Clear All Filters
         </button>
