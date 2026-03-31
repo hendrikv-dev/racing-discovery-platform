@@ -27,13 +27,13 @@ export function SiteHeader() {
     : defaultNavigation.filter((item) => item.href !== "/my-tracking" || isAuthenticated);
 
   return (
-    <header className="glass-border sticky top-4 z-50 mb-8 rounded-2xl bg-zinc-900/88 px-5 py-4 shadow-panel backdrop-blur-xl">
+    <header className="glass-border sticky top-4 z-50 mb-8 rounded-2xl bg-[#10111A]/92 px-5 py-4 shadow-[0_12px_30px_rgba(0,0,0,0.34)] backdrop-blur-xl">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <Link
           href={isComingSoon ? "/coming-soon" : "/"}
           className="flex shrink-0 items-center gap-3 self-start"
         >
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-red-600 text-sm font-semibold uppercase tracking-[0.3em] text-white">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-violet-600 text-sm font-semibold uppercase tracking-[0.3em] text-white shadow-[0_0_24px_rgba(124,58,237,0.28)]">
             RP
           </div>
           <div>
@@ -48,7 +48,7 @@ export function SiteHeader() {
 
         <div className="flex flex-1 flex-wrap items-center justify-end gap-3">
           {isComingSoon ? null : (
-            <div className="min-w-0 w-full md:w-auto md:min-w-[220px] md:max-w-[280px]">
+            <div className="min-w-0 w-full md:w-auto md:min-w-[240px] md:max-w-[320px]">
               <SearchTypeahead />
             </div>
           )}
@@ -58,10 +58,10 @@ export function SiteHeader() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`rounded-xl border px-4 py-2 transition duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 ${
+                  className={`rounded-xl border px-4 py-2 transition duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F] ${
                     pathname === item.href
-                      ? "border-red-500 bg-red-600 text-white"
-                      : "border-zinc-700 bg-zinc-900 text-zinc-300 hover:bg-zinc-800 hover:border-zinc-600 hover:text-white"
+                      ? "border-violet-500 bg-violet-600 text-white shadow-[0_0_18px_rgba(124,58,237,0.24)]"
+                      : "border-white/10 bg-white/5 text-zinc-300 hover:border-white/20 hover:bg-white/10 hover:text-white"
                   }`}
                 >
                   {item.label}
@@ -82,18 +82,18 @@ export function SiteHeader() {
               {isAdminEmail(session.user.email) ? (
                 <Link
                   href="/admin"
-                  className="rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm font-semibold text-zinc-100 transition duration-150 hover:border-zinc-600 hover:bg-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+                  className="secondary-action rounded-xl px-4 py-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
                 >
                   Admin
                 </Link>
               ) : null}
-              <span className="rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-100">
+              <span className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-zinc-100">
                 {session.user.name ?? session.user.email}
               </span>
               <button
                 type="button"
                 onClick={() => signOut({ callbackUrl: "/" })}
-                className="inline-flex items-center justify-center rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition duration-150 hover:bg-red-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+                className="primary-action inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-medium shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
               >
                 Sign Out
               </button>
@@ -102,13 +102,13 @@ export function SiteHeader() {
             <nav className="flex flex-wrap items-center gap-2 text-sm text-zinc-300">
               <Link
                 href="/login"
-                className="inline-flex items-center justify-center rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-2 text-sm font-medium text-zinc-100 transition duration-150 hover:bg-zinc-800 hover:border-zinc-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+                className="secondary-action inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
               >
                 Log In
               </Link>
               <Link
                 href="/signup"
-                className="inline-flex items-center justify-center rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition duration-150 hover:bg-red-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+                className="primary-action inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-medium shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
               >
                 Sign Up
               </Link>

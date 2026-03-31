@@ -63,13 +63,13 @@ export function TimelineView({ races }: { races: DiscoveryRace[] }) {
   }, {});
 
   return (
-    <section className="glass-border rounded-[28px] bg-white/85 p-6 shadow-panel">
+    <section className="surface-panel rounded-[28px] p-6">
       <div className="mb-6 flex items-center justify-between gap-3">
-        <p className="text-sm font-medium text-apex-muted">Sort the timeline</p>
+        <p className="text-sm font-medium text-zinc-300">Sort the timeline</p>
         <select
           value={sort}
           onChange={(event) => setSort(event.target.value as TimelineSort)}
-          className="rounded-full border border-slate-200 bg-white px-4 py-2 pr-10 text-sm text-apex-slate outline-none transition duration-200 focus:border-apex-blue"
+          className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 pr-12 text-sm text-zinc-100 outline-none transition duration-150 focus:border-violet-400 focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
         >
           <option value="month-asc">Earliest month first</option>
           <option value="month-desc">Latest month first</option>
@@ -80,18 +80,18 @@ export function TimelineView({ races }: { races: DiscoveryRace[] }) {
         {Object.entries(groups).map(([month, monthRaces]) => (
           <div key={month}>
             <div className="mb-5 flex items-center gap-3">
-              <div className="h-px flex-1 bg-slate-200" />
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-apex-muted">
+              <div className="h-px flex-1 bg-white/10" />
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-400">
                 {month}
               </p>
-              <div className="h-px flex-1 bg-slate-200" />
+              <div className="h-px flex-1 bg-white/10" />
             </div>
 
             <div className="space-y-4">
               {monthRaces.map((race) => (
                 <div key={race.id} className="grid gap-4 md:grid-cols-[140px_1fr]">
                   <div
-                    className="relative overflow-hidden rounded-[18px] bg-slate-100 px-4 py-4 text-sm font-semibold text-white"
+                    className="relative overflow-hidden rounded-[18px] bg-zinc-900 px-4 py-4 text-sm font-semibold text-white shadow-[0_10px_30px_rgba(0,0,0,0.34)]"
                     style={{
                       backgroundImage: `linear-gradient(180deg, rgba(15, 15, 15, 0.28), rgba(15, 15, 15, 0.82)), url('${race.image}')`,
                       backgroundSize: "cover",
@@ -99,7 +99,7 @@ export function TimelineView({ races }: { races: DiscoveryRace[] }) {
                     }}
                   >
                     <div className="relative flex min-h-[116px] flex-col justify-end">
-                      <span className="text-xs font-semibold uppercase tracking-[0.24em] text-red-200">
+                      <span className="text-xs font-semibold uppercase tracking-[0.24em] text-teal-200">
                         Race Date
                       </span>
                       <span className="mt-2 text-2xl font-bold">{getDateLabel(race.startDate)}</span>
@@ -108,30 +108,30 @@ export function TimelineView({ races }: { races: DiscoveryRace[] }) {
                   <div
                     className={`rounded-[22px] border p-5 ${
                       nextUpcomingRace === race.id
-                        ? "border-blue-200 bg-blue-50/70"
-                        : "border-slate-200 bg-white"
+                        ? "border-violet-400/30 bg-violet-500/10"
+                        : "border-white/10 bg-white/5"
                     }`}
                   >
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div>
-                        <h2 className="text-xl font-bold text-apex-slate">{race.name}</h2>
-                        <p className="mt-1 text-sm text-apex-muted">
+                        <h2 className="text-xl font-bold text-zinc-50">{race.name}</h2>
+                        <p className="mt-1 text-sm text-zinc-300">
                           {race.championshipName} • {race.trackName}
                         </p>
                       </div>
-                      <span className="rounded-full bg-slate-100 px-3 py-2 text-sm font-medium text-apex-slate">
+                      <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm font-medium text-zinc-200">
                         {race.status}
                       </span>
                     </div>
-                    <p className="mt-3 text-sm leading-6 text-apex-muted">{race.location}</p>
+                    <p className="mt-3 text-sm leading-6 text-zinc-300">{race.location}</p>
                     {race.isTracked ? (
-                      <p className="mt-3 text-xs font-semibold uppercase tracking-[0.2em] text-apex-blue">
+                      <p className="mt-3 text-xs font-semibold uppercase tracking-[0.2em] text-violet-200">
                         Tracked race
                       </p>
                     ) : null}
                     <Link
                       href={`/races/${race.slug}`}
-                      className="mt-5 inline-flex rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition duration-200 hover:bg-apex-blue"
+                      className="primary-action mt-5 inline-flex rounded-xl px-4 py-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
                     >
                       Open Race
                     </Link>

@@ -24,14 +24,14 @@ function SearchResultCard({
   return (
     <Link
       href={href}
-      className="glass-border block rounded-[20px] bg-white/85 px-4 py-4 shadow-panel transition duration-200 hover:-translate-y-0.5"
+      className="surface-card block rounded-[20px] px-4 py-4 transition duration-150 hover:-translate-y-0.5 hover:border-white/20 hover:shadow-[0_12px_36px_rgba(0,0,0,0.34)]"
     >
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="font-semibold text-apex-slate">{title}</p>
-          <p className="mt-1 text-sm text-apex-muted">{detail}</p>
+          <p className="font-semibold text-zinc-50">{title}</p>
+          <p className="mt-1 text-sm text-zinc-300">{detail}</p>
         </div>
-        {meta ? <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-apex-slate">{meta}</span> : null}
+        {meta ? <span className="surface-chip rounded-full px-3 py-1 text-xs font-medium text-zinc-100">{meta}</span> : null}
       </div>
     </Link>
   );
@@ -41,20 +41,20 @@ function RaceResultItem({ race }: { race: SearchRaceResult }) {
   return (
     <Link
       href={race.href}
-      className="glass-border block rounded-[20px] bg-white/85 p-4 shadow-panel transition duration-200 hover:-translate-y-0.5"
+      className="surface-card block rounded-[20px] p-4 transition duration-150 hover:-translate-y-0.5 hover:border-white/20 hover:shadow-[0_12px_36px_rgba(0,0,0,0.34)]"
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-lg font-bold text-apex-slate">{race.name}</p>
-          <p className="mt-1 text-sm text-apex-muted">
+          <p className="text-lg font-bold text-zinc-50">{race.name}</p>
+          <p className="mt-1 text-sm text-zinc-300">
             {race.date} • {race.trackName}
           </p>
         </div>
         <StatusBadge status={race.status} />
       </div>
-      <div className="mt-4 flex flex-wrap gap-2 text-sm text-apex-slate">
-        <span className="rounded-full bg-slate-100 px-3 py-2">{race.trackName}</span>
-        <span className="rounded-full bg-slate-100 px-3 py-2">{race.championshipName}</span>
+      <div className="mt-4 flex flex-wrap gap-2 text-sm text-zinc-200">
+        <span className="surface-chip rounded-full px-3 py-2">{race.trackName}</span>
+        <span className="surface-chip rounded-full px-3 py-2">{race.championshipName}</span>
       </div>
     </Link>
   );
@@ -99,8 +99,8 @@ export function SearchSection({
   children: ReactNode;
 }) {
   return (
-    <section className="glass-border rounded-[24px] bg-white/85 p-5 shadow-panel">
-      <h2 className="text-2xl font-bold text-apex-slate">{title}</h2>
+    <section className="surface-panel rounded-[24px] p-5">
+      <h2 className="text-2xl font-bold text-zinc-50">{title}</h2>
       <div className="mt-4 space-y-3">{children}</div>
     </section>
   );
@@ -114,9 +114,9 @@ export function SearchEmptyState({
   hasFilters: boolean;
 }) {
   return (
-    <div className="glass-border rounded-[24px] bg-white/80 p-8 text-center shadow-panel">
-      <h2 className="text-2xl font-bold text-apex-slate">No results found for &quot;{query}&quot;</h2>
-      <p className="mt-3 text-sm leading-6 text-apex-muted">
+    <div className="rounded-[24px] border border-dashed border-white/10 bg-white/5 p-8 text-center shadow-[0_10px_30px_rgba(0,0,0,0.28)]">
+      <h2 className="text-2xl font-bold text-zinc-50">No results found for &quot;{query}&quot;</h2>
+      <p className="mt-3 text-sm leading-6 text-zinc-300">
         No results. Try a different search{hasFilters ? " or clear a filter." : "."}
       </p>
     </div>

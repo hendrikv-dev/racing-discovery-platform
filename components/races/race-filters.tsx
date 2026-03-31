@@ -97,9 +97,9 @@ export function RaceFilters({ defaults, options }: RaceFilterProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="glass-border grid gap-4 rounded-2xl bg-zinc-900/70 p-3 shadow-sm md:p-4">
+    <form onSubmit={handleSubmit} className="surface-panel grid gap-4 rounded-2xl p-3 md:p-4">
       <div className="grid gap-4 lg:grid-cols-[1.3fr_repeat(3,minmax(0,1fr))]">
-        <label className="glass-border flex h-11 items-center gap-3 rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3">
+        <label className="glass-border flex h-11 items-center gap-3 rounded-xl border border-white/10 bg-[#09090F] px-4 py-3 transition duration-150 focus-within:border-violet-400/60 focus-within:ring-2 focus-within:ring-violet-400 focus-within:ring-offset-2 focus-within:ring-offset-[#09090F]">
           <Search className="h-5 w-5 text-zinc-400" />
           <input
             aria-label="Search races"
@@ -113,7 +113,7 @@ export function RaceFilters({ defaults, options }: RaceFilterProps) {
         <select
           value={formValues.status}
           onChange={(event) => setFormValues((current) => ({ ...current, status: event.target.value }))}
-          className="h-11 rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 pr-10 text-sm text-zinc-100 outline-none transition duration-150 focus:border-red-500 focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+          className="h-11 rounded-xl border border-white/10 bg-[#09090F] px-4 py-3 pr-10 text-sm text-zinc-100 outline-none transition duration-150 focus:border-violet-400 focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
         >
           <option value="">All statuses</option>
           <option value="LIVE">Live</option>
@@ -124,7 +124,7 @@ export function RaceFilters({ defaults, options }: RaceFilterProps) {
         <select
           value={formValues.championship}
           onChange={(event) => setFormValues((current) => ({ ...current, championship: event.target.value }))}
-          className="h-11 rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 pr-10 text-sm text-zinc-100 outline-none transition duration-150 focus:border-red-500 focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+          className="h-11 rounded-xl border border-white/10 bg-[#09090F] px-4 py-3 pr-10 text-sm text-zinc-100 outline-none transition duration-150 focus:border-violet-400 focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
         >
           <option value="">All championships</option>
           {options.championships.map((championship) => (
@@ -137,7 +137,7 @@ export function RaceFilters({ defaults, options }: RaceFilterProps) {
         <select
           value={formValues.series}
           onChange={(event) => setFormValues((current) => ({ ...current, series: event.target.value }))}
-          className="h-11 rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 pr-10 text-sm text-zinc-100 outline-none transition duration-150 focus:border-red-500 focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+          className="h-11 rounded-xl border border-white/10 bg-[#09090F] px-4 py-3 pr-10 text-sm text-zinc-100 outline-none transition duration-150 focus:border-violet-400 focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
         >
           <option value="">All series</option>
           {options.series.map((series) => (
@@ -152,7 +152,7 @@ export function RaceFilters({ defaults, options }: RaceFilterProps) {
         <select
           value={formValues.sort}
           onChange={(event) => setFormValues((current) => ({ ...current, sort: event.target.value }))}
-          className="h-11 rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 pr-10 text-sm text-zinc-100 outline-none transition duration-150 focus:border-red-500 focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+          className="h-11 rounded-xl border border-white/10 bg-[#09090F] px-4 py-3 pr-10 text-sm text-zinc-100 outline-none transition duration-150 focus:border-violet-400 focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
         >
           <option value="">Sort by upcoming</option>
           <option value="nearest">Sort by nearest</option>
@@ -161,24 +161,24 @@ export function RaceFilters({ defaults, options }: RaceFilterProps) {
           type="date"
           value={formValues.start}
           onChange={(event) => setFormValues((current) => ({ ...current, start: event.target.value }))}
-          className="h-11 rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 text-sm text-zinc-100 outline-none transition duration-150 focus:border-red-500 focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+          className="h-11 rounded-xl border border-white/10 bg-[#09090F] px-4 py-3 text-sm text-zinc-100 outline-none transition duration-150 focus:border-violet-400 focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
         />
         <input
           type="date"
           value={formValues.end}
           onChange={(event) => setFormValues((current) => ({ ...current, end: event.target.value }))}
-          className="h-11 rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 text-sm text-zinc-100 outline-none transition duration-150 focus:border-red-500 focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+          className="h-11 rounded-xl border border-white/10 bg-[#09090F] px-4 py-3 text-sm text-zinc-100 outline-none transition duration-150 focus:border-violet-400 focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
         />
         <input
           value={formValues.location}
           onChange={(event) => setFormValues((current) => ({ ...current, location: event.target.value }))}
-          className="h-11 rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 text-sm text-zinc-100 outline-none transition duration-150 focus:border-red-500 focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+          className="h-11 rounded-xl border border-white/10 bg-[#09090F] px-4 py-3 text-sm text-zinc-100 outline-none transition duration-150 focus:border-violet-400 focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
           placeholder="Filter by location"
         />
         <select
           value={formValues.track}
           onChange={(event) => setFormValues((current) => ({ ...current, track: event.target.value }))}
-          className="h-11 rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 pr-10 text-sm text-zinc-100 outline-none transition duration-150 focus:border-red-500 focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+          className="h-11 rounded-xl border border-white/10 bg-[#09090F] px-4 py-3 pr-10 text-sm text-zinc-100 outline-none transition duration-150 focus:border-violet-400 focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
         >
           <option value="">All tracks</option>
           {options.tracks.map((track) => (
@@ -193,14 +193,14 @@ export function RaceFilters({ defaults, options }: RaceFilterProps) {
         <button
           type="submit"
           disabled={isPending}
-          className="inline-flex items-center justify-center rounded-xl bg-red-600 px-5 py-3 text-sm font-medium text-white shadow-sm transition duration-150 hover:bg-red-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 disabled:cursor-not-allowed disabled:opacity-70"
+          className="primary-action inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-medium shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F] disabled:cursor-not-allowed disabled:opacity-70"
         >
           {isPending ? "Applying..." : "Apply Filters"}
         </button>
         <button
           type="button"
           onClick={handleReset}
-          className="inline-flex items-center justify-center rounded-xl border border-zinc-700 bg-zinc-900 px-5 py-3 text-sm font-medium text-zinc-100 transition duration-150 hover:bg-zinc-800 hover:border-zinc-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+          className="secondary-action inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
         >
           Clear All Filters
         </button>

@@ -26,7 +26,7 @@ function DropdownSection({
 }) {
   return (
     <div>
-      <p className="px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-apex-muted">
+      <p className="px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-zinc-400">
         {title}
       </p>
       <div className="space-y-1 px-2 pb-2">{children}</div>
@@ -55,13 +55,13 @@ function DropdownLink({
     <Link
       href={href}
       onClick={onNavigate}
-      className="block rounded-[16px] px-3 py-3 transition duration-200 hover:bg-slate-50"
+      className="block rounded-[16px] px-3 py-3 transition duration-150 hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
     >
-      <p className="font-medium text-apex-slate">
+      <p className="font-medium text-zinc-100">
         {hasMatch ? (
           <>
             {title.slice(0, index)}
-            <mark className="rounded bg-blue-100 px-0.5 text-apex-slate">
+            <mark className="rounded bg-violet-500/20 px-0.5 text-violet-100">
               {title.slice(index, index + needle.length)}
             </mark>
             {title.slice(index + needle.length)}
@@ -70,7 +70,7 @@ function DropdownLink({
           title
         )}
       </p>
-      <p className="mt-1 text-sm text-apex-muted">{detail}</p>
+      <p className="mt-1 text-sm text-zinc-300">{detail}</p>
     </Link>
   );
 }
@@ -181,13 +181,13 @@ export function SearchTypeahead() {
           }
         }}
         placeholder="Search everything"
-        className="bg-white"
+        className=""
       />
 
       {isOpen ? (
-        <div className="glass-border absolute left-0 right-0 top-[calc(100%+10px)] z-50 overflow-hidden rounded-[22px] bg-white/95 shadow-panel backdrop-blur-xl">
+        <div className="glass-border absolute left-0 right-0 top-[calc(100%+10px)] z-50 overflow-hidden rounded-[22px] bg-[#10111A]/96 shadow-[0_16px_40px_rgba(0,0,0,0.42)] backdrop-blur-xl">
           {isLoading ? (
-            <p className="px-4 py-4 text-sm text-apex-muted">
+            <p className="px-4 py-4 text-sm text-zinc-300">
               {query.trim().length >= 2 ? "Searching..." : "Loading top results..."}
             </p>
           ) : results && summaryCount > 0 ? (
@@ -252,11 +252,11 @@ export function SearchTypeahead() {
                   ))}
                 </DropdownSection>
               ) : null}
-              <div className="border-t border-slate-200 px-4 py-3">
+              <div className="border-t border-white/10 px-4 py-3">
                 <Link
                   href={query.trim() ? `/search?q=${encodeURIComponent(query.trim())}` : "/search"}
                   onClick={() => setIsOpen(false)}
-                  className="text-sm font-semibold text-apex-blue transition duration-200 hover:opacity-80"
+                  className="text-sm font-semibold text-violet-200 transition duration-150 hover:text-violet-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400"
                 >
                   View all results
                 </Link>
