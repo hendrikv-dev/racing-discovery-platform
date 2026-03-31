@@ -21,9 +21,9 @@ export function SearchInput({
 }) {
   return (
     <label
-      className={`glass-border flex items-center gap-3 rounded-[20px] bg-slate-50 px-4 py-3 ${className}`}
+      className={`glass-border flex min-h-11 items-center gap-3 rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 ${className}`}
     >
-      <Search className="h-5 w-5 text-apex-muted" />
+      <Search className="h-5 w-5 text-zinc-400" />
       <input
         aria-label={placeholder}
         value={value}
@@ -31,7 +31,7 @@ export function SearchInput({
         autoFocus={autoFocus}
         onKeyDown={onKeyDown}
         onFocus={onFocus}
-        className="w-full bg-transparent text-sm outline-none placeholder:text-apex-muted"
+        className="w-full bg-transparent text-sm text-zinc-100 outline-none placeholder:text-zinc-500"
         placeholder={placeholder}
       />
     </label>

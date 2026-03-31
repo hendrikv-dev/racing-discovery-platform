@@ -11,7 +11,7 @@ export default async function HomePage() {
   const home = await getHomepageData(session?.user?.id);
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-14 md:space-y-20">
       <section className="grid gap-6 lg:grid-cols-[1.25fr_0.75fr]">
         <div className="glass-border overflow-hidden rounded-[28px] bg-slate-950 text-white shadow-panel">
           <div
@@ -62,28 +62,28 @@ export default async function HomePage() {
           </div>
         </div>
 
-        <div className="glass-border rounded-[28px] bg-white/85 p-6 shadow-panel">
+        <div className="glass-border rounded-[28px] bg-zinc-900/80 p-6 shadow-panel">
           {home.nextTrackedRace ? (
             <>
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-apex-muted">
-                Next race coming up
+                Your next tracked race
               </p>
-              <h2 className="mt-3 text-3xl font-bold tracking-tight text-apex-slate">
+              <h2 className="mt-3 text-3xl font-semibold tracking-tight text-zinc-50">
                 {home.nextTrackedRace.name}
               </h2>
-              <p className="mt-3 text-sm leading-7 text-apex-muted">
+              <p className="mt-3 text-base leading-7 text-zinc-300">
                 {home.nextTrackedRace.trackName} in {home.nextTrackedRace.location} {formatRelativeRaceTiming(home.nextTrackedRace.startDate)}.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
                   href={`/races/${home.nextTrackedRace.slug}`}
-                  className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition duration-200 hover:-translate-y-0.5 hover:bg-apex-blue"
+                  className="inline-flex items-center justify-center rounded-xl bg-red-600 px-5 py-3 text-sm font-medium text-white shadow-sm transition duration-150 hover:bg-red-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
                 >
                   Open Next Race
                 </Link>
                 <Link
                   href="/my-tracking"
-                  className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-5 py-3 text-sm font-semibold text-apex-slate transition duration-200 hover:-translate-y-0.5"
+                  className="inline-flex items-center justify-center rounded-xl border border-zinc-700 bg-zinc-900 px-5 py-3 text-sm font-medium text-zinc-100 transition duration-150 hover:bg-zinc-800 hover:border-zinc-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
                 >
                   View My Tracking
                 </Link>
@@ -92,24 +92,24 @@ export default async function HomePage() {
           ) : (
             <>
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-apex-muted">
-                Search races, drivers, tracks, and championships
+                Find your next event
               </p>
-              <h2 className="mt-3 text-3xl font-bold tracking-tight text-apex-slate">
+              <h2 className="mt-3 text-3xl font-semibold tracking-tight text-zinc-50">
                 Start exploring
               </h2>
-              <p className="mt-3 text-sm leading-7 text-apex-muted">
+              <p className="mt-3 text-base leading-7 text-zinc-300">
                 Jump straight into the schedule, open the map, or search the full platform in seconds.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
                   href="/search"
-                  className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition duration-200 hover:-translate-y-0.5 hover:bg-apex-blue"
+                  className="inline-flex items-center justify-center rounded-xl bg-red-600 px-5 py-3 text-sm font-medium text-white shadow-sm transition duration-150 hover:bg-red-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
                 >
                   Open Search
                 </Link>
                 <Link
                   href="/championships"
-                  className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-5 py-3 text-sm font-semibold text-apex-slate transition duration-200 hover:-translate-y-0.5"
+                  className="inline-flex items-center justify-center rounded-xl border border-zinc-700 bg-zinc-900 px-5 py-3 text-sm font-medium text-zinc-100 transition duration-150 hover:bg-zinc-800 hover:border-zinc-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
                 >
                   Browse Championships
                 </Link>
@@ -121,7 +121,7 @@ export default async function HomePage() {
 
       <section className="glass-border rounded-[28px] bg-white/80 p-6 shadow-panel">
         <SectionHeading
-          eyebrow="Quick Entry"
+          eyebrow="Get Started"
           title="Start exploring"
           description="Pick the fastest way in and get to useful results right away."
         />
@@ -228,9 +228,9 @@ export default async function HomePage() {
       <section className="grid gap-6 xl:grid-cols-2">
         <div className="glass-border rounded-[28px] bg-white/80 p-6 shadow-panel">
           <SectionHeading
-            eyebrow="Signals"
-            title="Upcoming this week"
-            description="A fast way to see what is about to happen next."
+          eyebrow="Follow Races"
+          title="Upcoming this week"
+          description="A fast way to see what is about to happen next."
           />
           <div className="space-y-3">
             {home.upcomingThisWeek.length > 0 ? (
@@ -259,9 +259,9 @@ export default async function HomePage() {
 
         <div className="glass-border rounded-[28px] bg-white/80 p-6 shadow-panel">
           <SectionHeading
-            eyebrow="Signals"
-            title="Popular tracks"
-            description="A quick look at the venues appearing most often across the schedule."
+          eyebrow="Explore Tracks"
+          title="Popular tracks"
+          description="A quick look at the venues appearing most often across the schedule."
           />
           <div className="space-y-3">
             {home.popularTracks.map((track) => (
@@ -287,7 +287,7 @@ export default async function HomePage() {
 
       <section className="glass-border rounded-[28px] bg-white/80 p-6 shadow-panel">
         <SectionHeading
-          eyebrow="Signals"
+          eyebrow="Browse Events"
           title="Recently added races"
           description="Fresh additions from the latest calendar and admin updates."
         />
