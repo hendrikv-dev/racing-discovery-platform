@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { DiscoveryRace, RaceFilters } from "@/lib/discovery";
@@ -15,6 +16,67 @@ const viewLabels: Array<{ value: RaceViewMode; label: string; description: strin
   { value: "calendar", label: "Calendar", description: "See what is happening on each date and open the exact day you want." },
   { value: "timeline", label: "Timeline", description: "Follow the season chronologically and spot the next key race quickly." }
 ];
+
+type RaceListSort = "upcoming" | "championship" | "track" | "status";
+
+function sortRaceCards(races: DiscoveryRace[], sort: RaceListSort) {
+  const sorted = [...races];
+
+  switch (sort) {
+    case "championship":
+      return sorted.sort((left, right) =>
+        left.championshipName.localeCompare(right.championshipName) ||
+        new Date(left.startDate).getTime() - new Date(right.startDate).getTime()
+      );
+    case "track":
+      return sorted.sort((left, right) =>
+        left.trackName.localeCompare(right.trackName) ||
+        new Date(left.startDate).getTime() - new Date(right.startDate).getTime()
+      );
+    case "status": {
+      const statusOrder = { Live: 0, Upcoming: 1, Completed: 2 } as const;
+      return sorted.sort(
+        (left, right) =>
+          statusOrder[left.status] - statusOrder[right.status] ||
+          new Date(left.startDate).getTime() - new Date(right.startDate).getTime()
+      );
+    }
+    case "upcoming":
+    default:
+      return sorted.sort(
+        (left, right) => new Date(left.startDate).getTime() - new Date(right.startDate).getTime()
+      );
+  }
+}
+
+function RaceListSortControls({
+  label,
+  value,
+  onChange,
+  options
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  options: Array<{ value: string; label: string }>;
+}) {
+  return (
+    <div className="mb-4 flex items-center justify-between gap-3">
+      <p className="text-sm font-medium text-apex-muted">{label}</p>
+      <select
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-apex-slate outline-none transition duration-200 focus:border-apex-blue"
+      >
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}
 
 function getViewHref(view: RaceViewMode, filters: RaceFilters) {
   const params = new URLSearchParams();
@@ -61,16 +123,29 @@ function RaceListCard({
         selected ? "ring-2 ring-apex-blue" : "hover:-translate-y-1"
       }`}
     >
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-apex-muted">
-            {race.championshipName}
-          </p>
-          <h3 className="mt-2 text-xl font-bold text-apex-slate">{race.name}</h3>
+      <div className="flex items-start gap-4">
+        <div className="relative h-16 w-16 overflow-hidden rounded-2xl bg-slate-100">
+          <Image
+            src={race.image}
+            alt={`${race.name} race visual`}
+            fill
+            className="object-cover"
+            sizes="64px"
+          />
         </div>
-        <span className="rounded-full bg-slate-100 px-3 py-2 text-sm font-medium text-apex-slate">
-          {race.status}
-        </span>
+        <div className="flex-1">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-apex-muted">
+                {race.championshipName}
+              </p>
+              <h3 className="mt-2 text-xl font-bold text-apex-slate">{race.name}</h3>
+            </div>
+            <span className="rounded-full bg-slate-100 px-3 py-2 text-sm font-medium text-apex-slate">
+              {race.status}
+            </span>
+          </div>
+        </div>
       </div>
       <p className="mt-3 text-sm leading-6 text-apex-muted">{race.summary}</p>
       <div className="mt-4 flex flex-wrap gap-2 text-sm text-apex-slate">
@@ -147,27 +222,46 @@ export function RaceViewDescription({ activeView }: { activeView: RaceViewMode }
 }
 
 export function RaceListView({ races }: { races: DiscoveryRace[] }) {
+  const [sort, setSort] = useState<RaceListSort>("upcoming");
+
   if (races.length === 0) {
     return <EmptyState title="No races found" description="Try clearing one or more filters to broaden the results." />;
   }
 
+  const sortedRaces = useMemo(() => sortRaceCards(races, sort), [races, sort]);
+
   return (
-    <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-      {races.map((race) => (
-        <RaceListCard key={race.id} race={race} />
-      ))}
+    <section>
+      <RaceListSortControls
+        label="Sort the race list"
+        value={sort}
+        onChange={(value) => setSort(value as RaceListSort)}
+        options={[
+          { value: "upcoming", label: "Upcoming first" },
+          { value: "championship", label: "Championship" },
+          { value: "track", label: "Track" },
+          { value: "status", label: "Status" }
+        ]}
+      />
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        {sortedRaces.map((race) => (
+          <RaceListCard key={race.id} race={race} />
+        ))}
+      </div>
     </section>
   );
 }
 
 export function RaceMapView({ races }: { races: DiscoveryRace[] }) {
+  const [sort, setSort] = useState<RaceListSort>("upcoming");
   const [selectedRaceId, setSelectedRaceId] = useState<string | null>(races.find((race) => race.mapCoordinates)?.id ?? races[0]?.id ?? null);
-  const sortedRaces = useMemo(() => {
+  const sortedRaces = useMemo(() => sortRaceCards(races, sort), [races, sort]);
+  const orderedRaces = useMemo(() => {
     if (!selectedRaceId) {
-      return races;
+      return sortedRaces;
     }
 
-    return [...races].sort((left, right) => {
+    return [...sortedRaces].sort((left, right) => {
       if (left.id === selectedRaceId) {
         return -1;
       }
@@ -178,7 +272,7 @@ export function RaceMapView({ races }: { races: DiscoveryRace[] }) {
 
       return 0;
     });
-  }, [races, selectedRaceId]);
+  }, [selectedRaceId, sortedRaces]);
 
   if (races.length === 0) {
     return <EmptyState title="No races found" description="Adjust filters to see races on the map and in the list." />;
@@ -187,7 +281,18 @@ export function RaceMapView({ races }: { races: DiscoveryRace[] }) {
   return (
     <section className="grid gap-4 lg:grid-cols-[0.92fr_1.08fr]">
       <div className="order-2 grid gap-4 lg:order-1">
-        {sortedRaces.map((race) => (
+        <RaceListSortControls
+          label="Sort the race list"
+          value={sort}
+          onChange={(value) => setSort(value as RaceListSort)}
+          options={[
+            { value: "upcoming", label: "Upcoming first" },
+            { value: "championship", label: "Championship" },
+            { value: "track", label: "Track" },
+            { value: "status", label: "Status" }
+          ]}
+        />
+        {orderedRaces.map((race) => (
           <RaceListCard
             key={race.id}
             race={race}

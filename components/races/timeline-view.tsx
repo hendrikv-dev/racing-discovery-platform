@@ -1,4 +1,8 @@
+"use client";
+
+import Image from "next/image";
 import Link from "next/link";
+import { useMemo, useState } from "react";
 import { DiscoveryRace } from "@/lib/discovery";
 import { EmptyState } from "@/components/states";
 
@@ -18,15 +22,43 @@ function getDateLabel(date: string) {
   }).format(new Date(date));
 }
 
+type TimelineSort = "month-asc" | "month-desc" | "championship";
+
 export function TimelineView({ races }: { races: DiscoveryRace[] }) {
+  const [sort, setSort] = useState<TimelineSort>("month-asc");
+
   if (races.length === 0) {
     return <EmptyState title="No races in the timeline" description="The timeline will fill in once races match the active filters." />;
   }
 
+  const sortedRaces = useMemo(() => {
+    const timelineRaces = [...races];
+
+    if (sort === "month-desc") {
+      return timelineRaces.sort(
+        (left, right) => new Date(right.startDate).getTime() - new Date(left.startDate).getTime()
+      );
+    }
+
+    if (sort === "championship") {
+      return timelineRaces.sort((left, right) =>
+        left.championshipName.localeCompare(right.championshipName) ||
+        new Date(left.startDate).getTime() - new Date(right.startDate).getTime()
+      );
+    }
+
+    return timelineRaces.sort(
+      (left, right) => new Date(left.startDate).getTime() - new Date(right.startDate).getTime()
+    );
+  }, [races, sort]);
+
   const nextUpcomingRace =
-    races.find((race) => race.status === "Upcoming" || race.status === "Live")?.id ?? null;
-  const groups = races.reduce<Record<string, DiscoveryRace[]>>((accumulator, race) => {
-    const key = getMonthLabel(race.startDate);
+    sortedRaces.find((race) => race.status === "Upcoming" || race.status === "Live")?.id ?? null;
+  const groups = sortedRaces.reduce<Record<string, DiscoveryRace[]>>((accumulator, race) => {
+    const key =
+      sort === "championship"
+        ? `${race.championshipName} · ${getMonthLabel(race.startDate)}`
+        : getMonthLabel(race.startDate);
     accumulator[key] ??= [];
     accumulator[key].push(race);
     return accumulator;
@@ -34,6 +66,18 @@ export function TimelineView({ races }: { races: DiscoveryRace[] }) {
 
   return (
     <section className="glass-border rounded-[28px] bg-white/85 p-6 shadow-panel">
+      <div className="mb-6 flex items-center justify-between gap-3">
+        <p className="text-sm font-medium text-apex-muted">Sort the timeline</p>
+        <select
+          value={sort}
+          onChange={(event) => setSort(event.target.value as TimelineSort)}
+          className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-apex-slate outline-none transition duration-200 focus:border-apex-blue"
+        >
+          <option value="month-asc">Earliest month first</option>
+          <option value="month-desc">Latest month first</option>
+          <option value="championship">Group by championship</option>
+        </select>
+      </div>
       <div className="space-y-8">
         {Object.entries(groups).map(([month, monthRaces]) => (
           <div key={month}>
@@ -58,16 +102,29 @@ export function TimelineView({ races }: { races: DiscoveryRace[] }) {
                         : "border-slate-200 bg-white"
                     }`}
                   >
-                    <div className="flex flex-wrap items-start justify-between gap-3">
-                      <div>
-                        <h2 className="text-xl font-bold text-apex-slate">{race.name}</h2>
-                        <p className="mt-1 text-sm text-apex-muted">
-                          {race.championshipName} • {race.trackName}
-                        </p>
+                    <div className="flex flex-wrap items-start gap-4">
+                      <div className="relative h-16 w-16 overflow-hidden rounded-2xl bg-slate-100">
+                        <Image
+                          src={race.image}
+                          alt={`${race.name} race visual`}
+                          fill
+                          className="object-cover"
+                          sizes="64px"
+                        />
                       </div>
-                      <span className="rounded-full bg-slate-100 px-3 py-2 text-sm font-medium text-apex-slate">
-                        {race.status}
-                      </span>
+                      <div className="flex-1">
+                        <div className="flex flex-wrap items-start justify-between gap-3">
+                          <div>
+                            <h2 className="text-xl font-bold text-apex-slate">{race.name}</h2>
+                            <p className="mt-1 text-sm text-apex-muted">
+                              {race.championshipName} • {race.trackName}
+                            </p>
+                          </div>
+                          <span className="rounded-full bg-slate-100 px-3 py-2 text-sm font-medium text-apex-slate">
+                            {race.status}
+                          </span>
+                        </div>
+                      </div>
                     </div>
                     <p className="mt-3 text-sm leading-6 text-apex-muted">{race.location}</p>
                     {race.isTracked ? (

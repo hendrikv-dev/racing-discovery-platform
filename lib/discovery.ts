@@ -5,6 +5,7 @@ export type DiscoveryRace = {
   id: string;
   slug: string;
   name: string;
+  image: string;
   series: string;
   championshipId: string;
   championshipName: string;
@@ -346,6 +347,7 @@ export async function getRaces(filters: RaceFilters, userId?: string) {
       id: race.id,
       slug: race.slug,
       name: race.name,
+      image: race.track.image || race.championship.image,
       series: race.series,
       championshipId: race.championshipId,
       championshipName: race.championship.name,
@@ -428,6 +430,7 @@ export async function getRaceBySlug(slug: string, userId?: string) {
     id: race.id,
     slug: race.slug,
     name: race.name,
+    image: race.track.image || race.championship.image,
     series: race.series,
     championshipId: race.championshipId,
     championshipName: race.championship.name,
@@ -570,6 +573,7 @@ export async function getChampionshipBySlug(slug: string, userId?: string) {
         id: race.id,
         slug: race.slug,
         name: race.name,
+        image: race.track.image || race.championship.image,
         series: race.series,
         championshipId: race.championshipId,
         championshipName: race.championship.name,
@@ -731,6 +735,7 @@ export async function getTrackBySlug(slug: string, userId?: string) {
         id: race.id,
         slug: race.slug,
         name: race.name,
+        image: race.track.image || race.championship.image,
         series: race.series,
         championshipId: race.championshipId,
         championshipName: race.championship.name,
@@ -899,6 +904,7 @@ export async function getMyTracking(userId: string) {
       id: race.id,
       slug: race.slug,
       name: race.name,
+      image: race.track.image || race.championship.image,
       series: race.series,
       championshipId: race.championshipId,
       championshipName: race.championship.name,
@@ -1085,6 +1091,7 @@ export async function getHomepageData(userId?: string) {
         id: race.id,
         slug: race.slug,
         name: race.name,
+        image: race.track.image || race.championship.image,
         series: race.series,
         championshipId: race.championshipId,
         championshipName: race.championship.name,
