@@ -36,12 +36,12 @@ export function CalendarEventChip({
     <button
       type="button"
       onClick={onSelect}
-      className={`w-full rounded-[12px] px-2 py-1 text-left text-xs font-semibold transition duration-200 ${
+      className={`w-full rounded-[12px] px-2 py-1 text-left text-xs font-semibold transition duration-150 ${
         selected
-          ? "bg-slate-900 text-white"
+          ? "bg-violet-600 text-white"
           : race.isTracked
-            ? "bg-blue-100 text-apex-blue hover:bg-blue-200"
-            : "bg-blue-50 text-apex-blue hover:bg-blue-100"
+            ? "border border-violet-400/30 bg-violet-500/12 text-violet-200 hover:bg-violet-500/18"
+            : "border border-teal-400/20 bg-teal-500/10 text-teal-200 hover:bg-teal-500/16"
       }`}
     >
       {race.name}
@@ -68,18 +68,18 @@ export function CalendarDayCell({
     <button
       type="button"
       onClick={onSelectDay}
-      className={`min-h-[140px] rounded-[20px] border p-3 text-left transition duration-200 ${
+      className={`min-h-[140px] rounded-[20px] border p-3 text-left transition duration-150 ${
         selected
-          ? "border-slate-900 bg-slate-50"
-          : "border-slate-200 bg-white hover:-translate-y-0.5"
+          ? "border-violet-400/40 bg-violet-500/10"
+          : "border-white/10 bg-white/5 hover:-translate-y-0.5 hover:border-white/20"
       }`}
     >
       <div className="flex items-center justify-between">
-        <span className={`text-sm font-semibold ${day.getUTCMonth() === currentMonth ? "text-apex-slate" : "text-slate-400"}`}>
+        <span className={`text-sm font-semibold ${day.getUTCMonth() === currentMonth ? "text-zinc-100" : "text-zinc-500"}`}>
           {day.getUTCDate()}
         </span>
         {races.length > 0 ? (
-          <span className="rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-apex-slate">
+          <span className="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-xs font-medium text-zinc-200">
             {races.length}
           </span>
         ) : null}
@@ -151,13 +151,13 @@ export function CalendarView({ races }: { races: DiscoveryRace[] }) {
 
   return (
     <section className="space-y-4">
-      <div className="glass-border rounded-[28px] bg-white/85 p-6 shadow-panel">
+      <div className="surface-panel rounded-[28px] p-6">
         <div className="mb-6 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-apex-muted">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-400">
               Calendar View
             </p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight text-apex-slate">
+            <h2 className="mt-3 text-3xl font-bold tracking-tight text-zinc-50">
               {new Intl.DateTimeFormat("en-US", {
                 month: "long",
                 year: "numeric",
@@ -165,7 +165,7 @@ export function CalendarView({ races }: { races: DiscoveryRace[] }) {
               }).format(monthDate)}
             </h2>
           </div>
-          <p className="max-w-md text-sm leading-6 text-apex-muted">
+          <p className="max-w-md text-sm leading-6 text-zinc-300">
             Jump straight from the month view into the exact day you want to watch.
           </p>
         </div>
@@ -177,32 +177,32 @@ export function CalendarView({ races }: { races: DiscoveryRace[] }) {
         />
       </div>
 
-      <div className="glass-border rounded-[28px] bg-white/85 p-6 shadow-panel">
-        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-apex-muted">
+      <div className="surface-panel rounded-[28px] p-6">
+        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-400">
           Selected Day
         </p>
-        <h3 className="mt-3 text-2xl font-bold tracking-tight text-apex-slate">{selectedDay}</h3>
+        <h3 className="mt-3 text-2xl font-bold tracking-tight text-zinc-50">{selectedDay}</h3>
         <div className="mt-4 space-y-3">
           {selectedDayRaces.length > 0 ? (
             selectedDayRaces.map((race) => (
               <Link
                 key={race.id}
                 href={`/races/${race.slug}`}
-                className="block rounded-[20px] bg-slate-50 px-4 py-4 transition duration-200 hover:-translate-y-0.5 hover:bg-slate-100"
+                className="surface-card block rounded-[20px] px-4 py-4 transition duration-150 hover:-translate-y-0.5 hover:border-white/20 hover:shadow-[0_12px_36px_rgba(0,0,0,0.34)]"
               >
-                <p className="font-semibold text-apex-slate">{race.name}</p>
-                <p className="mt-1 text-sm text-apex-muted">
+                <p className="font-semibold text-zinc-50">{race.name}</p>
+                <p className="mt-1 text-sm text-zinc-300">
                   {race.championshipName} • {race.trackName} • {race.location}
                 </p>
                 {race.isTracked ? (
-                  <p className="mt-2 text-xs font-semibold uppercase tracking-[0.18em] text-apex-blue">
+                  <p className="mt-2 text-xs font-semibold uppercase tracking-[0.18em] text-violet-200">
                     Tracked race
                   </p>
                 ) : null}
               </Link>
             ))
           ) : (
-            <p className="text-sm text-apex-muted">No races are scheduled for that day.</p>
+            <p className="text-sm text-zinc-300">No races are scheduled for that day.</p>
           )}
         </div>
       </div>

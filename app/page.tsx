@@ -11,50 +11,57 @@ export default async function HomePage() {
   const home = await getHomepageData(session?.user?.id);
 
   return (
-    <div className="space-y-14 md:space-y-20">
+    <div className="space-y-16 md:space-y-24">
       <section className="grid gap-6 lg:grid-cols-[1.25fr_0.75fr]">
-        <div className="glass-border overflow-hidden rounded-[28px] bg-slate-950 text-white shadow-panel">
+        <div className="surface-panel overflow-hidden rounded-[28px] text-white">
           <div
             className="hero-image relative min-h-[560px] px-6 py-8 sm:px-10 sm:py-10"
             style={{
               backgroundImage:
-                "linear-gradient(135deg, rgba(2,6,23,0.88), rgba(29,78,216,0.28)), url('https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=1600&q=80')"
+                "linear-gradient(180deg, rgba(9,9,15,0.72), rgba(9,9,15,0.95)), url('https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=1600&q=80')"
             }}
           >
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/45 to-transparent" />
+            <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(124,58,237,0.18),transparent_42%),linear-gradient(225deg,rgba(20,184,166,0.12),transparent_38%)]" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#09090F] via-[#09090F]/55 to-[#09090F]/25 backdrop-blur-[2px]" />
             <div className="relative flex h-full flex-col justify-between">
               <div className="max-w-3xl">
-                <p className="mb-4 text-xs font-semibold uppercase tracking-[0.34em] text-blue-200">
+                <p className="mb-4 text-xs font-semibold uppercase tracking-[0.34em] text-violet-200">
                   Motorsports Discovery
                 </p>
                 <h1 className="max-w-2xl text-4xl font-bold tracking-tight sm:text-5xl">
                   Find races. Follow drivers. Never miss an event.
                 </h1>
-                <p className="mt-5 max-w-2xl text-sm leading-7 text-slate-200 sm:text-base">
+                <p className="mt-5 max-w-2xl text-sm leading-7 text-zinc-200 sm:text-base">
                   Explore races, tracks, and championships — all in one place.
                 </p>
                 <div className="mt-8 flex flex-wrap gap-3">
                   <Link
                     href="/races"
-                    className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-950 transition duration-200 hover:-translate-y-0.5"
+                    className="primary-action inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold shadow-[0_12px_24px_rgba(124,58,237,0.28)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
                   >
                     Browse Races
                   </Link>
+                  <Link
+                    href="/races?view=map"
+                    className="secondary-action inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
+                  >
+                    Explore Map
+                  </Link>
                 </div>
-                <p className="mt-5 text-sm font-medium text-blue-100">{home.statLine}</p>
+                <p className="mt-5 text-sm font-medium text-zinc-200">{home.statLine}</p>
               </div>
 
               <div className="mt-10 grid gap-4 md:grid-cols-3">
                 {home.metrics.map((item) => (
                   <div
                     key={item.label}
-                    className="rounded-[20px] border border-white/12 bg-white/10 p-4 backdrop-blur-sm"
+                    className="rounded-[20px] border border-white/10 bg-black/25 p-4 backdrop-blur-sm"
                   >
-                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-blue-100">
+                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-zinc-300">
                       {item.label}
                     </p>
                     <p className="mt-4 text-4xl font-bold">{item.value}</p>
-                    <p className="mt-2 text-sm leading-6 text-slate-300">{item.detail}</p>
+                    <p className="mt-2 text-sm leading-6 text-zinc-300">{item.detail}</p>
                   </div>
                 ))}
               </div>
@@ -62,10 +69,10 @@ export default async function HomePage() {
           </div>
         </div>
 
-        <div className="glass-border rounded-[28px] bg-zinc-900/80 p-6 shadow-panel">
+        <div className="surface-panel rounded-[28px] p-6">
           {home.nextTrackedRace ? (
             <>
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-apex-muted">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-violet-300">
                 Your next tracked race
               </p>
               <h2 className="mt-3 text-3xl font-semibold tracking-tight text-zinc-50">
@@ -77,13 +84,13 @@ export default async function HomePage() {
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
                   href={`/races/${home.nextTrackedRace.slug}`}
-                  className="inline-flex items-center justify-center rounded-xl bg-red-600 px-5 py-3 text-sm font-medium text-white shadow-sm transition duration-150 hover:bg-red-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+                  className="primary-action inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
                 >
                   Open Next Race
                 </Link>
                 <Link
                   href="/my-tracking"
-                  className="inline-flex items-center justify-center rounded-xl border border-zinc-700 bg-zinc-900 px-5 py-3 text-sm font-medium text-zinc-100 transition duration-150 hover:bg-zinc-800 hover:border-zinc-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+                  className="secondary-action inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
                 >
                   View My Tracking
                 </Link>
@@ -91,7 +98,7 @@ export default async function HomePage() {
             </>
           ) : (
             <>
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-apex-muted">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-violet-300">
                 Find your next event
               </p>
               <h2 className="mt-3 text-3xl font-semibold tracking-tight text-zinc-50">
@@ -103,13 +110,13 @@ export default async function HomePage() {
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
                   href="/search"
-                  className="inline-flex items-center justify-center rounded-xl bg-red-600 px-5 py-3 text-sm font-medium text-white shadow-sm transition duration-150 hover:bg-red-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+                  className="primary-action inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
                 >
                   Open Search
                 </Link>
                 <Link
                   href="/championships"
-                  className="inline-flex items-center justify-center rounded-xl border border-zinc-700 bg-zinc-900 px-5 py-3 text-sm font-medium text-zinc-100 transition duration-150 hover:bg-zinc-800 hover:border-zinc-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+                  className="secondary-action inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
                 >
                   Browse Championships
                 </Link>
@@ -119,71 +126,71 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="glass-border rounded-[28px] bg-white/80 p-6 shadow-panel">
+      <section className="surface-panel rounded-[28px] p-6">
         <SectionHeading
           eyebrow="Get Started"
           title="Start exploring"
           description="Pick the fastest way in and get to useful results right away."
         />
         <div className="grid gap-4 md:grid-cols-3">
-          <FindNearYouButton className="glass-border rounded-[22px] bg-white p-5 text-left shadow-panel transition duration-200 hover:-translate-y-1">
-            <p className="text-xl font-bold text-apex-slate">Find races near you</p>
-            <p className="mt-2 text-sm leading-6 text-apex-muted">Open the map and see the closest race weekends first.</p>
+          <FindNearYouButton className="surface-card rounded-[22px] p-5 text-left transition duration-150 hover:-translate-y-0.5 hover:border-white/20 hover:shadow-[0_12px_36px_rgba(0,0,0,0.34)]">
+            <p className="text-xl font-bold text-zinc-50">Find races near you</p>
+            <p className="mt-2 text-sm leading-6 text-zinc-300">Open the map and see the closest race weekends first.</p>
           </FindNearYouButton>
           <Link
             href="/races?view=calendar"
-            className="glass-border rounded-[22px] bg-white p-5 shadow-panel transition duration-200 hover:-translate-y-1"
+            className="surface-card rounded-[22px] p-5 transition duration-150 hover:-translate-y-0.5 hover:border-white/20 hover:shadow-[0_12px_36px_rgba(0,0,0,0.34)]"
           >
-            <p className="text-xl font-bold text-apex-slate">See what&apos;s happening this month</p>
-            <p className="mt-2 text-sm leading-6 text-apex-muted">Plan around the calendar and spot busy weekends at a glance.</p>
+            <p className="text-xl font-bold text-zinc-50">See what&apos;s happening this month</p>
+            <p className="mt-2 text-sm leading-6 text-zinc-300">Plan around the calendar and spot busy weekends at a glance.</p>
           </Link>
           <Link
             href="/search"
-            className="glass-border rounded-[22px] bg-white p-5 shadow-panel transition duration-200 hover:-translate-y-1"
+            className="surface-card rounded-[22px] p-5 transition duration-150 hover:-translate-y-0.5 hover:border-white/20 hover:shadow-[0_12px_36px_rgba(0,0,0,0.34)]"
           >
-            <p className="text-xl font-bold text-apex-slate">Search races, drivers, and tracks</p>
-            <p className="mt-2 text-sm leading-6 text-apex-muted">Jump straight to the people, venues, and series you care about.</p>
+            <p className="text-xl font-bold text-zinc-50">Search races, drivers, and tracks</p>
+            <p className="mt-2 text-sm leading-6 text-zinc-300">Jump straight to the people, venues, and series you care about.</p>
           </Link>
         </div>
       </section>
 
-      <section className="glass-border rounded-[28px] bg-white/80 p-6 shadow-panel">
+      <section className="surface-panel rounded-[28px] p-6">
         <div className="grid gap-4 lg:grid-cols-[0.95fr_1.05fr]">
-          <div className="rounded-[24px] bg-slate-950 p-6 text-white">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-blue-200">
-              Track in one place
+          <div className="surface-card-strong rounded-[24px] p-6 text-white">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-violet-300">
+              What you can do
             </p>
             <h2 className="mt-4 text-3xl font-bold tracking-tight">
-              Track races, drivers, and tracks in one place
+              Find races, explore venues, and stay close to the series you follow
             </h2>
-            <p className="mt-4 max-w-xl text-sm leading-7 text-slate-300">
-              Keep the series you follow close, spot the next weekend faster, and come back when the next race is near.
+            <p className="mt-4 max-w-xl text-sm leading-7 text-zinc-300">
+              Use the schedule, maps, and tracking tools together so the next race weekend is always easy to find.
             </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-3">
-            <div className="rounded-[22px] bg-slate-50 p-5">
-              <CalendarDays className="h-6 w-6 text-apex-blue" />
-              <h3 className="mt-4 text-xl font-bold text-apex-slate">Upcoming this week</h3>
-              <p className="mt-2 text-3xl font-bold text-apex-slate">{String(home.upcomingThisWeek.length).padStart(2, "0")}</p>
-              <p className="mt-2 text-sm leading-6 text-apex-muted">Race weekends starting in the next seven days.</p>
+            <div className="surface-card rounded-[22px] p-5">
+              <CalendarDays className="h-6 w-6 text-teal-300" />
+              <h3 className="mt-4 text-xl font-bold text-zinc-50">Browse upcoming events</h3>
+              <p className="mt-2 text-3xl font-bold text-zinc-50">{String(home.upcomingThisWeek.length).padStart(2, "0")}</p>
+              <p className="mt-2 text-sm leading-6 text-zinc-300">See what is happening this week and open the next race fast.</p>
             </div>
-            <div className="rounded-[22px] bg-slate-50 p-5">
-              <MapPinned className="h-6 w-6 text-apex-blue" />
-              <h3 className="mt-4 text-xl font-bold text-apex-slate">Mapped venues</h3>
-              <p className="mt-2 text-3xl font-bold text-apex-slate">{home.metrics[2]?.value}</p>
-              <p className="mt-2 text-sm leading-6 text-apex-muted">Tracks ready for fast geographic discovery.</p>
+            <div className="surface-card rounded-[22px] p-5">
+              <MapPinned className="h-6 w-6 text-teal-300" />
+              <h3 className="mt-4 text-xl font-bold text-zinc-50">Explore by location</h3>
+              <p className="mt-2 text-3xl font-bold text-zinc-50">{home.metrics[2]?.value}</p>
+              <p className="mt-2 text-sm leading-6 text-zinc-300">Find race weekends and tracks on the map instead of hunting through lists.</p>
             </div>
-            <div className="rounded-[22px] bg-slate-50 p-5">
-              <Trophy className="h-6 w-6 text-apex-blue" />
-              <h3 className="mt-4 text-xl font-bold text-apex-slate">Live series mix</h3>
-              <p className="mt-2 text-3xl font-bold text-apex-slate">{home.metrics[0]?.value}</p>
-              <p className="mt-2 text-sm leading-6 text-apex-muted">Championships available to browse and track.</p>
+            <div className="surface-card rounded-[22px] p-5">
+              <Trophy className="h-6 w-6 text-teal-300" />
+              <h3 className="mt-4 text-xl font-bold text-zinc-50">Follow championships</h3>
+              <p className="mt-2 text-3xl font-bold text-zinc-50">{home.metrics[0]?.value}</p>
+              <p className="mt-2 text-sm leading-6 text-zinc-300">Keep the drivers, venues, and championships you care about in one place.</p>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="glass-border rounded-[28px] bg-white/80 p-6 shadow-panel">
+      <section className="surface-panel rounded-[28px] p-6">
         <SectionHeading
           eyebrow="Upcoming Races"
           title="Upcoming races"
@@ -195,30 +202,38 @@ export default async function HomePage() {
             <Link
               key={race.id}
               href={`/races/${race.slug}`}
-              className="glass-border rounded-[22px] bg-white p-5 shadow-panel transition duration-200 hover:-translate-y-1"
+              className="surface-card overflow-hidden rounded-[22px] transition duration-150 hover:-translate-y-0.5 hover:border-white/20 hover:shadow-[0_12px_36px_rgba(0,0,0,0.34)]"
             >
+              <div
+                className="h-28 bg-cover bg-center"
+                style={{
+                  backgroundImage: `linear-gradient(to bottom, rgba(9,9,15,0.18), rgba(9,9,15,0.72)), url('${race.image}')`
+                }}
+              />
+              <div className="p-5">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-apex-muted">
+                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-zinc-400">
                     {race.championshipName}
                   </p>
-                  <h3 className="mt-2 text-xl font-bold text-apex-slate">{race.name}</h3>
+                  <h3 className="mt-2 text-xl font-bold text-zinc-50">{race.name}</h3>
                 </div>
                 <StatusBadge status={race.status} />
               </div>
-              <div className="mt-4 space-y-2 text-sm text-apex-muted">
+              <div className="mt-4 space-y-2 text-sm text-zinc-300">
                 <p className="flex items-center gap-2">
-                  <Timer className="h-4 w-4 text-apex-blue" />
+                  <Timer className="h-4 w-4 text-teal-300" />
                   {race.date}
                 </p>
                 <p className="flex items-center gap-2">
-                  <Flag className="h-4 w-4 text-apex-blue" />
+                  <Flag className="h-4 w-4 text-teal-300" />
                   {race.trackName}
                 </p>
                 <p className="flex items-center gap-2">
-                  <MapPinned className="h-4 w-4 text-apex-blue" />
+                  <MapPinned className="h-4 w-4 text-teal-300" />
                   {race.location}
                 </p>
+              </div>
               </div>
             </Link>
           ))}
@@ -226,9 +241,9 @@ export default async function HomePage() {
       </section>
 
       <section className="grid gap-6 xl:grid-cols-2">
-        <div className="glass-border rounded-[28px] bg-white/80 p-6 shadow-panel">
+        <div className="surface-panel rounded-[28px] p-6">
           <SectionHeading
-          eyebrow="Follow Races"
+          eyebrow="Upcoming This Week"
           title="Upcoming this week"
           description="A fast way to see what is about to happen next."
           />
@@ -238,26 +253,26 @@ export default async function HomePage() {
                 <Link
                   key={race.id}
                   href={`/races/${race.slug}`}
-                  className="flex items-center justify-between gap-4 rounded-[20px] bg-slate-50 px-4 py-4 transition duration-200 hover:bg-slate-100"
+                  className="surface-card flex items-center justify-between gap-4 rounded-[20px] px-4 py-4 transition duration-150 hover:-translate-y-0.5 hover:border-white/20"
                 >
                   <div>
-                    <p className="font-semibold text-apex-slate">{race.name}</p>
-                    <p className="mt-1 text-sm text-apex-muted">
+                    <p className="font-semibold text-zinc-50">{race.name}</p>
+                    <p className="mt-1 text-sm text-zinc-300">
                       {race.trackName} • {race.championshipName}
                     </p>
                   </div>
-                  <span className="text-sm font-semibold text-apex-blue">
+                  <span className="text-sm font-semibold text-teal-300">
                     {formatRelativeRaceTiming(race.startDate)}
                   </span>
                 </Link>
               ))
             ) : (
-              <p className="text-sm text-apex-muted">New race weekends will appear here as the calendar fills out.</p>
+              <p className="text-sm text-zinc-300">New race weekends will appear here as the calendar fills out.</p>
             )}
           </div>
         </div>
 
-        <div className="glass-border rounded-[28px] bg-white/80 p-6 shadow-panel">
+        <div className="surface-panel rounded-[28px] p-6">
           <SectionHeading
           eyebrow="Explore Tracks"
           title="Popular tracks"
@@ -268,15 +283,15 @@ export default async function HomePage() {
               <Link
                 key={track.id}
                 href={`/tracks/${track.slug}`}
-                className="flex items-center justify-between gap-4 rounded-[20px] bg-slate-50 px-4 py-4 transition duration-200 hover:bg-slate-100"
+                className="surface-card flex items-center justify-between gap-4 rounded-[20px] px-4 py-4 transition duration-150 hover:-translate-y-0.5 hover:border-white/20"
               >
                 <div>
-                  <p className="font-semibold text-apex-slate">{track.name}</p>
-                  <p className="mt-1 text-sm text-apex-muted">
+                  <p className="font-semibold text-zinc-50">{track.name}</p>
+                  <p className="mt-1 text-sm text-zinc-300">
                     {track.location}, {track.country}
                   </p>
                 </div>
-                <span className="rounded-full bg-white px-3 py-2 text-sm font-semibold text-apex-slate">
+                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm font-semibold text-zinc-100">
                   {track.raceCount} races
                 </span>
               </Link>
@@ -285,7 +300,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="glass-border rounded-[28px] bg-white/80 p-6 shadow-panel">
+      <section className="surface-panel rounded-[28px] p-6">
         <SectionHeading
           eyebrow="Browse Events"
           title="Recently added races"
@@ -296,13 +311,13 @@ export default async function HomePage() {
             <Link
               key={race.id}
               href={`/races/${race.slug}`}
-              className="glass-border rounded-[22px] bg-white p-5 shadow-panel transition duration-200 hover:-translate-y-1"
+              className="surface-card rounded-[22px] p-5 transition duration-150 hover:-translate-y-0.5 hover:border-white/20 hover:shadow-[0_12px_36px_rgba(0,0,0,0.34)]"
             >
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-apex-muted">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-zinc-400">
                 {race.championshipName}
               </p>
-              <h3 className="mt-2 text-xl font-bold text-apex-slate">{race.name}</h3>
-              <p className="mt-3 text-sm text-apex-muted">
+              <h3 className="mt-2 text-xl font-bold text-zinc-50">{race.name}</h3>
+              <p className="mt-3 text-sm text-zinc-300">
                 {race.trackName} • {race.date}
               </p>
             </Link>
@@ -310,33 +325,36 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="glass-border overflow-hidden rounded-[28px] bg-white/85 shadow-panel">
+      <section className="surface-panel overflow-hidden rounded-[28px]">
         <div className="grid gap-0 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="bg-slate-950 p-6 text-white sm:p-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-blue-200">
+          <div className="relative p-6 text-white sm:p-8">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(124,58,237,0.2),transparent_36%),radial-gradient(circle_at_bottom_right,rgba(20,184,166,0.16),transparent_30%)]" />
+            <div className="relative">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-violet-200">
               Explore by location
             </p>
             <h2 className="mt-4 text-3xl font-bold tracking-tight">
               Explore by location
             </h2>
-            <p className="mt-4 max-w-lg text-sm leading-7 text-slate-300">
+            <p className="mt-4 max-w-lg text-sm leading-7 text-zinc-300">
               See where races are happening and explore tracks geographically.
             </p>
             <div className="mt-6">
               <Link
                 href="/races?view=map"
-                className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-950 transition duration-200 hover:-translate-y-0.5"
+                className="primary-action inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
               >
                 Open Map View
               </Link>
             </div>
-            <div className="mt-8 rounded-[20px] border border-white/10 bg-white/5 p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-blue-200">
+            <div className="mt-8 rounded-[20px] border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-teal-300">
                 Search discovery
               </p>
-              <Link href="/search" className="mt-3 inline-flex text-base font-semibold text-white transition duration-200 hover:text-blue-200">
+              <Link href="/search" className="mt-3 inline-flex text-base font-semibold text-white underline-offset-4 transition duration-150 hover:text-violet-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400">
                 Search races, drivers, tracks, and championships
               </Link>
+            </div>
             </div>
           </div>
           <div className="p-4 sm:p-6">
@@ -353,7 +371,7 @@ export default async function HomePage() {
                 className="h-[320px] lg:h-[360px]"
               />
             ) : (
-              <div className="glass-border flex h-[320px] items-center justify-center rounded-[24px] bg-slate-50 p-6 text-center text-sm text-apex-muted">
+              <div className="surface-card flex h-[320px] items-center justify-center rounded-[24px] p-6 text-center text-sm text-zinc-300">
                 Map previews appear here when race locations are available.
               </div>
             )}

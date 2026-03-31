@@ -65,13 +65,13 @@ function RaceListSortControls({
 }) {
   return (
     <div className="mb-4 flex items-center justify-between gap-3">
-      <p className="text-sm font-medium text-apex-muted">{label}</p>
+      <p className="text-sm font-medium text-zinc-300">{label}</p>
       <div className="flex items-center gap-2">
         {right}
         <select
           value={value}
           onChange={(event) => onChange(event.target.value)}
-          className="rounded-full border border-slate-200 bg-white px-4 py-2 pr-10 text-sm text-apex-slate outline-none transition duration-200 focus:border-apex-blue"
+          className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 pr-12 text-sm text-zinc-100 outline-none transition duration-150 focus:border-violet-400 focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
         >
           {options.map((option) => (
             <option key={option.value} value={option.value}>
@@ -129,12 +129,14 @@ function RaceListCard({
 
   return (
     <article
-      className={`glass-border rounded-[24px] bg-white/85 p-5 shadow-panel transition duration-200 ${
-        selected ? "ring-2 ring-apex-blue shadow-2xl" : "hover:-translate-y-1 hover:shadow-2xl"
+      className={`surface-card rounded-[24px] p-5 transition duration-150 ${
+        selected
+          ? "border-violet-400/40 bg-violet-500/10 ring-2 ring-violet-400/60 shadow-[0_14px_40px_rgba(0,0,0,0.38)]"
+          : "hover:-translate-y-0.5 hover:border-white/20 hover:shadow-[0_12px_36px_rgba(0,0,0,0.34)]"
       }`}
     >
       <div className={`flex gap-4 ${isGrid ? "items-start" : "items-start md:items-center"}`}>
-        <div className={`relative overflow-hidden rounded-2xl bg-slate-100 ${isGrid ? "h-16 w-16" : "h-20 w-24 shrink-0"}`}>
+        <div className={`relative overflow-hidden rounded-2xl bg-zinc-900 ${isGrid ? "h-16 w-16" : "h-20 w-24 shrink-0"}`}>
           <Image
             src={race.image}
             alt={`${race.name} race visual`}
@@ -142,51 +144,52 @@ function RaceListCard({
             className="object-cover"
             sizes={isGrid ? "64px" : "96px"}
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#09090F] via-[#09090F]/10 to-transparent" />
         </div>
         <div className="flex-1">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-apex-muted">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-zinc-400">
                 {race.championshipName}
               </p>
-              <h3 className={`mt-2 font-bold text-apex-slate ${isGrid ? "text-xl" : "text-2xl"}`}>{race.name}</h3>
+              <h3 className={`mt-2 font-bold text-zinc-50 ${isGrid ? "text-xl" : "text-2xl"}`}>{race.name}</h3>
             </div>
-            <span className="rounded-full bg-slate-100 px-3 py-2 text-sm font-medium text-apex-slate">
+            <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm font-medium text-zinc-200">
               {race.status}
             </span>
           </div>
-          <p className="mt-3 text-base font-semibold text-apex-blue">
+          <p className="mt-3 text-base font-semibold text-teal-300">
             {formatDateRange(race.startDate, race.endDate)}
           </p>
-          {!isGrid ? <p className="mt-2 text-sm leading-6 text-apex-muted">{race.summary}</p> : null}
+          {!isGrid ? <p className="mt-2 text-sm leading-6 text-zinc-300">{race.summary}</p> : null}
           {!isGrid ? (
-            <div className="mt-4 flex flex-wrap gap-2 text-sm text-apex-slate">
-              <span className="rounded-full bg-slate-100 px-3 py-2">{race.trackName}</span>
-              <span className="rounded-full bg-slate-100 px-3 py-2">{race.location}</span>
+            <div className="mt-4 flex flex-wrap gap-2 text-sm text-zinc-200">
+              <span className="surface-chip rounded-full px-3 py-2">{race.trackName}</span>
+              <span className="surface-chip rounded-full px-3 py-2">{race.location}</span>
               {race.isTracked ? (
-                <span className="rounded-full bg-blue-50 px-3 py-2 font-semibold text-apex-blue">Tracked</span>
+                <span className="rounded-full border border-violet-400/30 bg-violet-500/12 px-3 py-2 font-semibold text-violet-200">Tracked</span>
               ) : null}
               {typeof race.distanceKm === "number" ? (
-                <span className="rounded-full bg-slate-100 px-3 py-2">{Math.round(race.distanceKm)} km away</span>
+                <span className="surface-chip rounded-full px-3 py-2">{Math.round(race.distanceKm)} km away</span>
               ) : null}
             </div>
           ) : null}
         </div>
       </div>
-      {isGrid ? <p className="mt-3 text-sm leading-6 text-apex-muted">{race.summary}</p> : null}
+      {isGrid ? <p className="mt-3 text-sm leading-6 text-zinc-300">{race.summary}</p> : null}
       {isGrid ? (
-        <div className="mt-4 flex flex-wrap gap-2 text-sm text-apex-slate">
-        <span className="rounded-full bg-slate-100 px-3 py-2">{race.trackName}</span>
-        <span className="rounded-full bg-slate-100 px-3 py-2">{race.location}</span>
+        <div className="mt-4 flex flex-wrap gap-2 text-sm text-zinc-200">
+        <span className="surface-chip rounded-full px-3 py-2">{race.trackName}</span>
+        <span className="surface-chip rounded-full px-3 py-2">{race.location}</span>
         {race.isTracked ? (
-          <span className="rounded-full bg-blue-50 px-3 py-2 font-semibold text-apex-blue">Tracked</span>
+          <span className="rounded-full border border-violet-400/30 bg-violet-500/12 px-3 py-2 font-semibold text-violet-200">Tracked</span>
         ) : null}
         {typeof race.distanceKm === "number" ? (
-          <span className="rounded-full bg-slate-100 px-3 py-2">{Math.round(race.distanceKm)} km away</span>
+          <span className="surface-chip rounded-full px-3 py-2">{Math.round(race.distanceKm)} km away</span>
         ) : null}
         </div>
       ) : null}
-      <div className="mt-4 flex flex-wrap gap-2 text-xs uppercase tracking-[0.18em] text-apex-muted">
+      <div className="mt-4 flex flex-wrap gap-2 text-xs uppercase tracking-[0.18em] text-zinc-400">
         {race.mapCoordinates ? (
           <span>{race.mapSource === "track" ? "Located by venue" : "Shown on map"}</span>
         ) : (
@@ -197,7 +200,7 @@ function RaceListCard({
         <div className="flex flex-wrap gap-3">
           <Link
             href={`/races/${race.slug}`}
-            className="inline-flex rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition duration-200 hover:bg-apex-blue"
+            className="primary-action inline-flex rounded-xl px-4 py-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
           >
             View Race
           </Link>
@@ -205,7 +208,7 @@ function RaceListCard({
             <button
               type="button"
               onClick={onSelect}
-              className="rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-apex-slate transition duration-200 hover:-translate-y-0.5"
+              className="secondary-action rounded-xl px-4 py-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
             >
               Focus On Map
             </button>
@@ -230,10 +233,10 @@ export function RaceViewTabs({
         <Link
           key={view.value}
           href={getViewHref(view.value, filters)}
-          className={`rounded-full px-4 py-2 text-sm font-medium transition duration-200 ${
+          className={`rounded-xl border px-4 py-2 text-sm font-medium transition duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F] ${
             activeView === view.value
-              ? "bg-slate-900 text-white"
-              : "bg-slate-100 text-apex-slate hover:-translate-y-0.5"
+              ? "border-violet-500 bg-violet-600 text-white"
+              : "border-white/10 bg-white/5 text-zinc-300 hover:border-white/20 hover:bg-white/10 hover:text-white"
           }`}
         >
           {view.label}
@@ -245,7 +248,7 @@ export function RaceViewTabs({
 
 export function RaceViewDescription({ activeView }: { activeView: RaceViewMode }) {
   const view = viewLabels.find((entry) => entry.value === activeView);
-  return view ? <p className="text-sm leading-6 text-apex-muted">{view.description}</p> : null;
+  return view ? <p className="text-sm leading-6 text-zinc-300">{view.description}</p> : null;
 }
 
 export function RaceListView({ races }: { races: DiscoveryRace[] }) {
@@ -265,14 +268,14 @@ export function RaceListView({ races }: { races: DiscoveryRace[] }) {
         value={sort}
         onChange={(value) => setSort(value as RaceListSort)}
         right={
-          <div className="flex rounded-full bg-slate-100 p-1">
+          <div className="flex rounded-xl border border-white/10 bg-white/5 p-1">
             {(["list", "grid"] as RaceLayout[]).map((option) => (
               <button
                 key={option}
                 type="button"
                 onClick={() => setLayout(option)}
-                className={`rounded-full px-3 py-1.5 text-sm font-medium transition duration-150 ${
-                  layout === option ? "bg-slate-900 text-white" : "text-apex-slate"
+                className={`rounded-lg px-3 py-1.5 text-sm font-medium transition duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F] ${
+                  layout === option ? "bg-violet-600 text-white" : "text-zinc-300"
                 }`}
               >
                 {option === "list" ? "List" : "Grid"}
@@ -323,7 +326,7 @@ export function RaceMapView({ races }: { races: DiscoveryRace[] }) {
   }
 
   return (
-    <section className="grid gap-4 lg:grid-cols-[0.92fr_1.08fr]">
+    <section className="grid gap-6 lg:grid-cols-[1fr_1fr]">
       <div className="order-2 grid gap-4 lg:order-1">
         <RaceListSortControls
           label="Sort the race list"

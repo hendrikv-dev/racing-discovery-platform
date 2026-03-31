@@ -54,7 +54,7 @@ export function InteractiveMapClient({
   }, [points]);
 
   return (
-    <div className={`overflow-hidden rounded-[24px] ${className}`}>
+    <div className={`map-frame ${className}`}>
       <MapContainer
         center={selectedPoint ? [selectedPoint.lat, selectedPoint.lng] : [20, 0]}
         zoom={selectedPoint ? 6 : 2}
@@ -75,8 +75,8 @@ export function InteractiveMapClient({
               center={[point.lat, point.lng]}
               radius={selected ? 10 : 7}
               pathOptions={{
-                color: selected ? "#ffe0df" : "#ffb4b1",
-                fillColor: selected ? "#E10600" : "#8f1712",
+                color: selected ? "#c4b5fd" : "#99f6e4",
+                fillColor: selected ? "#7C3AED" : "#14B8A6",
                 fillOpacity: 0.95,
                 weight: selected ? 4 : 2
               }}
@@ -87,9 +87,9 @@ export function InteractiveMapClient({
               <Popup>
                 <div className="min-w-[180px] text-white">
                   <p className="font-semibold">{point.title}</p>
-                  <p className="mt-1 text-sm text-slate-300">{point.subtitle}</p>
+                  <p className="mt-1 text-sm text-zinc-300">{point.subtitle}</p>
                   {point.meta ? (
-                    <p className="mt-2 text-xs uppercase tracking-[0.16em] text-red-300">
+                    <p className="mt-2 text-xs uppercase tracking-[0.16em] text-teal-300">
                       {point.meta}
                     </p>
                   ) : null}
