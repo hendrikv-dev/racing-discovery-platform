@@ -84,10 +84,12 @@ export function SearchTypeahead() {
   const [results, setResults] = useState<SearchResults | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
 
   useEffect(() => {
     setIsOpen(false);
     setQuery("");
+    setHasInteracted(false);
   }, [pathname]);
 
   useEffect(() => {
@@ -113,6 +115,10 @@ export function SearchTypeahead() {
   }, []);
 
   useEffect(() => {
+    if (!hasInteracted) {
+      return;
+    }
+
     const activeQuery = debouncedQuery.trim();
 
     let cancelled = false;
@@ -145,7 +151,7 @@ export function SearchTypeahead() {
     return () => {
       cancelled = true;
     };
-  }, [debouncedQuery]);
+  }, [debouncedQuery, hasInteracted]);
 
   const summaryCount = useMemo(() => results?.counts.total ?? 0, [results]);
 
@@ -161,9 +167,13 @@ export function SearchTypeahead() {
         value={query}
         onChange={(value) => {
           setQuery(value);
+          setHasInteracted(true);
           setIsOpen(true);
         }}
-        onFocus={() => setIsOpen(true)}
+        onFocus={() => {
+          setHasInteracted(true);
+          setIsOpen(true);
+        }}
         onKeyDown={(event) => {
           if (event.key === "Enter") {
             event.preventDefault();
