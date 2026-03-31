@@ -75,9 +75,9 @@ export function InteractiveMapClient({
               center={[point.lat, point.lng]}
               radius={selected ? 10 : 7}
               pathOptions={{
-                color: selected ? "#bfdbfe" : "#60a5fa",
-                fillColor: selected ? "#2563eb" : "#1d4ed8",
-                fillOpacity: 0.9,
+                color: selected ? "#ffe0df" : "#ffb4b1",
+                fillColor: selected ? "#E10600" : "#8f1712",
+                fillOpacity: 0.95,
                 weight: selected ? 4 : 2
               }}
               eventHandlers={{
@@ -85,11 +85,11 @@ export function InteractiveMapClient({
               }}
             >
               <Popup>
-                <div className="min-w-[180px] text-slate-900">
+                <div className="min-w-[180px] text-white">
                   <p className="font-semibold">{point.title}</p>
-                  <p className="mt-1 text-sm">{point.subtitle}</p>
+                  <p className="mt-1 text-sm text-slate-300">{point.subtitle}</p>
                   {point.meta ? (
-                    <p className="mt-2 text-xs uppercase tracking-[0.16em] text-blue-700">
+                    <p className="mt-2 text-xs uppercase tracking-[0.16em] text-red-300">
                       {point.meta}
                     </p>
                   ) : null}

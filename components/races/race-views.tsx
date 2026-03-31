@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { type ReactNode, useMemo, useState } from "react";
 import { DiscoveryRace, RaceFilters } from "@/lib/discovery";
 import { RaceMap } from "@/components/maps/race-map";
 import { EmptyState } from "@/components/states";
@@ -18,6 +18,7 @@ const viewLabels: Array<{ value: RaceViewMode; label: string; description: strin
 ];
 
 type RaceListSort = "upcoming" | "championship" | "track" | "status";
+type RaceLayout = "list" | "grid";
 
 function sortRaceCards(races: DiscoveryRace[], sort: RaceListSort) {
   const sorted = [...races];
@@ -53,27 +54,32 @@ function RaceListSortControls({
   label,
   value,
   onChange,
-  options
+  options,
+  right
 }: {
   label: string;
   value: string;
   onChange: (value: string) => void;
   options: Array<{ value: string; label: string }>;
+  right?: ReactNode;
 }) {
   return (
     <div className="mb-4 flex items-center justify-between gap-3">
       <p className="text-sm font-medium text-apex-muted">{label}</p>
-      <select
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-apex-slate outline-none transition duration-200 focus:border-apex-blue"
-      >
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
+      <div className="flex items-center gap-2">
+        {right}
+        <select
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+          className="rounded-full border border-slate-200 bg-white px-4 py-2 pr-10 text-sm text-apex-slate outline-none transition duration-200 focus:border-apex-blue"
+        >
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      </div>
     </div>
   );
 }
@@ -111,26 +117,30 @@ function formatDateRange(startDate: string, endDate: string) {
 function RaceListCard({
   race,
   selected = false,
-  onSelect
+  onSelect,
+  layout = "list"
 }: {
   race: DiscoveryRace;
   selected?: boolean;
   onSelect?: () => void;
+  layout?: RaceLayout;
 }) {
+  const isGrid = layout === "grid";
+
   return (
     <article
       className={`glass-border rounded-[24px] bg-white/85 p-5 shadow-panel transition duration-200 ${
-        selected ? "ring-2 ring-apex-blue" : "hover:-translate-y-1"
+        selected ? "ring-2 ring-apex-blue shadow-2xl" : "hover:-translate-y-1 hover:shadow-2xl"
       }`}
     >
-      <div className="flex items-start gap-4">
-        <div className="relative h-16 w-16 overflow-hidden rounded-2xl bg-slate-100">
+      <div className={`flex gap-4 ${isGrid ? "items-start" : "items-start md:items-center"}`}>
+        <div className={`relative overflow-hidden rounded-2xl bg-slate-100 ${isGrid ? "h-16 w-16" : "h-20 w-24 shrink-0"}`}>
           <Image
             src={race.image}
             alt={`${race.name} race visual`}
             fill
             className="object-cover"
-            sizes="64px"
+            sizes={isGrid ? "64px" : "96px"}
           />
         </div>
         <div className="flex-1">
@@ -139,17 +149,33 @@ function RaceListCard({
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-apex-muted">
                 {race.championshipName}
               </p>
-              <h3 className="mt-2 text-xl font-bold text-apex-slate">{race.name}</h3>
+              <h3 className={`mt-2 font-bold text-apex-slate ${isGrid ? "text-xl" : "text-2xl"}`}>{race.name}</h3>
             </div>
             <span className="rounded-full bg-slate-100 px-3 py-2 text-sm font-medium text-apex-slate">
               {race.status}
             </span>
           </div>
+          <p className="mt-3 text-base font-semibold text-apex-blue">
+            {formatDateRange(race.startDate, race.endDate)}
+          </p>
+          {!isGrid ? <p className="mt-2 text-sm leading-6 text-apex-muted">{race.summary}</p> : null}
+          {!isGrid ? (
+            <div className="mt-4 flex flex-wrap gap-2 text-sm text-apex-slate">
+              <span className="rounded-full bg-slate-100 px-3 py-2">{race.trackName}</span>
+              <span className="rounded-full bg-slate-100 px-3 py-2">{race.location}</span>
+              {race.isTracked ? (
+                <span className="rounded-full bg-blue-50 px-3 py-2 font-semibold text-apex-blue">Tracked</span>
+              ) : null}
+              {typeof race.distanceKm === "number" ? (
+                <span className="rounded-full bg-slate-100 px-3 py-2">{Math.round(race.distanceKm)} km away</span>
+              ) : null}
+            </div>
+          ) : null}
         </div>
       </div>
-      <p className="mt-3 text-sm leading-6 text-apex-muted">{race.summary}</p>
-      <div className="mt-4 flex flex-wrap gap-2 text-sm text-apex-slate">
-        <span className="rounded-full bg-slate-100 px-3 py-2">{formatDateRange(race.startDate, race.endDate)}</span>
+      {isGrid ? <p className="mt-3 text-sm leading-6 text-apex-muted">{race.summary}</p> : null}
+      {isGrid ? (
+        <div className="mt-4 flex flex-wrap gap-2 text-sm text-apex-slate">
         <span className="rounded-full bg-slate-100 px-3 py-2">{race.trackName}</span>
         <span className="rounded-full bg-slate-100 px-3 py-2">{race.location}</span>
         {race.isTracked ? (
@@ -158,7 +184,8 @@ function RaceListCard({
         {typeof race.distanceKm === "number" ? (
           <span className="rounded-full bg-slate-100 px-3 py-2">{Math.round(race.distanceKm)} km away</span>
         ) : null}
-      </div>
+        </div>
+      ) : null}
       <div className="mt-4 flex flex-wrap gap-2 text-xs uppercase tracking-[0.18em] text-apex-muted">
         {race.mapCoordinates ? (
           <span>{race.mapSource === "track" ? "Located by venue" : "Shown on map"}</span>
@@ -223,6 +250,7 @@ export function RaceViewDescription({ activeView }: { activeView: RaceViewMode }
 
 export function RaceListView({ races }: { races: DiscoveryRace[] }) {
   const [sort, setSort] = useState<RaceListSort>("upcoming");
+  const [layout, setLayout] = useState<RaceLayout>("list");
 
   if (races.length === 0) {
     return <EmptyState title="No races found" description="Try clearing one or more filters to broaden the results." />;
@@ -236,6 +264,22 @@ export function RaceListView({ races }: { races: DiscoveryRace[] }) {
         label="Sort the race list"
         value={sort}
         onChange={(value) => setSort(value as RaceListSort)}
+        right={
+          <div className="flex rounded-full bg-slate-100 p-1">
+            {(["list", "grid"] as RaceLayout[]).map((option) => (
+              <button
+                key={option}
+                type="button"
+                onClick={() => setLayout(option)}
+                className={`rounded-full px-3 py-1.5 text-sm font-medium transition duration-150 ${
+                  layout === option ? "bg-slate-900 text-white" : "text-apex-slate"
+                }`}
+              >
+                {option === "list" ? "List" : "Grid"}
+              </button>
+            ))}
+          </div>
+        }
         options={[
           { value: "upcoming", label: "Upcoming first" },
           { value: "championship", label: "Championship" },
@@ -243,9 +287,9 @@ export function RaceListView({ races }: { races: DiscoveryRace[] }) {
           { value: "status", label: "Status" }
         ]}
       />
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <div className={layout === "list" ? "space-y-4" : "grid gap-4 md:grid-cols-2 xl:grid-cols-3"}>
         {sortedRaces.map((race) => (
-          <RaceListCard key={race.id} race={race} />
+          <RaceListCard key={race.id} race={race} layout={layout} />
         ))}
       </div>
     </section>
@@ -298,6 +342,7 @@ export function RaceMapView({ races }: { races: DiscoveryRace[] }) {
             race={race}
             selected={race.id === selectedRaceId}
             onSelect={race.mapCoordinates ? () => setSelectedRaceId(race.id) : undefined}
+            layout="list"
           />
         ))}
       </div>
