@@ -1,7 +1,9 @@
+import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 import { getSearchParams, searchDiscovery } from "@/lib/search";
 
 export async function GET(request: Request) {
+  const session = await auth();
   const { searchParams } = new URL(request.url);
   const results = await searchDiscovery(
     getSearchParams({
@@ -12,7 +14,8 @@ export async function GET(request: Request) {
       start: searchParams.get("start") ?? undefined,
       end: searchParams.get("end") ?? undefined,
       limit: searchParams.get("limit") ?? undefined
-    })
+    }),
+    session?.user?.id
   );
 
   return NextResponse.json(results);

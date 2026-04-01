@@ -3,12 +3,17 @@ import { CalendarDays, Flag, MapPinned, Search, Timer, Trophy } from "lucide-rea
 import { auth } from "@/auth";
 import { FindNearYouButton } from "@/components/home/find-near-you-button";
 import { InteractiveMap } from "@/components/maps/interactive-map";
+import { RecommendedRaceSection } from "@/components/recommendation/recommended-race-section";
 import { SectionHeading, StatusBadge } from "@/components/ui";
 import { formatRelativeRaceTiming, getHomepageData } from "@/lib/discovery";
+import { getPersonalizedRaceRecommendations } from "@/lib/recommendation/recommend";
 
 export default async function HomePage() {
   const session = await auth();
-  const home = await getHomepageData(session?.user?.id);
+  const [home, recommendations] = await Promise.all([
+    getHomepageData(session?.user?.id),
+    getPersonalizedRaceRecommendations(session?.user?.id)
+  ]);
 
   return (
     <div className="space-y-16 md:space-y-24">
@@ -153,6 +158,28 @@ export default async function HomePage() {
           </Link>
         </div>
       </section>
+
+      {session?.user?.id ? (
+        <RecommendedRaceSection
+          eyebrow="Recommended For You"
+          title="Recommended for you"
+          description="A smarter starting point based on what you track and what is coming up soon."
+          races={recommendations.recommended.slice(0, 3)}
+          href="/my-tracking"
+          emptyTitle="Start tracking to unlock recommendations"
+          emptyDescription="Follow a race, track, racer, or championship and the next relevant weekends will show up here."
+        />
+      ) : null}
+
+      <RecommendedRaceSection
+        eyebrow="Races This Weekend"
+        title="Races this weekend"
+        description="The fastest habit-forming view in the product: check what is happening over the next seven days and jump straight in."
+        races={recommendations.thisWeekend.slice(0, 3)}
+        href="/races"
+        emptyTitle="No race weekends in the next seven days"
+        emptyDescription="Browse the full calendar to see what is coming up next across the season."
+      />
 
       <section className="surface-panel rounded-[28px] p-6">
         <div className="grid gap-4 lg:grid-cols-[0.95fr_1.05fr]">

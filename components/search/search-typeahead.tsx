@@ -192,6 +192,11 @@ export function SearchTypeahead() {
             </p>
           ) : results && summaryCount > 0 ? (
             <>
+              {query.trim().length === 0 ? (
+                <div className="border-b border-white/10 px-4 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-teal-300">
+                  Popular this week
+                </div>
+              ) : null}
               {results.results.races.length > 0 ? (
                 <DropdownSection title="Races">
                   {results.results.races.map((race) => (

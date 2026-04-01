@@ -17,6 +17,16 @@ export function RaceMap({
 }) {
   const mappedRaces = races.filter((race) => race.mapCoordinates);
   const missingCount = races.length - mappedRaces.length;
+  const activeRegions = Array.from(
+    mappedRaces.reduce((counts, race) => {
+      const parts = race.location.split(",").map((part) => part.trim());
+      const label = parts.at(-1) ?? race.location;
+      counts.set(label, (counts.get(label) ?? 0) + 1);
+      return counts;
+    }, new Map<string, number>())
+  )
+    .sort((left, right) => right[1] - left[1])
+    .slice(0, 3);
 
   if (mappedRaces.length === 0) {
     return (
@@ -40,6 +50,15 @@ export function RaceMap({
           {missingCount} filtered race{missingCount === 1 ? "" : "s"} still show in the list while
           location details are being filled in.
         </p>
+      ) : null}
+      {activeRegions.length > 0 ? (
+        <div className="mt-4 flex flex-wrap gap-2 text-sm text-zinc-200">
+          {activeRegions.map(([region, count]) => (
+            <span key={region} className="surface-chip rounded-full px-3 py-2">
+              {region} · {count}
+            </span>
+          ))}
+        </div>
       ) : null}
       <div className="mt-6">
         <InteractiveMap

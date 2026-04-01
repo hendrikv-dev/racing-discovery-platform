@@ -33,6 +33,7 @@ export type DiscoveryRace = {
   } | null;
   mapSource: "race" | "track" | null;
   distanceKm?: number | null;
+  popularityScore?: number | null;
   isTracked: boolean;
 };
 
@@ -205,6 +206,29 @@ function getDistanceKm(
   return earthRadiusKm * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
+export function getRacePopularityScore({
+  trackedByCount,
+  entryCount,
+  startDate,
+  status
+}: {
+  trackedByCount: number;
+  entryCount: number;
+  startDate: Date;
+  status: RaceStatus;
+}) {
+  const now = Date.now();
+  const hoursUntilStart = Math.abs(startDate.getTime() - now) / (1000 * 60 * 60);
+  const recencyBoost =
+    status === RaceStatus.LIVE
+      ? 18
+      : status === RaceStatus.UPCOMING
+        ? Math.max(0, 14 - Math.min(14, hoursUntilStart / 24))
+        : Math.max(0, 6 - Math.min(6, hoursUntilStart / 72));
+
+  return trackedByCount * 10 + entryCount * 2 + recencyBoost;
+}
+
 export function getRaceFilters(searchParams: Record<string, string | string[] | undefined>): RaceFilters {
   const getValue = (key: keyof RaceFilters) => {
     const value = searchParams[key];
@@ -316,6 +340,12 @@ export async function getRaces(filters: RaceFilters, userId?: string) {
     include: {
       championship: true,
       track: true,
+      _count: {
+        select: {
+          trackedBy: true,
+          entries: true
+        }
+      },
       trackedBy: userId
         ? {
             where: {
@@ -366,6 +396,12 @@ export async function getRaces(filters: RaceFilters, userId?: string) {
       mapCoordinates,
       mapSource,
       distanceKm,
+      popularityScore: getRacePopularityScore({
+        trackedByCount: race._count.trackedBy,
+        entryCount: race._count.entries,
+        startDate: race.startDate,
+        status: race.status
+      }),
       isTracked: userId ? race.trackedBy.length > 0 : false
     };
   }) satisfies DiscoveryRace[];
@@ -397,6 +433,12 @@ export async function getRaceBySlug(slug: string, userId?: string) {
     include: {
       championship: true,
       track: true,
+      _count: {
+        select: {
+          trackedBy: true,
+          entries: true
+        }
+      },
       trackedBy: userId
         ? {
             where: {
@@ -448,6 +490,12 @@ export async function getRaceBySlug(slug: string, userId?: string) {
     trackCoordinates,
     mapCoordinates,
     mapSource,
+    popularityScore: getRacePopularityScore({
+      trackedByCount: race._count.trackedBy,
+      entryCount: race._count.entries,
+      startDate: race.startDate,
+      status: race.status
+    }),
     isTracked: userId ? race.trackedBy.length > 0 : false
   } satisfies DiscoveryRace;
 }
@@ -499,6 +547,12 @@ export async function getChampionshipBySlug(slug: string, userId?: string) {
         include: {
           championship: true,
           track: true,
+          _count: {
+            select: {
+              trackedBy: true,
+              entries: true
+            }
+          },
           trackedBy: userId
             ? {
                 where: {
@@ -591,6 +645,12 @@ export async function getChampionshipBySlug(slug: string, userId?: string) {
         trackCoordinates,
         mapCoordinates,
         mapSource,
+        popularityScore: getRacePopularityScore({
+          trackedByCount: race._count.trackedBy,
+          entryCount: race._count.entries,
+          startDate: race.startDate,
+          status: race.status
+        }),
         isTracked: userId ? race.trackedBy.length > 0 : false
       };
     }) satisfies DiscoveryRace[],
@@ -666,6 +726,12 @@ export async function getTrackBySlug(slug: string, userId?: string) {
         include: {
           championship: true,
           track: true,
+          _count: {
+            select: {
+              trackedBy: true,
+              entries: true
+            }
+          },
           trackedBy: userId
             ? {
                 where: {
@@ -753,6 +819,12 @@ export async function getTrackBySlug(slug: string, userId?: string) {
         trackCoordinates: fallbackTrackCoordinates,
         mapCoordinates,
         mapSource,
+        popularityScore: getRacePopularityScore({
+          trackedByCount: race._count.trackedBy,
+          entryCount: race._count.entries,
+          startDate: race.startDate,
+          status: race.status
+        }),
         isTracked: userId ? race.trackedBy.length > 0 : false
       };
     }) satisfies DiscoveryRace[]
@@ -800,6 +872,35 @@ export async function getRacerBySlug(slug: string, userId?: string) {
     where: { slug },
     include: {
       championship: true,
+      raceEntries: {
+        orderBy: {
+          race: {
+            startDate: "desc"
+          }
+        },
+        take: 5,
+        include: {
+          race: {
+            include: {
+              championship: true,
+              track: true,
+              _count: {
+                select: {
+                  trackedBy: true,
+                  entries: true
+                }
+              },
+              trackedBy: userId
+                ? {
+                    where: {
+                      userId
+                    }
+                  }
+                : false
+            }
+          }
+        }
+      },
       trackedBy: userId
         ? {
             where: {
@@ -831,8 +932,55 @@ export async function getRacerBySlug(slug: string, userId?: string) {
     championshipId: racer.championshipId,
     championshipName: racer.championship?.name ?? null,
     championshipSlug: racer.championship?.slug ?? null,
-    isTracked: userId ? racer.trackedBy.length > 0 : false
-  } satisfies DiscoveryRacer;
+    isTracked: userId ? racer.trackedBy.length > 0 : false,
+    recentRaces: racer.raceEntries.map(({ race }) => {
+      const raceCoordinates = {
+        lat: race.latitude,
+        lng: race.longitude
+      };
+      const trackCoordinates = hasValidCoordinates({
+        lat: race.track.latitude,
+        lng: race.track.longitude
+      })
+        ? {
+            lat: race.track.latitude,
+            lng: race.track.longitude
+          }
+        : null;
+      const { mapCoordinates, mapSource } = resolveRaceMapCoordinates(raceCoordinates, trackCoordinates);
+
+      return {
+        id: race.id,
+        slug: race.slug,
+        name: race.name,
+        image: race.track.image || race.championship.image,
+        series: race.series,
+        championshipId: race.championshipId,
+        championshipName: race.championship.name,
+        championshipSlug: race.championship.slug,
+        date: formatRaceDate(race.startDate),
+        startDate: race.startDate.toISOString(),
+        endDate: race.endDate.toISOString(),
+        location: race.location,
+        trackId: race.trackId,
+        trackName: race.track.name,
+        trackSlug: race.track.slug,
+        status: formatRaceStatus(race.status),
+        summary: race.summary,
+        coordinates: raceCoordinates,
+        trackCoordinates,
+        mapCoordinates,
+        mapSource,
+        popularityScore: getRacePopularityScore({
+          trackedByCount: race._count.trackedBy,
+          entryCount: race._count.entries,
+          startDate: race.startDate,
+          status: race.status
+        }),
+        isTracked: userId ? race.trackedBy.length > 0 : false
+      };
+    })
+  } satisfies DiscoveryRacer & { recentRaces: DiscoveryRace[] };
 }
 
 export async function getMyTracking(userId: string) {
@@ -845,7 +993,13 @@ export async function getMyTracking(userId: string) {
           race: {
             include: {
               championship: true,
-              track: true
+              track: true,
+              _count: {
+                select: {
+                  trackedBy: true,
+                  entries: true
+                }
+              }
             }
           }
         }
@@ -937,6 +1091,12 @@ export async function getMyTracking(userId: string) {
           ? { lat: race.track.latitude, lng: race.track.longitude }
           : null
       ).mapSource,
+      popularityScore: getRacePopularityScore({
+        trackedByCount: race._count.trackedBy,
+        entryCount: race._count.entries,
+        startDate: race.startDate,
+        status: race.status
+      }),
       isTracked: true
     })) satisfies DiscoveryRace[],
     championships: user.trackedChampionships.map(({ championship }) => ({
@@ -1012,6 +1172,12 @@ export async function getHomepageData(userId?: string) {
       include: {
         championship: true,
         track: true,
+        _count: {
+          select: {
+            trackedBy: true,
+            entries: true
+          }
+        },
         trackedBy: userId
           ? {
               where: {
@@ -1109,6 +1275,12 @@ export async function getHomepageData(userId?: string) {
         trackCoordinates,
         mapCoordinates,
         mapSource,
+        popularityScore: getRacePopularityScore({
+          trackedByCount: race._count.trackedBy,
+          entryCount: race._count.entries,
+          startDate: race.startDate,
+          status: race.status
+        }),
         isTracked: userId ? race.trackedBy.length > 0 : false
       };
     }) satisfies DiscoveryRace[],

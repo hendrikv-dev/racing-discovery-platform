@@ -1,5 +1,6 @@
 const {
   PrismaClient,
+  NotificationType,
   RaceStatus,
   RaceSubmissionStatus
 } = require("@prisma/client");
@@ -749,6 +750,7 @@ async function main() {
   await prisma.trackedRacer.deleteMany();
   await prisma.trackedTrack.deleteMany();
   await prisma.trackedChampionship.deleteMany();
+  await prisma.notification.deleteMany();
   await prisma.raceEntry.deleteMany();
   await prisma.raceSubmission.deleteMany();
   await prisma.race.deleteMany();
@@ -935,6 +937,29 @@ async function main() {
       { userId: demoUser.id, championshipId: championshipIdsBySlug["gt-world-challenge"] },
       { userId: fanUser.id, championshipId: championshipIdsBySlug["prototype-series"] },
       { userId: fanUser.id, championshipId: championshipIdsBySlug["endurance-cup"] }
+    ]
+  });
+
+  await prisma.notification.createMany({
+    data: [
+      {
+        userId: demoUser.id,
+        type: NotificationType.RACE_STARTING_SOON,
+        entityId: raceIdsBySlug["silverstone-sprint-classic"].id,
+        read: false
+      },
+      {
+        userId: demoUser.id,
+        type: NotificationType.NEW_RACE_IN_FOLLOWED_CHAMPIONSHIP,
+        entityId: championshipIdsBySlug["gt-world-challenge"],
+        read: true
+      },
+      {
+        userId: fanUser.id,
+        type: NotificationType.RESULT_AVAILABLE,
+        entityId: raceIdsBySlug["fuji-six-hour"].id,
+        read: false
+      }
     ]
   });
 

@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import { RecommendedRaceSection } from "@/components/recommendation/recommended-race-section";
 import { CalendarView } from "@/components/races/calendar-view";
 import { RaceFilters } from "@/components/races/race-filters";
 import {
@@ -11,6 +12,7 @@ import {
 import { TimelineView } from "@/components/races/timeline-view";
 import { SectionHeading } from "@/components/ui";
 import { getRaceFilterOptions, getRaceFilters, getRaces } from "@/lib/discovery";
+import { getPersonalizedRaceRecommendations } from "@/lib/recommendation/recommend";
 
 const validViews: RaceViewMode[] = ["map", "list", "calendar", "timeline"];
 
@@ -27,9 +29,10 @@ export default async function RacesPage({
   const resolvedSearchParams = await searchParams;
   const filters = getRaceFilters(resolvedSearchParams);
   const activeView = getActiveView(filters.view);
-  const [races, filterOptions] = await Promise.all([
+  const [races, filterOptions, recommendations] = await Promise.all([
     getRaces(filters, session?.user?.id),
-    getRaceFilterOptions()
+    getRaceFilterOptions(),
+    getPersonalizedRaceRecommendations(session?.user?.id)
   ]);
 
   return (
@@ -62,6 +65,28 @@ export default async function RacesPage({
           <RaceViewTabs activeView={activeView} filters={filters} />
         </div>
       </section>
+
+      {session?.user?.id ? (
+        <RecommendedRaceSection
+          eyebrow="Because You Follow"
+          title="Because you follow..."
+          description="Use your tracked series, racers, venues, and race weekends to jump into the next relevant events faster."
+          races={recommendations.becauseYouFollow.slice(0, 3)}
+          href="/my-tracking"
+          emptyTitle="No personalized race picks yet"
+          emptyDescription="Track a few racers, championships, or tracks and the schedule will adapt here."
+        />
+      ) : null}
+
+      <RecommendedRaceSection
+        eyebrow="Races This Weekend"
+        title="Races this weekend"
+        description="A quick high-signal view of the next seven days, ordered by what is most relevant first."
+        races={recommendations.thisWeekend.slice(0, 3)}
+        href="/races"
+        emptyTitle="Nothing lands this weekend"
+        emptyDescription="Try the full schedule or map view to see the next active stretch of the calendar."
+      />
 
       {activeView === "calendar" ? <CalendarView races={races} /> : null}
       {activeView === "timeline" ? <TimelineView races={races} /> : null}

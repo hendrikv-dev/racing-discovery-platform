@@ -1,4 +1,5 @@
 import { Prisma, RaceStatus } from "@prisma/client";
+import { getRacePopularityScore } from "@/lib/discovery";
 import { prisma } from "@/lib/prisma";
 
 export type SearchType = "all" | "races" | "racers" | "tracks" | "championships";
@@ -25,6 +26,8 @@ export type SearchRaceResult = {
   championshipName: string;
   championshipSlug: string;
   href: string;
+  isTracked?: boolean;
+  popularityScore?: number;
 };
 
 export type SearchRacerResult = {
@@ -34,6 +37,8 @@ export type SearchRacerResult = {
   team: string;
   championshipName: string | null;
   href: string;
+  isTracked?: boolean;
+  popularityScore?: number;
 };
 
 export type SearchTrackResult = {
@@ -43,6 +48,8 @@ export type SearchTrackResult = {
   location: string;
   trackType: string;
   href: string;
+  isTracked?: boolean;
+  popularityScore?: number;
 };
 
 export type SearchChampionshipResult = {
@@ -52,6 +59,8 @@ export type SearchChampionshipResult = {
   category: string;
   description: string;
   href: string;
+  isTracked?: boolean;
+  popularityScore?: number;
 };
 
 export type SearchResults = {
@@ -77,6 +86,14 @@ export type SearchResults = {
     championships: SearchChampionshipResult[];
   };
 };
+
+function getEntityPopularityScore(values: {
+  trackedByCount: number;
+  raceCount?: number;
+  racerCount?: number;
+}) {
+  return values.trackedByCount * 10 + (values.raceCount ?? 0) * 3 + (values.racerCount ?? 0) * 2;
+}
 
 export type SearchFilterOptions = {
   championships: Array<{ slug: string; name: string }>;
@@ -317,7 +334,7 @@ export async function getSearchFilterOptions(): Promise<SearchFilterOptions> {
   return { championships };
 }
 
-export async function searchDiscovery(params: SearchParams): Promise<SearchResults> {
+export async function searchDiscovery(params: SearchParams, userId?: string): Promise<SearchResults> {
   const query = normalizeQuery(params.q);
   const type = normalizeType(params.type);
   const limit = normalizeLimit(params.limit, type === "all" ? 12 : 24);
@@ -334,7 +351,9 @@ export async function searchDiscovery(params: SearchParams): Promise<SearchResul
             },
             include: {
               track: { select: { name: true, slug: true } },
-              championship: { select: { name: true, slug: true } }
+              championship: { select: { name: true, slug: true } },
+              _count: { select: { trackedBy: true, entries: true } },
+              trackedBy: userId ? { where: { userId } } : false
             },
             orderBy: [{ startDate: "asc" }],
             take: limit
@@ -343,7 +362,9 @@ export async function searchDiscovery(params: SearchParams): Promise<SearchResul
       shouldSearch("racers")
         ? prisma.racer.findMany({
             include: {
-              championship: { select: { name: true, slug: true } }
+              championship: { select: { name: true, slug: true } },
+              _count: { select: { trackedBy: true, raceEntries: true } },
+              trackedBy: userId ? { where: { userId } } : false
             },
             orderBy: [{ podiums: "desc" }, { victories: "desc" }, { name: "asc" }],
             take: limit
@@ -351,12 +372,20 @@ export async function searchDiscovery(params: SearchParams): Promise<SearchResul
         : Promise.resolve([]),
       shouldSearch("tracks")
         ? prisma.track.findMany({
+            include: {
+              _count: { select: { races: true, trackedBy: true } },
+              trackedBy: userId ? { where: { userId } } : false
+            },
             orderBy: [{ races: { _count: "desc" } }, { name: "asc" }],
             take: limit
           })
         : Promise.resolve([]),
       shouldSearch("championships")
         ? prisma.championship.findMany({
+            include: {
+              _count: { select: { races: true, racers: true, trackedBy: true } },
+              trackedBy: userId ? { where: { userId } } : false
+            },
             orderBy: [{ races: { _count: "desc" } }, { name: "asc" }],
             take: limit
           })
@@ -374,7 +403,14 @@ export async function searchDiscovery(params: SearchParams): Promise<SearchResul
       trackName: race.track.name,
       championshipName: race.championship.name,
       championshipSlug: race.championship.slug,
-      href: `/races/${race.slug}`
+      href: `/races/${race.slug}`,
+      isTracked: userId ? race.trackedBy.length > 0 : false,
+      popularityScore: getRacePopularityScore({
+        trackedByCount: race._count.trackedBy,
+        entryCount: race._count.entries,
+        startDate: race.startDate,
+        status: race.status
+      })
     })) satisfies SearchRaceResult[];
 
     const racers = featuredRacers.map((racer) => ({
@@ -383,7 +419,12 @@ export async function searchDiscovery(params: SearchParams): Promise<SearchResul
       name: racer.name,
       team: racer.team,
       championshipName: racer.championship?.name ?? null,
-      href: `/racers/${racer.slug}`
+      href: `/racers/${racer.slug}`,
+      isTracked: userId ? racer.trackedBy.length > 0 : false,
+      popularityScore: getEntityPopularityScore({
+        trackedByCount: racer._count.trackedBy,
+        raceCount: racer._count.raceEntries
+      })
     })) satisfies SearchRacerResult[];
 
     const tracks = featuredTracks.map((track) => ({
@@ -392,7 +433,12 @@ export async function searchDiscovery(params: SearchParams): Promise<SearchResul
       name: track.name,
       location: `${track.location}, ${track.country}`,
       trackType: track.trackType,
-      href: `/tracks/${track.slug}`
+      href: `/tracks/${track.slug}`,
+      isTracked: userId ? track.trackedBy.length > 0 : false,
+      popularityScore: getEntityPopularityScore({
+        trackedByCount: track._count.trackedBy,
+        raceCount: track._count.races
+      })
     })) satisfies SearchTrackResult[];
 
     const championships = featuredChampionships.map((championship) => ({
@@ -401,7 +447,13 @@ export async function searchDiscovery(params: SearchParams): Promise<SearchResul
       name: championship.name,
       category: championship.category,
       description: championship.description,
-      href: `/championships/${championship.slug}`
+      href: `/championships/${championship.slug}`,
+      isTracked: userId ? championship.trackedBy.length > 0 : false,
+      popularityScore: getEntityPopularityScore({
+        trackedByCount: championship._count.trackedBy,
+        raceCount: championship._count.races,
+        racerCount: championship._count.racers
+      })
     })) satisfies SearchChampionshipResult[];
 
     return {
@@ -435,7 +487,9 @@ export async function searchDiscovery(params: SearchParams): Promise<SearchResul
           where: buildRaceWhere(query, params),
           include: {
             track: { select: { name: true, slug: true } },
-            championship: { select: { name: true, slug: true } }
+            championship: { select: { name: true, slug: true } },
+            _count: { select: { trackedBy: true, entries: true } },
+            trackedBy: userId ? { where: { userId } } : false
           },
           orderBy: { startDate: "asc" },
           take: limit * 3
@@ -445,7 +499,9 @@ export async function searchDiscovery(params: SearchParams): Promise<SearchResul
       ? prisma.racer.findMany({
           where: buildChampionshipScopedRacerWhere(query, params),
           include: {
-            championship: { select: { name: true, slug: true } }
+            championship: { select: { name: true, slug: true } },
+            _count: { select: { trackedBy: true, raceEntries: true } },
+            trackedBy: userId ? { where: { userId } } : false
           },
           orderBy: { name: "asc" },
           take: limit * 3
@@ -454,6 +510,10 @@ export async function searchDiscovery(params: SearchParams): Promise<SearchResul
     shouldSearch("tracks")
       ? prisma.track.findMany({
           where: buildTrackWhere(query),
+          include: {
+            _count: { select: { races: true, trackedBy: true } },
+            trackedBy: userId ? { where: { userId } } : false
+          },
           orderBy: { name: "asc" },
           take: limit * 3
         })
@@ -461,6 +521,10 @@ export async function searchDiscovery(params: SearchParams): Promise<SearchResul
     shouldSearch("championships")
       ? prisma.championship.findMany({
           where: buildChampionshipWhere(query),
+          include: {
+            _count: { select: { races: true, racers: true, trackedBy: true } },
+            trackedBy: userId ? { where: { userId } } : false
+          },
           orderBy: { name: "asc" },
           take: limit * 3
         })
@@ -468,7 +532,27 @@ export async function searchDiscovery(params: SearchParams): Promise<SearchResul
   ]);
 
   const races = raceRows
-    .sort((left, right) => raceScore(left, query) - raceScore(right, query))
+    .sort((left, right) => {
+      const trackedDelta = Number(Boolean(userId && right.trackedBy.length > 0)) - Number(Boolean(userId && left.trackedBy.length > 0));
+      if (trackedDelta !== 0) return trackedDelta;
+      const scoreDelta = raceScore(left, query) - raceScore(right, query);
+      if (scoreDelta !== 0) return scoreDelta;
+      const popularityDelta =
+        getRacePopularityScore({
+          trackedByCount: right._count.trackedBy,
+          entryCount: right._count.entries,
+          startDate: right.startDate,
+          status: right.status
+        }) -
+        getRacePopularityScore({
+          trackedByCount: left._count.trackedBy,
+          entryCount: left._count.entries,
+          startDate: left.startDate,
+          status: left.status
+        });
+      if (popularityDelta !== 0) return popularityDelta;
+      return new Date(left.startDate).getTime() - new Date(right.startDate).getTime();
+    })
     .slice(0, limit)
     .map((race) => ({
       id: race.id,
@@ -481,11 +565,33 @@ export async function searchDiscovery(params: SearchParams): Promise<SearchResul
       trackName: race.track.name,
       championshipName: race.championship.name,
       championshipSlug: race.championship.slug,
-      href: `/races/${race.slug}`
+      href: `/races/${race.slug}`,
+      isTracked: userId ? race.trackedBy.length > 0 : false,
+      popularityScore: getRacePopularityScore({
+        trackedByCount: race._count.trackedBy,
+        entryCount: race._count.entries,
+        startDate: race.startDate,
+        status: race.status
+      })
     })) satisfies SearchRaceResult[];
 
   const racers = racerRows
-    .sort((left, right) => racerScore(left, query) - racerScore(right, query))
+    .sort((left, right) => {
+      const trackedDelta = Number(Boolean(userId && right.trackedBy.length > 0)) - Number(Boolean(userId && left.trackedBy.length > 0));
+      if (trackedDelta !== 0) return trackedDelta;
+      const scoreDelta = racerScore(left, query) - racerScore(right, query);
+      if (scoreDelta !== 0) return scoreDelta;
+      return (
+        getEntityPopularityScore({
+          trackedByCount: right._count.trackedBy,
+          raceCount: right._count.raceEntries
+        }) -
+        getEntityPopularityScore({
+          trackedByCount: left._count.trackedBy,
+          raceCount: left._count.raceEntries
+        })
+      );
+    })
     .slice(0, limit)
     .map((racer) => ({
       id: racer.id,
@@ -493,11 +599,31 @@ export async function searchDiscovery(params: SearchParams): Promise<SearchResul
       name: racer.name,
       team: racer.team,
       championshipName: racer.championship?.name ?? null,
-      href: `/racers/${racer.slug}`
+      href: `/racers/${racer.slug}`,
+      isTracked: userId ? racer.trackedBy.length > 0 : false,
+      popularityScore: getEntityPopularityScore({
+        trackedByCount: racer._count.trackedBy,
+        raceCount: racer._count.raceEntries
+      })
     })) satisfies SearchRacerResult[];
 
   const tracks = trackRows
-    .sort((left, right) => trackScore(left, query) - trackScore(right, query))
+    .sort((left, right) => {
+      const trackedDelta = Number(Boolean(userId && right.trackedBy.length > 0)) - Number(Boolean(userId && left.trackedBy.length > 0));
+      if (trackedDelta !== 0) return trackedDelta;
+      const scoreDelta = trackScore(left, query) - trackScore(right, query);
+      if (scoreDelta !== 0) return scoreDelta;
+      return (
+        getEntityPopularityScore({
+          trackedByCount: right._count.trackedBy,
+          raceCount: right._count.races
+        }) -
+        getEntityPopularityScore({
+          trackedByCount: left._count.trackedBy,
+          raceCount: left._count.races
+        })
+      );
+    })
     .slice(0, limit)
     .map((track) => ({
       id: track.id,
@@ -505,12 +631,34 @@ export async function searchDiscovery(params: SearchParams): Promise<SearchResul
       name: track.name,
       location: `${track.location}, ${track.country}`,
       trackType: track.trackType,
-      href: `/tracks/${track.slug}`
+      href: `/tracks/${track.slug}`,
+      isTracked: userId ? track.trackedBy.length > 0 : false,
+      popularityScore: getEntityPopularityScore({
+        trackedByCount: track._count.trackedBy,
+        raceCount: track._count.races
+      })
     })) satisfies SearchTrackResult[];
 
   const championships = championshipRows
     .sort(
-      (left, right) => championshipScore(left, query) - championshipScore(right, query)
+      (left, right) => {
+        const trackedDelta = Number(Boolean(userId && right.trackedBy.length > 0)) - Number(Boolean(userId && left.trackedBy.length > 0));
+        if (trackedDelta !== 0) return trackedDelta;
+        const scoreDelta = championshipScore(left, query) - championshipScore(right, query);
+        if (scoreDelta !== 0) return scoreDelta;
+        return (
+          getEntityPopularityScore({
+            trackedByCount: right._count.trackedBy,
+            raceCount: right._count.races,
+            racerCount: right._count.racers
+          }) -
+          getEntityPopularityScore({
+            trackedByCount: left._count.trackedBy,
+            raceCount: left._count.races,
+            racerCount: left._count.racers
+          })
+        );
+      }
     )
     .slice(0, limit)
     .map((championship) => ({
@@ -519,7 +667,13 @@ export async function searchDiscovery(params: SearchParams): Promise<SearchResul
       name: championship.name,
       category: championship.category,
       description: championship.description,
-      href: `/championships/${championship.slug}`
+      href: `/championships/${championship.slug}`,
+      isTracked: userId ? championship.trackedBy.length > 0 : false,
+      popularityScore: getEntityPopularityScore({
+        trackedByCount: championship._count.trackedBy,
+        raceCount: championship._count.races,
+        racerCount: championship._count.racers
+      })
     })) satisfies SearchChampionshipResult[];
 
   const counts = {

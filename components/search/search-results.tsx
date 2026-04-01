@@ -14,12 +14,14 @@ function SearchResultCard({
   href,
   title,
   detail,
-  meta
+  meta,
+  tracked
 }: {
   href: string;
   title: string;
   detail: string;
   meta?: string;
+  tracked?: boolean;
 }) {
   return (
     <Link
@@ -31,7 +33,14 @@ function SearchResultCard({
           <p className="font-semibold text-zinc-50">{title}</p>
           <p className="mt-1 text-sm text-zinc-300">{detail}</p>
         </div>
-        {meta ? <span className="surface-chip rounded-full px-3 py-1 text-xs font-medium text-zinc-100">{meta}</span> : null}
+        <div className="flex flex-wrap items-center gap-2">
+          {tracked ? (
+            <span className="rounded-full border border-violet-400/30 bg-violet-500/10 px-3 py-1 text-xs font-medium text-violet-200">
+              Tracked
+            </span>
+          ) : null}
+          {meta ? <span className="surface-chip rounded-full px-3 py-1 text-xs font-medium text-zinc-100">{meta}</span> : null}
+        </div>
       </div>
     </Link>
   );
@@ -53,6 +62,11 @@ function RaceResultItem({ race }: { race: SearchRaceResult }) {
         <StatusBadge status={race.status} />
       </div>
       <div className="mt-4 flex flex-wrap gap-2 text-sm text-zinc-200">
+        {race.isTracked ? (
+          <span className="rounded-full border border-violet-400/30 bg-violet-500/10 px-3 py-2 font-medium text-violet-200">
+            Tracked
+          </span>
+        ) : null}
         <span className="surface-chip rounded-full px-3 py-2">{race.trackName}</span>
         <span className="surface-chip rounded-full px-3 py-2">{race.championshipName}</span>
       </div>
@@ -66,6 +80,7 @@ function RacerResultItem({ racer }: { racer: SearchRacerResult }) {
       href={racer.href}
       title={racer.name}
       detail={racer.championshipName ? `${racer.team} • ${racer.championshipName}` : racer.team}
+      tracked={racer.isTracked}
     />
   );
 }
@@ -76,6 +91,7 @@ function TrackResultItem({ track }: { track: SearchTrackResult }) {
       href={track.href}
       title={track.name}
       detail={`${track.location} • ${track.trackType}`}
+      tracked={track.isTracked}
     />
   );
 }
@@ -87,6 +103,7 @@ function ChampionshipResultItem({ championship }: { championship: SearchChampion
       title={championship.name}
       detail={championship.description}
       meta={championship.category}
+      tracked={championship.isTracked}
     />
   );
 }

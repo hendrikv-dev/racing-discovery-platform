@@ -2,9 +2,11 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { EmptyState } from "@/components/states";
+import { RecommendedRaceSection } from "@/components/recommendation/recommended-race-section";
 import { MyTrackingNav } from "@/components/tracking/my-tracking-nav";
 import { MetricCard, SectionHeading } from "@/components/ui";
 import { formatRelativeRaceTiming, getMyTracking } from "@/lib/discovery";
+import { getPersonalizedRaceRecommendations } from "@/lib/recommendation/recommend";
 
 export default async function MyTrackingPage() {
   const session = await auth();
@@ -13,7 +15,10 @@ export default async function MyTrackingPage() {
     redirect("/login?callbackUrl=/my-tracking");
   }
 
-  const data = await getMyTracking(session.user.id);
+  const [data, recommendations] = await Promise.all([
+    getMyTracking(session.user.id),
+    getPersonalizedRaceRecommendations(session.user.id)
+  ]);
 
   if (!data) {
     redirect("/login?callbackUrl=/my-tracking");
@@ -111,6 +116,26 @@ export default async function MyTrackingPage() {
           <EmptyState title="No upcoming tracked races yet" description="Track a race to keep the next weekend you care about front and center." />
         )}
       </section>
+
+      <RecommendedRaceSection
+        eyebrow="Upcoming For You"
+        title="Upcoming for you"
+        description="Upcoming race weekends connected to the championships, racers, tracks, and races you already follow."
+        races={recommendations.upcomingForYou}
+        href="/races"
+        emptyTitle="Track more to sharpen your feed"
+        emptyDescription="As soon as you follow more racers, tracks, and championships, their upcoming weekends will surface here."
+      />
+
+      <RecommendedRaceSection
+        eyebrow="Because You Follow"
+        title="Because you follow..."
+        description="Related race weekends expanded from the people, venues, and series already on your board."
+        races={recommendations.becauseYouFollow}
+        href="/races"
+        emptyTitle="No related race suggestions yet"
+        emptyDescription="Once the next linked race weekends are on the calendar, they will show up here."
+      />
 
       <section className="app-panel rounded-[28px] p-6">
         <SectionHeading

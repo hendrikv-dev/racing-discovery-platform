@@ -20,6 +20,12 @@ enum RaceSubmissionStatus {
   CONVERTED
 }
 
+enum NotificationType {
+  RACE_STARTING_SOON
+  NEW_RACE_IN_FOLLOWED_CHAMPIONSHIP
+  RESULT_AVAILABLE
+}
+
 model User {
   id                    String                @id @default(cuid())
   name                  String?
@@ -35,6 +41,7 @@ model User {
   trackedRacers         TrackedRacer[]
   trackedTracks         TrackedTrack[]
   trackedChampionships  TrackedChampionship[]
+  notifications         Notification[]
 }
 
 model Account {
@@ -240,4 +247,16 @@ model RaceSubmission {
   championship   Championship?        @relation(fields: [championshipId], references: [id], onDelete: SetNull)
   track          Track?               @relation(fields: [trackId], references: [id], onDelete: SetNull)
   race           Race?                @relation(fields: [raceId], references: [id], onDelete: SetNull)
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  entityId  String
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now())
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read, createdAt])
 }

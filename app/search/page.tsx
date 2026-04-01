@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import { SearchFilters } from "@/components/search/search-filters";
 import { SearchEmptyState, SearchResults } from "@/components/search/search-results";
 import { SectionHeading } from "@/components/ui";
@@ -9,9 +10,10 @@ export default async function SearchPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const resolvedSearchParams = await searchParams;
+  const session = await auth();
   const params = getSearchParams(resolvedSearchParams);
   const [search, filterOptions] = await Promise.all([
-    searchDiscovery(params),
+    searchDiscovery(params, session?.user?.id),
     getSearchFilterOptions()
   ]);
 
@@ -33,7 +35,7 @@ export default async function SearchPage({
           description={
             hasQuery
               ? `${search.counts.total} result${search.counts.total === 1 ? "" : "s"} for "${search.query}".`
-              : "Top results across the platform, with filters ready when you want to narrow the field."
+              : "Popular this week, trending races, and the fastest way back to what you already follow."
           }
         />
         <SearchFilters defaults={params} championships={filterOptions.championships} />
@@ -44,7 +46,7 @@ export default async function SearchPage({
           <SectionHeading
             eyebrow="Top Results"
             title="Top results"
-            description="A quick way to jump into the races, drivers, tracks, and championships getting attention right now."
+            description="Start with the races and championships getting attention right now, with anything you track rising to the top."
           />
           <SearchResults search={search} activeType={search.filters.type} />
         </div>

@@ -17,7 +17,7 @@ const viewLabels: Array<{ value: RaceViewMode; label: string; description: strin
   { value: "timeline", label: "Timeline", description: "Follow the season chronologically and spot the next key race quickly." }
 ];
 
-type RaceListSort = "upcoming" | "championship" | "track" | "status";
+type RaceListSort = "upcoming" | "popular" | "championship" | "track" | "status";
 type RaceLayout = "list" | "grid";
 
 function sortRaceCards(races: DiscoveryRace[], sort: RaceListSort) {
@@ -42,6 +42,12 @@ function sortRaceCards(races: DiscoveryRace[], sort: RaceListSort) {
           new Date(left.startDate).getTime() - new Date(right.startDate).getTime()
       );
     }
+    case "popular":
+      return sorted.sort(
+        (left, right) =>
+          (right.popularityScore ?? 0) - (left.popularityScore ?? 0) ||
+          new Date(left.startDate).getTime() - new Date(right.startDate).getTime()
+      );
     case "upcoming":
     default:
       return sorted.sort(
@@ -285,6 +291,7 @@ export function RaceListView({ races }: { races: DiscoveryRace[] }) {
         }
         options={[
           { value: "upcoming", label: "Upcoming first" },
+          { value: "popular", label: "Most popular" },
           { value: "championship", label: "Championship" },
           { value: "track", label: "Track" },
           { value: "status", label: "Status" }
@@ -334,6 +341,7 @@ export function RaceMapView({ races }: { races: DiscoveryRace[] }) {
           onChange={(value) => setSort(value as RaceListSort)}
           options={[
             { value: "upcoming", label: "Upcoming first" },
+            { value: "popular", label: "Most popular" },
             { value: "championship", label: "Championship" },
             { value: "track", label: "Track" },
             { value: "status", label: "Status" }

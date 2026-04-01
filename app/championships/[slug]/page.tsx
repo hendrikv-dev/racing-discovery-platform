@@ -30,6 +30,15 @@ export default async function ChampionshipDetailPage({
     notFound();
   }
 
+  const standings = [...data.racers]
+    .sort(
+      (left, right) =>
+        right.victories - left.victories ||
+        right.podiums - left.podiums ||
+        left.name.localeCompare(right.name)
+    )
+    .slice(0, 5);
+
   return (
     <div className="space-y-8">
       <section className="surface-card-strong overflow-hidden rounded-[28px]">
@@ -92,6 +101,29 @@ export default async function ChampionshipDetailPage({
           value={String(data.championship.racerCount).padStart(2, "0")}
           detail="See who to watch across the season."
         />
+      </section>
+
+      <section className="app-panel rounded-[28px] p-6">
+        <SectionHeading
+          eyebrow="Standings Snapshot"
+          title="Who is shaping this title fight"
+          description="A quick form guide based on wins and podium momentum across this championship roster."
+        />
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+          {standings.map((racer, index) => (
+            <Link key={racer.id} href={`/racers/${racer.slug}`} className="app-card rounded-[22px] p-5">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-zinc-400">
+                Position {index + 1}
+              </p>
+              <h2 className="mt-2 text-xl font-bold text-zinc-50">{racer.name}</h2>
+              <p className="mt-2 text-sm text-zinc-300">{racer.team}</p>
+              <div className="mt-4 flex flex-wrap gap-2 text-sm text-zinc-200">
+                <span className="app-pill px-3 py-2">{racer.victories} wins</span>
+                <span className="app-pill px-3 py-2">{racer.podiums} podiums</span>
+              </div>
+            </Link>
+          ))}
+        </div>
       </section>
 
       <section className="app-panel rounded-[28px] p-6">

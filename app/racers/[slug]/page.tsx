@@ -135,6 +135,34 @@ export default async function RacerProfilePage({
           </div>
         </div>
       </section>
+
+      <section className="app-panel rounded-[28px] p-6">
+        <SectionHeading
+          eyebrow="Recent Races"
+          title="Recent race history"
+          description="Use recent race weekends to understand where this racer has been active lately."
+        />
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {racer.recentRaces.length > 0 ? (
+            racer.recentRaces.map((race) => (
+              <Link key={race.id} href={`/races/${race.slug}`} className="app-card rounded-[22px] p-5">
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-zinc-400">
+                  {race.championshipName}
+                </p>
+                <h2 className="mt-2 text-xl font-bold text-zinc-50">{race.name}</h2>
+                <p className="mt-3 text-sm font-semibold text-teal-300">{race.date}</p>
+                <p className="mt-2 text-sm text-zinc-300">
+                  {race.trackName} • {race.location}
+                </p>
+              </Link>
+            ))
+          ) : (
+            <div className="md:col-span-2 xl:col-span-3">
+              <p className="text-sm text-zinc-300">Recent races will show up here as entries are added.</p>
+            </div>
+          )}
+        </div>
+      </section>
     </div>
   );
 }
