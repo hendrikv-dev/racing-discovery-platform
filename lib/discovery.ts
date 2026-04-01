@@ -7,6 +7,8 @@ export type DiscoveryRace = {
   name: string;
   image: string;
   series: string;
+  ticketUrl?: string | null;
+  officialUrl?: string | null;
   championshipId: string;
   championshipName: string;
   championshipSlug: string;
@@ -58,6 +60,7 @@ export type DiscoveryTrack = {
   slug: string;
   name: string;
   location: string;
+  city?: string;
   country: string;
   trackType: string;
   length: string;
@@ -127,6 +130,18 @@ function formatRaceDate(date: Date) {
     year: "numeric",
     timeZone: "UTC"
   }).format(date);
+}
+
+function getLocationParts(location: string) {
+  const parts = location
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  return {
+    city: parts[0] ?? location,
+    region: parts.slice(1).join(", ") || null
+  };
 }
 
 export function formatRelativeRaceTiming(startDate: string | Date) {
@@ -379,6 +394,8 @@ export async function getRaces(filters: RaceFilters, userId?: string) {
       name: race.name,
       image: race.track.image || race.championship.image,
       series: race.series,
+      ticketUrl: race.ticketUrl,
+      officialUrl: race.track.website,
       championshipId: race.championshipId,
       championshipName: race.championship.name,
       championshipSlug: race.championship.slug,
@@ -474,6 +491,8 @@ export async function getRaceBySlug(slug: string, userId?: string) {
     name: race.name,
     image: race.track.image || race.championship.image,
     series: race.series,
+    ticketUrl: race.ticketUrl,
+    officialUrl: race.track.website,
     championshipId: race.championshipId,
     championshipName: race.championship.name,
     championshipSlug: race.championship.slug,
@@ -629,6 +648,8 @@ export async function getChampionshipBySlug(slug: string, userId?: string) {
         name: race.name,
         image: race.track.image || race.championship.image,
         series: race.series,
+        ticketUrl: race.ticketUrl,
+        officialUrl: race.track.website,
         championshipId: race.championshipId,
         championshipName: race.championship.name,
         championshipSlug: race.championship.slug,
@@ -698,6 +719,7 @@ export async function getTracks(userId?: string) {
     slug: track.slug,
     name: track.name,
     location: track.location,
+    city: getLocationParts(track.location).city,
     country: track.country,
     trackType: track.trackType,
     length: track.length,
@@ -761,6 +783,7 @@ export async function getTrackBySlug(slug: string, userId?: string) {
       slug: track.slug,
       name: track.name,
       location: track.location,
+      city: getLocationParts(track.location).city,
       country: track.country,
       trackType: track.trackType,
       length: track.length,
@@ -803,6 +826,8 @@ export async function getTrackBySlug(slug: string, userId?: string) {
         name: race.name,
         image: race.track.image || race.championship.image,
         series: race.series,
+        ticketUrl: race.ticketUrl,
+        officialUrl: race.track.website,
         championshipId: race.championshipId,
         championshipName: race.championship.name,
         championshipSlug: race.championship.slug,
@@ -1060,6 +1085,8 @@ export async function getMyTracking(userId: string) {
       name: race.name,
       image: race.track.image || race.championship.image,
       series: race.series,
+      ticketUrl: race.ticketUrl,
+      officialUrl: race.track.website,
       championshipId: race.championshipId,
       championshipName: race.championship.name,
       championshipSlug: race.championship.slug,
@@ -1259,6 +1286,8 @@ export async function getHomepageData(userId?: string) {
         name: race.name,
         image: race.track.image || race.championship.image,
         series: race.series,
+        ticketUrl: race.ticketUrl,
+        officialUrl: race.track.website,
         championshipId: race.championshipId,
         championshipName: race.championship.name,
         championshipSlug: race.championship.slug,

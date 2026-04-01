@@ -146,6 +146,7 @@ model Race {
   name           String
   series         String
   location       String
+  ticketUrl      String?
   status         RaceStatus
   summary        String
   startDate      DateTime

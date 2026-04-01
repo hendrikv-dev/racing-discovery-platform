@@ -3,6 +3,7 @@ import { CalendarDays, Flag, MapPinned, Search, Timer, Trophy } from "lucide-rea
 import { auth } from "@/auth";
 import { FindNearYouButton } from "@/components/home/find-near-you-button";
 import { InteractiveMap } from "@/components/maps/interactive-map";
+import { NearYouSection } from "@/components/recommendation/near-you-section";
 import { RecommendedRaceSection } from "@/components/recommendation/recommended-race-section";
 import { SectionHeading, StatusBadge } from "@/components/ui";
 import { formatRelativeRaceTiming, getHomepageData } from "@/lib/discovery";
@@ -171,6 +172,8 @@ export default async function HomePage() {
         />
       ) : null}
 
+      <NearYouSection />
+
       <RecommendedRaceSection
         eyebrow="Races This Weekend"
         title="Races this weekend"
@@ -270,9 +273,9 @@ export default async function HomePage() {
       <section className="grid gap-6 xl:grid-cols-2">
         <div className="surface-panel rounded-[28px] p-6">
           <SectionHeading
-          eyebrow="Upcoming This Week"
-          title="Upcoming this week"
-          description="A fast way to see what is about to happen next."
+          eyebrow="Races This Weekend"
+          title="Races this weekend"
+          description="The next seven days of race weekends, sorted so you can decide what to watch first."
           />
           <div className="space-y-3">
             {home.upcomingThisWeek.length > 0 ? (

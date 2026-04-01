@@ -110,6 +110,7 @@ export async function updateRaceAdminAction(formData: FormData) {
       slug: String(formData.get("slug") ?? "").trim(),
       series: String(formData.get("series") ?? "").trim(),
       location: String(formData.get("location") ?? "").trim(),
+      ticketUrl: String(formData.get("ticketUrl") ?? "").trim() || null,
       summary: String(formData.get("summary") ?? "").trim(),
       status,
       startDate: parseRequiredDate(formData.get("startDate")),

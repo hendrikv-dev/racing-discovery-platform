@@ -825,6 +825,10 @@ async function main() {
           name,
           series: championshipSchedule.series,
           location: `${track.location}, ${track.country}`,
+          ticketUrl:
+            status === RaceStatus.UPCOMING && index % 2 === 0
+              ? `${track.website?.replace(/\/$/, "") ?? ""}/tickets`
+              : null,
           status,
           summary,
           startDate,

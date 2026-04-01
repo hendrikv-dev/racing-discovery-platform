@@ -38,6 +38,7 @@ export default async function ChampionshipDetailPage({
         left.name.localeCompare(right.name)
     )
     .slice(0, 5);
+  const upcomingRaces = data.races.filter((race) => race.status === "Upcoming" || race.status === "Live");
 
   return (
     <div className="space-y-8">
@@ -66,6 +67,10 @@ export default async function ChampionshipDetailPage({
             <p className="mt-4 max-w-2xl text-sm leading-7 text-zinc-200">
               {data.championship.description}
             </p>
+            <div className="mt-5 flex flex-wrap gap-3 text-sm text-zinc-200">
+              <span className="app-pill px-3 py-2">{data.championship.season}</span>
+              <span className="app-pill px-3 py-2">{data.championship.region}</span>
+            </div>
             <div className="mt-6 flex flex-wrap gap-3">
               <FollowButton
                 entity="championships"
@@ -128,12 +133,12 @@ export default async function ChampionshipDetailPage({
 
       <section className="app-panel rounded-[28px] p-6">
         <SectionHeading
-          eyebrow="Race Schedule"
-          title="Races in this championship"
-          description="Move from the title fight into the exact races that shape it."
+          eyebrow="Upcoming Races"
+          title="Upcoming races in this championship"
+          description="See the next weekends that still shape the championship battle."
         />
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {data.races.map((race) => (
+          {(upcomingRaces.length > 0 ? upcomingRaces : data.races).map((race) => (
             <article key={race.id} className="app-card rounded-[22px] p-5">
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-zinc-400">
                 {race.series}

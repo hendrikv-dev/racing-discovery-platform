@@ -137,7 +137,7 @@ export async function getPersonalizedRaceRecommendations(
       const daysUntil = getDaysUntil(race.startDate);
       return daysUntil >= 0 && daysUntil <= 7;
     })
-    .sort((left, right) => right.recommendationScore - left.recommendationScore || new Date(left.startDate).getTime() - new Date(right.startDate).getTime());
+    .sort((left, right) => new Date(left.startDate).getTime() - new Date(right.startDate).getTime());
 
   const recommended = scored
     .sort((left, right) => right.recommendationScore - left.recommendationScore || new Date(left.startDate).getTime() - new Date(right.startDate).getTime());

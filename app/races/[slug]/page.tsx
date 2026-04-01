@@ -46,6 +46,27 @@ export default async function RaceDetailPage({
         <div className="mt-6">
           <TrackRaceButton raceId={race.id} initialTracked={race.isTracked} />
         </div>
+        <div className="mt-4 flex flex-wrap gap-3">
+          {race.ticketUrl ? (
+            <a
+              href={race.ticketUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="primary-action inline-flex items-center rounded-xl px-4 py-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
+            >
+              Get Tickets
+            </a>
+          ) : race.officialUrl ? (
+            <a
+              href={race.officialUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="secondary-action inline-flex items-center rounded-xl px-4 py-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
+            >
+              Visit Official Site
+            </a>
+          ) : null}
+        </div>
       </section>
 
       <section className="grid gap-4 md:grid-cols-3">
@@ -110,6 +131,14 @@ export default async function RaceDetailPage({
                 Coordinates pending
               </span>
             )}
+          </div>
+          <div className="mt-6">
+            <a
+              href="mailto:hello@racingplatform.app?subject=Organize%20events%20here"
+              className="text-sm font-medium text-violet-200 underline-offset-4 transition duration-150 hover:text-violet-100 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400"
+            >
+              Organize events here? Contact us
+            </a>
           </div>
         </div>
       </section>

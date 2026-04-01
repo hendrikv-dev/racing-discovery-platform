@@ -26,6 +26,7 @@ export default async function AdminRacesPage() {
               <input name="slug" defaultValue={race.slug} className="app-input" />
               <input name="series" defaultValue={race.series} className="app-input" />
               <input name="location" defaultValue={race.location} className="app-input" />
+              <input name="ticketUrl" defaultValue={race.ticketUrl ?? ""} className="app-input" placeholder="Optional ticket URL" />
               <input name="startDate" type="datetime-local" defaultValue={race.startDate.toISOString().slice(0, 16)} className="app-input" />
               <input name="endDate" type="datetime-local" defaultValue={race.endDate.toISOString().slice(0, 16)} className="app-input" />
               <input name="latitude" type="number" step="0.0001" defaultValue={race.latitude} className="app-input" />

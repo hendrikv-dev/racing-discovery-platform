@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { auth } from "@/auth";
 import { RecommendedRaceSection } from "@/components/recommendation/recommended-race-section";
 import { CalendarView } from "@/components/races/calendar-view";
@@ -34,6 +35,8 @@ export default async function RacesPage({
     getRaceFilterOptions(),
     getPersonalizedRaceRecommendations(session?.user?.id)
   ]);
+  const nearYouRaces =
+    filters.sort === "nearest" && filters.lat && filters.lng ? races.slice(0, 3) : [];
 
   return (
     <div className="space-y-8">
@@ -76,6 +79,38 @@ export default async function RacesPage({
           emptyTitle="No personalized race picks yet"
           emptyDescription="Track a few racers, championships, or tracks and the schedule will adapt here."
         />
+      ) : null}
+
+      {nearYouRaces.length > 0 ? (
+        <section className="app-panel rounded-[28px] p-6">
+          <SectionHeading
+            eyebrow="Near You"
+            title="Near you"
+            description="The closest upcoming race weekends based on your current location."
+          />
+          <div className="grid gap-4 md:grid-cols-3">
+            {nearYouRaces.map((race) => (
+              <Link
+                key={race.id}
+                href={`/races/${race.slug}`}
+                className="app-card rounded-[22px] p-5"
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-zinc-400">
+                  {race.championshipName}
+                </p>
+                <h3 className="mt-2 text-xl font-bold text-zinc-50">{race.name}</h3>
+                <p className="mt-3 text-sm text-zinc-300">
+                  {race.trackName} • {race.location}
+                </p>
+                {typeof race.distanceKm === "number" ? (
+                  <p className="mt-3 text-sm font-semibold text-teal-300">
+                    {Math.round(race.distanceKm)} km away
+                  </p>
+                ) : null}
+              </Link>
+            ))}
+          </div>
+        </section>
       ) : null}
 
       <RecommendedRaceSection
