@@ -66,10 +66,10 @@ export function FollowButton({
       type="button"
       onClick={handleClick}
       disabled={isPending}
-      className={`rounded-full px-4 py-2 text-sm font-semibold transition duration-200 ${
+      className={`rounded-xl px-4 py-2 text-sm font-semibold transition duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F] ${
         tracked
-          ? "bg-slate-900 text-white hover:bg-apex-blue"
-          : "bg-white text-apex-slate ring-1 ring-slate-200 hover:-translate-y-0.5"
+          ? "border border-violet-500 bg-violet-600 text-white"
+          : "border border-zinc-800 bg-zinc-900/80 text-zinc-100 hover:border-zinc-700 hover:bg-zinc-800/90"
       } disabled:cursor-not-allowed disabled:opacity-70`}
     >
       {isPending ? "Saving..." : tracked ? activeLabel : inactiveLabel}

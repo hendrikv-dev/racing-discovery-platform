@@ -21,10 +21,10 @@ export default async function MyTrackedRacesPage() {
 
   return (
     <div className="space-y-8">
-      <section className="glass-border rounded-[28px] bg-white/85 p-6 shadow-panel">
+      <section className="app-panel rounded-[28px] p-6">
         <MyTrackingNav pathname="/my-tracking/races" />
       </section>
-      <section className="glass-border rounded-[28px] bg-white/85 p-6 shadow-panel">
+      <section className="app-panel rounded-[28px] p-6">
         <SectionHeading
           eyebrow="Tracked Races"
           title="Saved race list"
@@ -36,13 +36,13 @@ export default async function MyTrackedRacesPage() {
               <Link
                 key={race.id}
                 href={`/races/${race.slug}`}
-                className="glass-border rounded-[22px] bg-white p-5 shadow-panel transition duration-200 hover:-translate-y-1"
+                className="app-card rounded-[22px] p-5"
               >
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-apex-muted">
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-zinc-400">
                   {race.championshipName}
                 </p>
-                <h2 className="mt-2 text-xl font-bold text-apex-slate">{race.name}</h2>
-                <p className="mt-3 text-sm text-apex-muted">{race.location}</p>
+                <h2 className="mt-2 text-xl font-bold text-zinc-50">{race.name}</h2>
+                <p className="mt-3 text-sm text-zinc-300">{race.location}</p>
               </Link>
             ))
           ) : (

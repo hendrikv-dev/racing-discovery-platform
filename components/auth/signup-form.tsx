@@ -55,53 +55,53 @@ export function SignupForm() {
   return (
     <form onSubmit={handleSubmit} className="grid gap-4">
       <label className="block">
-        <span className="mb-2 block text-sm font-medium text-apex-slate">Name</span>
+        <span className="app-label">Name</span>
         <input
           name="name"
           required
-          className="w-full rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition duration-200 focus:border-apex-blue focus:bg-white"
+          className="app-input"
           placeholder="Your name"
         />
       </label>
 
       <label className="block">
-        <span className="mb-2 block text-sm font-medium text-apex-slate">Email</span>
+        <span className="app-label">Email</span>
         <input
           name="email"
           type="email"
           required
-          className="w-full rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition duration-200 focus:border-apex-blue focus:bg-white"
+          className="app-input"
           placeholder="you@example.com"
         />
       </label>
 
       <label className="block">
-        <span className="mb-2 block text-sm font-medium text-apex-slate">Password</span>
+        <span className="app-label">Password</span>
         <input
           name="password"
           type="password"
           required
           minLength={8}
-          className="w-full rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition duration-200 focus:border-apex-blue focus:bg-white"
+          className="app-input"
           placeholder="Create a password"
         />
       </label>
 
       {error ? (
-        <div className="rounded-[18px] bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>
+        <div className="rounded-[18px] border border-violet-400/25 bg-violet-500/10 px-4 py-3 text-sm text-zinc-100">{error}</div>
       ) : null}
 
       <button
         type="submit"
         disabled={isPending}
-        className="rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition duration-200 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70"
+        className="primary-action rounded-xl px-5 py-3 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
       >
         {isPending ? "Creating Account..." : "Create Account"}
       </button>
 
-      <p className="text-sm text-apex-muted">
+      <p className="text-sm text-zinc-300">
         Already have an account?{" "}
-        <Link href={`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`} className="font-semibold text-apex-blue">
+        <Link href={`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`} className="font-semibold text-violet-300 underline-offset-4 hover:text-violet-200 hover:underline">
           Sign in
         </Link>
       </p>

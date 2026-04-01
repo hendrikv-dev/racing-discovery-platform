@@ -291,7 +291,7 @@ export default async function HomePage() {
                     {track.location}, {track.country}
                   </p>
                 </div>
-                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm font-semibold text-zinc-100">
+                <span className="rounded-full border border-zinc-800 bg-zinc-900/80 px-3 py-2 text-sm font-semibold text-zinc-100">
                   {track.raceCount} races
                 </span>
               </Link>
@@ -347,7 +347,7 @@ export default async function HomePage() {
                 Open Map View
               </Link>
             </div>
-            <div className="mt-8 rounded-[20px] border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
+            <div className="mt-8 rounded-[20px] border border-zinc-800 bg-zinc-900/80 p-4 backdrop-blur-sm">
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-teal-300">
                 Search discovery
               </p>

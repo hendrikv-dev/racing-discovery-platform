@@ -22,7 +22,7 @@ export default async function TrackDetailsPage({
 
   return (
     <div className="space-y-8">
-      <section className="glass-border overflow-hidden rounded-[28px] bg-white/80 shadow-panel">
+      <section className="surface-card-strong overflow-hidden rounded-[28px]">
         <div className="relative min-h-[420px]">
           <Image
             src={data.track.image}
@@ -33,11 +33,11 @@ export default async function TrackDetailsPage({
           />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/35 to-transparent" />
           <div className="relative flex min-h-[420px] flex-col justify-end p-6 text-white sm:p-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-blue-200">
+            <p className="app-kicker">
               Track Details
             </p>
             <h1 className="mt-3 text-4xl font-bold tracking-tight md:text-5xl">{data.track.name}</h1>
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-200">{data.track.history}</p>
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-zinc-200">{data.track.history}</p>
             <div className="mt-6">
               <FollowButton
                 entity="tracks"
@@ -76,22 +76,22 @@ export default async function TrackDetailsPage({
             description="This venue will show up here as soon as its map location is available."
           />
         )}
-        <div className="glass-border rounded-[28px] bg-white/80 p-6 shadow-panel">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-apex-muted">
+        <div className="app-panel rounded-[28px] p-6">
+          <p className="app-kicker">
             Location
           </p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-apex-slate">Physical venue context</h2>
-          <p className="mt-3 text-sm leading-7 text-apex-muted">
+          <h2 className="mt-3 text-3xl font-bold tracking-tight text-zinc-50">Physical venue context</h2>
+          <p className="mt-3 text-sm leading-7 text-zinc-300">
             See where the circuit sits before you dive into race weekends hosted there.
           </p>
-          <div className="mt-5 flex flex-wrap gap-3 text-sm text-apex-slate">
-            <span className="rounded-full bg-slate-100 px-3 py-2">{data.track.country}</span>
+          <div className="mt-5 flex flex-wrap gap-3 text-sm text-zinc-200">
+            <span className="app-pill px-3 py-2">{data.track.country}</span>
             {data.track.coordinates ? (
-              <span className="rounded-full bg-slate-100 px-3 py-2">
+              <span className="app-pill px-3 py-2">
                 {data.track.coordinates.lat.toFixed(4)}, {data.track.coordinates.lng.toFixed(4)}
               </span>
             ) : (
-              <span className="rounded-full bg-amber-50 px-3 py-2 text-amber-800">
+              <span className="rounded-full border border-zinc-600 bg-zinc-800 px-3 py-2 text-zinc-300">
                 Coordinates pending
               </span>
             )}
@@ -99,7 +99,7 @@ export default async function TrackDetailsPage({
         </div>
       </section>
 
-      <section className="glass-border rounded-[28px] bg-white/80 p-6 shadow-panel">
+      <section className="app-panel rounded-[28px] p-6">
         <SectionHeading
           eyebrow="Event Timeline"
           title="Races at this circuit"
@@ -107,12 +107,12 @@ export default async function TrackDetailsPage({
         />
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {data.races.map((race) => (
-            <article key={race.id} className="glass-border rounded-[22px] bg-white p-5 shadow-panel">
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-apex-muted">
+            <article key={race.id} className="app-card rounded-[22px] p-5">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-zinc-400">
                 {race.championshipName}
               </p>
-              <h2 className="mt-2 text-xl font-bold text-apex-slate">{race.name}</h2>
-              <p className="mt-3 text-sm leading-6 text-apex-muted">{race.summary}</p>
+              <h2 className="mt-2 text-xl font-bold text-zinc-50">{race.name}</h2>
+              <p className="mt-3 text-sm leading-6 text-zinc-300">{race.summary}</p>
             </article>
           ))}
         </div>

@@ -9,13 +9,13 @@ export default async function AdminChampionshipsPage() {
 
   return (
     <div className="space-y-8">
-      <section className="glass-border rounded-[28px] bg-white/85 p-6 shadow-panel">
+      <section className="app-panel rounded-[28px] p-6">
         <AdminNav pathname="/admin/championships" />
       </section>
 
       <section className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-        <div className="glass-border rounded-[28px] bg-slate-950 p-6 text-white shadow-panel">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-blue-200">Create</p>
+        <div className="surface-card-strong rounded-[28px] p-6 text-white">
+          <p className="app-kicker">Create</p>
           <h1 className="mt-4 text-3xl font-bold tracking-tight">Add championship</h1>
           <form action={createChampionshipAction} className="mt-6 grid gap-4">
             {["name", "slug", "category", "region", "season", "image", "accentColor"].map((field) => (
@@ -23,16 +23,16 @@ export default async function AdminChampionshipsPage() {
                 key={field}
                 name={field}
                 placeholder={field}
-                className="rounded-[18px] border border-white/10 bg-white/10 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-300"
+                className="app-input"
               />
             ))}
             <textarea
               name="description"
               rows={5}
               placeholder="description"
-              className="rounded-[18px] border border-white/10 bg-white/10 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-300"
+              className="app-input"
             />
-            <button className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-950">
+            <button className="primary-action rounded-xl px-5 py-3 text-sm font-semibold">
               Create Championship
             </button>
           </form>
@@ -43,7 +43,7 @@ export default async function AdminChampionshipsPage() {
             <form
               key={championship.id}
               action={updateChampionshipAction}
-              className="glass-border rounded-[24px] bg-white/85 p-5 shadow-panel"
+              className="app-panel rounded-[24px] p-5"
             >
               <input type="hidden" name="id" value={championship.id} />
               <div className="grid gap-3 md:grid-cols-2">
@@ -60,7 +60,7 @@ export default async function AdminChampionshipsPage() {
                     key={name}
                     name={name}
                     defaultValue={value}
-                    className="rounded-[16px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none"
+                    className="app-input"
                   />
                 ))}
               </div>
@@ -68,15 +68,15 @@ export default async function AdminChampionshipsPage() {
                 name="description"
                 rows={4}
                 defaultValue={championship.description}
-                className="mt-3 w-full rounded-[16px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none"
+                className="mt-3 w-full app-input"
               />
               <div className="mt-4 flex flex-wrap gap-3">
-                <button className="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white">
+                <button className="primary-action rounded-xl px-4 py-2 text-sm font-semibold">
                   Save
                 </button>
                 <button
                   formAction={deleteChampionshipAction}
-                  className="rounded-full bg-red-50 px-4 py-2 text-sm font-semibold text-red-700"
+                  className="rounded-xl border border-zinc-600 bg-zinc-800 px-4 py-2 text-sm font-semibold text-zinc-200"
                 >
                   Delete
                 </button>

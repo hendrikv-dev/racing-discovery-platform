@@ -114,7 +114,7 @@ export function SearchEmptyState({
   hasFilters: boolean;
 }) {
   return (
-    <div className="rounded-[24px] border border-dashed border-white/10 bg-white/5 p-8 text-center shadow-[0_10px_30px_rgba(0,0,0,0.28)]">
+    <div className="rounded-[24px] border border-dashed border-zinc-700 bg-zinc-900/60 p-8 text-center shadow-[0_10px_30px_rgba(0,0,0,0.28)]">
       <h2 className="text-2xl font-bold text-zinc-50">No results found for &quot;{query}&quot;</h2>
       <p className="mt-3 text-sm leading-6 text-zinc-300">
         No results. Try a different search{hasFilters ? " or clear a filter." : "."}

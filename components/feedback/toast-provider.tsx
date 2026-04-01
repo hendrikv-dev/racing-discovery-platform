@@ -40,7 +40,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className="glass-border rounded-[18px] bg-slate-950/95 px-4 py-3 text-sm font-medium text-white shadow-panel backdrop-blur-xl"
+            className="rounded-[18px] border border-white/10 bg-[#0F1118]/95 px-4 py-3 text-sm font-medium text-white shadow-[0_18px_48px_rgba(0,0,0,0.32)] backdrop-blur-xl"
           >
             {toast.message}
           </div>
@@ -59,4 +59,3 @@ export function useToast() {
 
   return context;
 }
-

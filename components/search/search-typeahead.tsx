@@ -55,7 +55,7 @@ function DropdownLink({
     <Link
       href={href}
       onClick={onNavigate}
-      className="block rounded-[16px] px-3 py-3 transition duration-150 hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
+      className="block rounded-[16px] px-3 py-3 transition duration-150 hover:bg-zinc-900/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
     >
       <p className="font-medium text-zinc-100">
         {hasMatch ? (
@@ -264,7 +264,7 @@ export function SearchTypeahead() {
             </>
           ) : (
             <div className="px-4 py-4">
-              <p className="text-sm text-apex-muted">
+              <p className="text-sm text-zinc-300">
                 No results. Try a different search.
               </p>
             </div>

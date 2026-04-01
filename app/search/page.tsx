@@ -26,7 +26,7 @@ export default async function SearchPage({
 
   return (
     <div className="space-y-8">
-      <section className="glass-border rounded-[28px] bg-white/80 p-6 shadow-panel">
+      <section className="app-panel rounded-[28px] p-6">
         <SectionHeading
           eyebrow="Global Search"
           title="Find races, racers, tracks, and championships"

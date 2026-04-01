@@ -12,7 +12,7 @@ import { FollowButton } from "@/components/tracking/follow-button";
 function TrackLocationAvatar({ track }: { track: DiscoveryTrack }) {
   if (!track.coordinates) {
     return (
-      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100 text-apex-muted">
+      <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-zinc-800 bg-zinc-900/80 text-zinc-400">
         <MapPinned className="h-5 w-5" />
       </div>
     );

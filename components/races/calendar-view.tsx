@@ -71,7 +71,7 @@ export function CalendarDayCell({
       className={`min-h-[140px] rounded-[20px] border p-3 text-left transition duration-150 ${
         selected
           ? "border-violet-400/40 bg-violet-500/10"
-          : "border-white/10 bg-white/5 hover:-translate-y-0.5 hover:border-white/20"
+          : "border-zinc-800 bg-zinc-900/80 hover:-translate-y-0.5 hover:border-zinc-700"
       }`}
     >
       <div className="flex items-center justify-between">
@@ -79,7 +79,7 @@ export function CalendarDayCell({
           {day.getUTCDate()}
         </span>
         {races.length > 0 ? (
-          <span className="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-xs font-medium text-zinc-200">
+          <span className="rounded-full border border-zinc-800 bg-zinc-900/80 px-2 py-1 text-xs font-medium text-zinc-200">
             {races.length}
           </span>
         ) : null}

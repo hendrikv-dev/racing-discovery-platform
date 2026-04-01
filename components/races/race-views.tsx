@@ -71,7 +71,7 @@ function RaceListSortControls({
         <select
           value={value}
           onChange={(event) => onChange(event.target.value)}
-          className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 pr-12 text-sm text-zinc-100 outline-none transition duration-150 focus:border-violet-400 focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
+          className="rounded-xl border border-zinc-800 bg-zinc-900/80 px-4 py-2 pr-12 text-sm text-zinc-100 outline-none transition duration-150 focus:border-violet-400 focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
         >
           {options.map((option) => (
             <option key={option.value} value={option.value}>
@@ -154,7 +154,7 @@ function RaceListCard({
               </p>
               <h3 className={`mt-2 font-bold text-zinc-50 ${isGrid ? "text-xl" : "text-2xl"}`}>{race.name}</h3>
             </div>
-            <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm font-medium text-zinc-200">
+            <span className="rounded-full border border-zinc-800 bg-zinc-900/80 px-3 py-2 text-sm font-medium text-zinc-200">
               {race.status}
             </span>
           </div>
@@ -236,7 +236,7 @@ export function RaceViewTabs({
           className={`rounded-xl border px-4 py-2 text-sm font-medium transition duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F] ${
             activeView === view.value
               ? "border-violet-500 bg-violet-600 text-white"
-              : "border-white/10 bg-white/5 text-zinc-300 hover:border-white/20 hover:bg-white/10 hover:text-white"
+              : "border-zinc-800 bg-zinc-900/80 text-zinc-300 hover:border-zinc-700 hover:bg-zinc-800/90 hover:text-white"
           }`}
         >
           {view.label}
@@ -268,7 +268,7 @@ export function RaceListView({ races }: { races: DiscoveryRace[] }) {
         value={sort}
         onChange={(value) => setSort(value as RaceListSort)}
         right={
-          <div className="flex rounded-xl border border-white/10 bg-white/5 p-1">
+          <div className="flex rounded-xl border border-zinc-800 bg-zinc-900/80 p-1">
             {(["list", "grid"] as RaceLayout[]).map((option) => (
               <button
                 key={option}

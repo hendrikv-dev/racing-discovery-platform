@@ -28,14 +28,14 @@ export function TrackMap({
   }
 
   return (
-    <div className="glass-border rounded-[28px] bg-slate-950 p-6 text-white shadow-panel">
-      <p className="text-xs font-semibold uppercase tracking-[0.28em] text-blue-200">Explore By Map</p>
+    <div className="surface-card-strong rounded-[28px] p-6 text-white">
+      <p className="app-kicker">Explore By Map</p>
       <h2 className="mt-3 text-2xl font-bold">Physical venues, clearly mapped</h2>
-      <p className="mt-3 max-w-lg text-sm leading-7 text-slate-300">
+      <p className="mt-3 max-w-lg text-sm leading-7 text-zinc-300">
         Pick a circuit from the map or list to see where it sits and jump straight into track details.
       </p>
       {missingCount > 0 ? (
-        <p className="mt-3 text-xs uppercase tracking-[0.24em] text-blue-200">
+        <p className="mt-3 text-xs uppercase tracking-[0.24em] text-teal-300">
           {missingCount} track{missingCount === 1 ? "" : "s"} still show in the list while map
           locations are being added.
         </p>

@@ -26,14 +26,14 @@ export default async function MyTrackingPage() {
   return (
     <div className="space-y-8">
       <section className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
-        <div className="glass-border rounded-[28px] bg-slate-950 p-6 text-white shadow-panel">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-blue-200">
+        <div className="surface-card-strong rounded-[28px] p-6 text-white">
+          <p className="app-kicker">
             Tracking Center
           </p>
           <h1 className="mt-4 text-4xl font-bold tracking-tight">
             {data.user.name ?? data.user.email}&apos;s dashboard
           </h1>
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-300">
+          <p className="mt-4 max-w-2xl text-sm leading-7 text-zinc-300">
             Keep upcoming races, followed series, saved racers, and favorite circuits together in
             one place.
           </p>
@@ -80,7 +80,7 @@ export default async function MyTrackingPage() {
         />
       </section>
 
-      <section className="glass-border rounded-[28px] bg-white/85 p-6 shadow-panel">
+      <section className="app-panel rounded-[28px] p-6">
         <SectionHeading
           eyebrow="Next Race"
           title="Your next tracked race"
@@ -90,19 +90,19 @@ export default async function MyTrackingPage() {
         {nextRace ? (
           <Link
             href={`/races/${nextRace.slug}`}
-            className="glass-border block rounded-[24px] bg-white p-6 shadow-panel transition duration-200 hover:-translate-y-1"
+            className="app-card block rounded-[24px] p-6"
           >
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-apex-muted">
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-zinc-400">
                   {nextRace.championshipName}
                 </p>
-                <h2 className="mt-2 text-3xl font-bold text-apex-slate">{nextRace.name}</h2>
-                <p className="mt-3 text-sm text-apex-muted">
+                <h2 className="mt-2 text-3xl font-bold text-zinc-50">{nextRace.name}</h2>
+                <p className="mt-3 text-sm text-zinc-300">
                   {nextRace.trackName} • {nextRace.location}
                 </p>
               </div>
-              <div className="rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-apex-blue">
+              <div className="rounded-full border border-violet-400/30 bg-violet-500/10 px-4 py-2 text-sm font-semibold text-violet-200">
                 {formatRelativeRaceTiming(nextRace.startDate)}
               </div>
             </div>
@@ -112,7 +112,7 @@ export default async function MyTrackingPage() {
         )}
       </section>
 
-      <section className="glass-border rounded-[28px] bg-white/85 p-6 shadow-panel">
+      <section className="app-panel rounded-[28px] p-6">
         <SectionHeading
           eyebrow="Upcoming"
           title="Upcoming tracked races"
@@ -124,13 +124,13 @@ export default async function MyTrackingPage() {
               <Link
                 key={race.id}
                 href={`/races/${race.slug}`}
-                className="glass-border rounded-[22px] bg-white p-5 shadow-panel transition duration-200 hover:-translate-y-1"
+                className="app-card rounded-[22px] p-5"
               >
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-apex-muted">
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-zinc-400">
                   {race.championshipName}
                 </p>
-                <h2 className="mt-2 text-xl font-bold text-apex-slate">{race.name}</h2>
-                <p className="mt-3 text-sm text-apex-muted">{race.trackName} • {race.location}</p>
+                <h2 className="mt-2 text-xl font-bold text-zinc-50">{race.name}</h2>
+                <p className="mt-3 text-sm text-zinc-300">{race.trackName} • {race.location}</p>
               </Link>
             ))
           ) : (
@@ -141,7 +141,7 @@ export default async function MyTrackingPage() {
         </div>
       </section>
 
-      <section className="glass-border rounded-[28px] bg-white/85 p-6 shadow-panel">
+      <section className="app-panel rounded-[28px] p-6">
         <SectionHeading
           eyebrow="Past"
           title="Past tracked races"
@@ -153,13 +153,13 @@ export default async function MyTrackingPage() {
               <Link
                 key={race.id}
                 href={`/races/${race.slug}`}
-                className="glass-border rounded-[22px] bg-white p-5 shadow-panel transition duration-200 hover:-translate-y-1"
+                className="app-card rounded-[22px] p-5"
               >
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-apex-muted">
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-zinc-400">
                   {race.championshipName}
                 </p>
-                <h2 className="mt-2 text-xl font-bold text-apex-slate">{race.name}</h2>
-                <p className="mt-3 text-sm text-apex-muted">{race.trackName} • {race.location}</p>
+                <h2 className="mt-2 text-xl font-bold text-zinc-50">{race.name}</h2>
+                <p className="mt-3 text-sm text-zinc-300">{race.trackName} • {race.location}</p>
               </Link>
             ))
           ) : (

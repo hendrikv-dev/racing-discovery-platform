@@ -21,7 +21,7 @@ export default async function RacerProfilePage({
 
   return (
     <div className="space-y-8">
-      <section className="glass-border overflow-hidden rounded-[28px] bg-white/80 shadow-panel">
+      <section className="overflow-hidden rounded-[28px] border border-white/10 bg-[#11131C]/95 shadow-[0_18px_48px_rgba(0,0,0,0.3)]">
         <div className="grid gap-0 lg:grid-cols-[0.95fr_1.05fr]">
           <div className="relative min-h-[420px]">
             <Image
@@ -34,16 +34,16 @@ export default async function RacerProfilePage({
           </div>
           <div className="flex flex-col justify-between p-6 sm:p-8">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-apex-muted">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-400">
                 Racer Profile
               </p>
-              <h1 className="mt-3 text-4xl font-bold tracking-tight text-apex-slate md:text-5xl">
+              <h1 className="mt-3 text-4xl font-bold tracking-tight text-zinc-50 md:text-5xl">
                 {racer.name}
               </h1>
-              <p className="mt-3 text-lg text-apex-muted">
+              <p className="mt-3 text-lg text-zinc-300">
                 {racer.team} • {racer.nationality} • Car #{racer.number}
               </p>
-              <p className="mt-6 max-w-xl text-sm leading-7 text-apex-muted">
+              <p className="mt-6 max-w-xl text-sm leading-7 text-zinc-300">
                 Follow this racer to keep their profile close on race weekend.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
@@ -57,7 +57,7 @@ export default async function RacerProfilePage({
                 {racer.championshipSlug ? (
                   <Link
                     href={`/championships/${racer.championshipSlug}`}
-                    className="rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-apex-slate transition duration-200 hover:-translate-y-0.5"
+                    className="inline-flex items-center justify-center rounded-full border border-zinc-800 bg-zinc-900/80 px-4 py-2 text-sm font-semibold text-zinc-100 transition duration-150 hover:-translate-y-0.5 hover:border-zinc-700 hover:bg-zinc-800/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
                   >
                     View Championship
                   </Link>
@@ -86,49 +86,49 @@ export default async function RacerProfilePage({
       </section>
 
       <section className="grid gap-6 lg:grid-cols-[0.7fr_1.3fr]">
-        <div className="glass-border rounded-[28px] bg-white/80 p-6 shadow-panel">
+        <div className="app-panel rounded-[28px] p-6">
           <SectionHeading
             eyebrow="Machine Gallery"
             title={racer.vehicle}
             description="Get a quick read on the machine this racer brings into the weekend."
           />
-          <div className="rounded-[24px] bg-slate-950 p-6 text-white">
-            <p className="text-sm uppercase tracking-[0.28em] text-blue-200">Championship Context</p>
+          <div className="rounded-[24px] border border-white/10 bg-[#0F1118] p-6 text-white">
+            <p className="text-sm uppercase tracking-[0.28em] text-teal-300">Championship Context</p>
             <p className="mt-5 text-lg font-semibold">
               {racer.championshipName ?? "Independent competitor context"}
             </p>
-            <p className="mt-3 text-sm leading-7 text-slate-300">
+            <p className="mt-3 text-sm leading-7 text-zinc-300">
               Jump from a racer you follow straight into the championship story around them.
             </p>
           </div>
         </div>
 
-        <div className="glass-border rounded-[28px] bg-white/80 p-6 shadow-panel">
+        <div className="app-panel rounded-[28px] p-6">
           <SectionHeading
             eyebrow="Racer Snapshot"
             title="Current profile data"
             description="Scan the details that matter before you jump back into the calendar."
           />
-          <div className="overflow-hidden rounded-[24px] border border-slate-200">
-            <table className="min-w-full divide-y divide-slate-200 text-left text-sm">
-              <tbody className="divide-y divide-slate-100 bg-white">
+          <div className="overflow-hidden rounded-[24px] border border-zinc-800 bg-zinc-950/80">
+            <table className="min-w-full divide-y divide-zinc-800 text-left text-sm">
+              <tbody className="divide-y divide-zinc-800 bg-zinc-950/70">
                 <tr>
-                  <td className="px-4 py-4 font-medium text-apex-slate">Team</td>
-                  <td className="px-4 py-4 text-apex-muted">{racer.team}</td>
+                  <td className="px-4 py-4 font-medium text-zinc-100">Team</td>
+                  <td className="px-4 py-4 text-zinc-300">{racer.team}</td>
                 </tr>
                 <tr>
-                  <td className="px-4 py-4 font-medium text-apex-slate">Nationality</td>
-                  <td className="px-4 py-4 text-apex-muted">{racer.nationality}</td>
+                  <td className="px-4 py-4 font-medium text-zinc-100">Nationality</td>
+                  <td className="px-4 py-4 text-zinc-300">{racer.nationality}</td>
                 </tr>
                 <tr>
-                  <td className="px-4 py-4 font-medium text-apex-slate">Championship</td>
-                  <td className="px-4 py-4 text-apex-muted">
+                  <td className="px-4 py-4 font-medium text-zinc-100">Championship</td>
+                  <td className="px-4 py-4 text-zinc-300">
                     {racer.championshipName ?? "Not assigned"}
                   </td>
                 </tr>
                 <tr>
-                  <td className="px-4 py-4 font-medium text-apex-slate">Vehicle</td>
-                  <td className="px-4 py-4 text-apex-muted">{racer.vehicle}</td>
+                  <td className="px-4 py-4 font-medium text-zinc-100">Vehicle</td>
+                  <td className="px-4 py-4 text-zinc-300">{racer.vehicle}</td>
                 </tr>
               </tbody>
             </table>

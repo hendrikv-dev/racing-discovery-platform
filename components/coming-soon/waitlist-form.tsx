@@ -92,10 +92,10 @@ export function WaitlistForm({
         <p
           className={`mt-3 text-sm ${
             submission.kind === "success"
-              ? "text-green-600"
+              ? "text-emerald-300"
               : submission.kind === "error"
-                ? "text-apex-alert"
-                : "text-apex-muted"
+                ? "text-rose-300"
+                : "text-zinc-400"
           }`}
         >
           {submission.message || "Single-field signup. No spam, just launch updates."}

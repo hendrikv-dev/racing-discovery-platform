@@ -61,7 +61,7 @@ export function SiteHeader() {
                   className={`rounded-xl border px-4 py-2 transition duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F] ${
                     pathname === item.href
                       ? "border-violet-500 bg-violet-600 text-white shadow-[0_0_18px_rgba(124,58,237,0.24)]"
-                      : "border-white/10 bg-white/5 text-zinc-300 hover:border-white/20 hover:bg-white/10 hover:text-white"
+                      : "border-zinc-800 bg-zinc-900/80 text-zinc-300 hover:border-zinc-700 hover:bg-zinc-800/90 hover:text-white"
                   }`}
                 >
                   {item.label}
@@ -87,7 +87,7 @@ export function SiteHeader() {
                   Admin
                 </Link>
               ) : null}
-              <span className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-zinc-100">
+              <span className="rounded-xl border border-zinc-800 bg-zinc-900/80 px-4 py-2 text-sm font-medium text-zinc-100">
                 {session.user.name ?? session.user.email}
               </span>
               <button

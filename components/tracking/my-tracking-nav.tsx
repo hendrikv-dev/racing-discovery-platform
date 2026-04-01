@@ -15,10 +15,10 @@ export function MyTrackingNav({ pathname }: { pathname: string }) {
         <Link
           key={link.href}
           href={link.href}
-          className={`rounded-full px-4 py-2 text-sm font-medium transition duration-200 ${
+          className={`rounded-xl border px-4 py-2 text-sm font-medium transition duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F] ${
             pathname === link.href
-              ? "bg-slate-900 text-white"
-              : "bg-slate-100 text-apex-slate hover:-translate-y-0.5"
+              ? "border-violet-500 bg-violet-600 text-white"
+              : "border-zinc-800 bg-zinc-900/80 text-zinc-300 hover:border-zinc-700 hover:bg-zinc-800/90 hover:text-white"
           }`}
         >
           {link.label}

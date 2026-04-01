@@ -12,12 +12,12 @@ export default async function ChampionshipsPage() {
   return (
     <div className="space-y-8">
       <section className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
-        <div className="glass-border rounded-[28px] bg-slate-950 p-6 text-white shadow-panel">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-blue-200">
+        <div className="surface-card-strong rounded-[28px] p-6 text-white">
+          <p className="app-kicker">
             Championship Hub
           </p>
           <h1 className="mt-4 text-4xl font-bold tracking-tight">Follow every title fight from one place</h1>
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-300">
+          <p className="mt-4 max-w-2xl text-sm leading-7 text-zinc-300">
             Explore the series on the platform, track the next decisive race, and move directly
             into championship-specific race discovery.
           </p>
@@ -36,7 +36,7 @@ export default async function ChampionshipsPage() {
         </div>
       </section>
 
-      <section className="glass-border rounded-[28px] bg-white/85 p-6 shadow-panel">
+      <section className="app-panel rounded-[28px] p-6">
         <SectionHeading
           eyebrow="Series Directory"
           title="Championship overview"
@@ -47,7 +47,7 @@ export default async function ChampionshipsPage() {
           {championships.map((championship) => (
             <article
               key={championship.id}
-              className="glass-border overflow-hidden rounded-[24px] bg-white shadow-panel"
+              className="app-card overflow-hidden rounded-[24px]"
             >
               <div className="relative h-56">
                 <Image
@@ -64,25 +64,25 @@ export default async function ChampionshipsPage() {
                   }}
                 />
                 <div className="absolute inset-x-0 bottom-0 p-5 text-white">
-                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-blue-100">
+                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-violet-100">
                     {championship.category}
                   </p>
                   <h2 className="mt-2 text-2xl font-bold">{championship.name}</h2>
                 </div>
               </div>
               <div className="p-5">
-                <p className="text-sm leading-6 text-apex-muted">{championship.description}</p>
-                <div className="mt-4 flex flex-wrap gap-2 text-sm text-apex-slate">
-                  <span className="rounded-full bg-slate-100 px-3 py-2">{championship.season}</span>
-                  <span className="rounded-full bg-slate-100 px-3 py-2">{championship.region}</span>
-                  <span className="rounded-full bg-slate-100 px-3 py-2">
+                <p className="text-sm leading-6 text-zinc-300">{championship.description}</p>
+                <div className="mt-4 flex flex-wrap gap-2 text-sm text-zinc-200">
+                  <span className="app-pill px-3 py-2">{championship.season}</span>
+                  <span className="app-pill px-3 py-2">{championship.region}</span>
+                  <span className="app-pill px-3 py-2">
                     {championship.raceCount} races
                   </span>
                 </div>
                 <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
                   <Link
                     href={`/championships/${championship.slug}`}
-                    className="inline-flex items-center rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition duration-200 hover:bg-apex-blue"
+                    className="primary-action inline-flex items-center rounded-xl px-4 py-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
                   >
                     View Championship
                   </Link>

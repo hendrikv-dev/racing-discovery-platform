@@ -69,7 +69,7 @@ export function TimelineView({ races }: { races: DiscoveryRace[] }) {
         <select
           value={sort}
           onChange={(event) => setSort(event.target.value as TimelineSort)}
-          className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 pr-12 text-sm text-zinc-100 outline-none transition duration-150 focus:border-violet-400 focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
+          className="rounded-xl border border-zinc-800 bg-zinc-900/80 px-4 py-2 pr-12 text-sm text-zinc-100 outline-none transition duration-150 focus:border-violet-400 focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090F]"
         >
           <option value="month-asc">Earliest month first</option>
           <option value="month-desc">Latest month first</option>
@@ -109,7 +109,7 @@ export function TimelineView({ races }: { races: DiscoveryRace[] }) {
                     className={`rounded-[22px] border p-5 ${
                       nextUpcomingRace === race.id
                         ? "border-violet-400/30 bg-violet-500/10"
-                        : "border-white/10 bg-white/5"
+                        : "border-zinc-800 bg-zinc-900/80"
                     }`}
                   >
                     <div className="flex flex-wrap items-start justify-between gap-3">
@@ -119,7 +119,7 @@ export function TimelineView({ races }: { races: DiscoveryRace[] }) {
                           {race.championshipName} • {race.trackName}
                         </p>
                       </div>
-                      <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm font-medium text-zinc-200">
+                      <span className="rounded-full border border-zinc-800 bg-zinc-900/80 px-3 py-2 text-sm font-medium text-zinc-200">
                         {race.status}
                       </span>
                     </div>

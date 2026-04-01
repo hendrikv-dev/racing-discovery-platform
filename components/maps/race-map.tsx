@@ -29,14 +29,14 @@ export function RaceMap({
   }
 
   return (
-    <div className="glass-border rounded-[28px] bg-slate-950 p-6 text-white shadow-panel">
-      <p className="text-xs font-semibold uppercase tracking-[0.28em] text-blue-200">Map View</p>
+    <div className="surface-card-strong rounded-[28px] p-6 text-white">
+      <p className="app-kicker">Map View</p>
       <h2 className="mt-3 text-2xl font-bold">Explore races by location</h2>
-      <p className="mt-3 max-w-lg text-sm leading-7 text-slate-300">
+      <p className="mt-3 max-w-lg text-sm leading-7 text-zinc-300">
         Click a marker to see where a weekend takes place and move straight into the race details.
       </p>
       {missingCount > 0 ? (
-        <p className="mt-3 text-xs uppercase tracking-[0.24em] text-blue-200">
+        <p className="mt-3 text-xs uppercase tracking-[0.24em] text-teal-300">
           {missingCount} filtered race{missingCount === 1 ? "" : "s"} still show in the list while
           location details are being filled in.
         </p>

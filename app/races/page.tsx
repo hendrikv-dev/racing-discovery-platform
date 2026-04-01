@@ -34,7 +34,7 @@ export default async function RacesPage({
 
   return (
     <div className="space-y-8">
-      <section className="glass-border rounded-[28px] bg-white/80 p-6 shadow-panel">
+      <section className="app-panel rounded-[28px] p-6">
         <SectionHeading
           eyebrow="Race Discovery"
           title="Search, filter, and track the race calendar"
@@ -43,20 +43,20 @@ export default async function RacesPage({
         <RaceFilters defaults={filters} options={filterOptions} />
       </section>
 
-      <section className="glass-border rounded-[28px] bg-white/80 p-6 shadow-panel">
+      <section className="app-panel rounded-[28px] p-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.32em] text-apex-muted">
+            <p className="app-kicker">
               View Modes
             </p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight text-apex-slate">
+            <h2 className="mt-3 text-3xl font-bold tracking-tight text-zinc-50">
               Explore the race schedule your way
             </h2>
             <div className="mt-3">
               <RaceViewDescription activeView={activeView} />
             </div>
             {filters.sort === "nearest" && filters.lat && filters.lng ? (
-              <p className="mt-3 text-sm font-medium text-apex-blue">Nearest races</p>
+              <p className="mt-3 text-sm font-medium text-teal-300">Nearest races</p>
             ) : null}
           </div>
           <RaceViewTabs activeView={activeView} filters={filters} />

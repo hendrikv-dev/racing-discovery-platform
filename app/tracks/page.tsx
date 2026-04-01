@@ -17,7 +17,7 @@ export default async function TracksPage({
 
   return (
     <div className="space-y-8">
-      <section className="glass-border rounded-[28px] bg-white/80 p-6 shadow-panel">
+      <section className="app-panel rounded-[28px] p-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <SectionHeading
             eyebrow="Track Discovery"
@@ -27,29 +27,29 @@ export default async function TracksPage({
           <div className="flex flex-wrap gap-2">
             <Link
               href="/tracks?view=map"
-              className={`rounded-full px-4 py-2 text-sm font-medium transition duration-200 ${
-                activeView === "map"
-                  ? "bg-slate-900 text-white"
-                  : "bg-slate-100 text-apex-slate hover:-translate-y-0.5"
+                className={`rounded-xl border px-4 py-2 text-sm font-medium transition duration-150 ${
+                  activeView === "map"
+                  ? "border-violet-500 bg-violet-600 text-white"
+                  : "border-zinc-800 bg-zinc-900/80 text-zinc-300 hover:border-zinc-700 hover:bg-zinc-800/90"
               }`}
             >
               Map
             </Link>
             <Link
               href="/tracks"
-              className={`rounded-full px-4 py-2 text-sm font-medium transition duration-200 ${
-                activeView === "list"
-                  ? "bg-slate-900 text-white"
-                  : "bg-slate-100 text-apex-slate hover:-translate-y-0.5"
+                className={`rounded-xl border px-4 py-2 text-sm font-medium transition duration-150 ${
+                  activeView === "list"
+                  ? "border-violet-500 bg-violet-600 text-white"
+                  : "border-zinc-800 bg-zinc-900/80 text-zinc-300 hover:border-zinc-700 hover:bg-zinc-800/90"
               }`}
             >
               List
             </Link>
           </div>
         </div>
-        <div className="mt-5 flex flex-wrap items-center gap-3 rounded-[22px] bg-slate-50 px-4 py-4">
-          <MapPinned className="h-5 w-5 text-apex-blue" />
-          <p className="text-sm text-apex-muted">
+        <div className="mt-5 flex flex-wrap items-center gap-3 rounded-[22px] border border-zinc-800 bg-zinc-900/80 px-4 py-4">
+          <MapPinned className="h-5 w-5 text-teal-300" />
+          <p className="text-sm text-zinc-300">
             Use map view to spot circuits by location, then open the venue you want to explore.
           </p>
         </div>

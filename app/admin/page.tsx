@@ -16,10 +16,10 @@ export default async function AdminPage() {
 
   return (
     <div className="space-y-8">
-      <section className="glass-border rounded-[28px] bg-slate-950 p-6 text-white shadow-panel">
-        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-blue-200">Admin</p>
+      <section className="surface-card-strong rounded-[28px] p-6 text-white">
+        <p className="app-kicker">Admin</p>
         <h1 className="mt-4 text-4xl font-bold tracking-tight">Keep discovery data sharp</h1>
-        <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-300">
+        <p className="mt-4 max-w-2xl text-sm leading-7 text-zinc-300">
           Keep championship pages accurate, map locations easy to trust, and approved submissions
           ready for discovery.
         </p>
@@ -35,7 +35,7 @@ export default async function AdminPage() {
         <MetricCard label="Submissions" value={String(submissions).padStart(2, "0")} detail="Incoming race submissions awaiting review or conversion." />
       </section>
 
-      <section className="glass-border rounded-[28px] bg-white/85 p-6 shadow-panel">
+      <section className="app-panel rounded-[28px] p-6">
         <SectionHeading
           eyebrow="Admin Areas"
           title="Admin shortcuts"
@@ -49,9 +49,9 @@ export default async function AdminPage() {
             ["/admin/tracks", "Track Coordinates", "Correct latitude and longitude for map views."],
             ["/admin/submissions", "Submission Conversion", "Approve submissions and convert them into real races."]
           ].map(([href, title, description]) => (
-            <Link key={href} href={href} className="rounded-[22px] bg-slate-50 p-5 transition duration-200 hover:-translate-y-0.5">
-              <h2 className="text-xl font-bold text-apex-slate">{title}</h2>
-              <p className="mt-3 text-sm leading-6 text-apex-muted">{description}</p>
+            <Link key={href} href={href} className="app-card rounded-[22px] p-5">
+              <h2 className="text-xl font-bold text-zinc-50">{title}</h2>
+              <p className="mt-3 text-sm leading-6 text-zinc-300">{description}</p>
             </Link>
           ))}
         </div>

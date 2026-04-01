@@ -89,7 +89,7 @@ export function SearchFilters({
         <select
           value={currentParams.type}
           onChange={(event) => updateParam("type", event.target.value)}
-          className="rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-apex-slate outline-none transition duration-200 focus:border-apex-blue focus:bg-white"
+          className="app-input"
         >
           <option value="all">All types</option>
           <option value="races">Races</option>
@@ -101,7 +101,7 @@ export function SearchFilters({
         <select
           value={currentParams.championship}
           onChange={(event) => updateParam("championship", event.target.value)}
-          className="rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-apex-slate outline-none transition duration-200 focus:border-apex-blue focus:bg-white"
+          className="app-input"
         >
           <option value="">All championships</option>
           {championships.map((championship) => (
@@ -114,7 +114,7 @@ export function SearchFilters({
         <select
           value={currentParams.status}
           onChange={(event) => updateParam("status", event.target.value)}
-          className="rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-apex-slate outline-none transition duration-200 focus:border-apex-blue focus:bg-white"
+          className="app-input"
         >
           <option value="">Any status</option>
           <option value="LIVE">Live</option>
@@ -126,14 +126,14 @@ export function SearchFilters({
           type="date"
           value={currentParams.start}
           onChange={(event) => updateParam("start", event.target.value)}
-          className="rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-apex-slate outline-none transition duration-200 focus:border-apex-blue focus:bg-white"
+          className="app-input"
         />
 
         <input
           type="date"
           value={currentParams.end}
           onChange={(event) => updateParam("end", event.target.value)}
-          className="rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-apex-slate outline-none transition duration-200 focus:border-apex-blue focus:bg-white"
+          className="app-input"
         />
       </div>
     </div>

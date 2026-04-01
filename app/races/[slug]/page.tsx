@@ -32,16 +32,16 @@ export default async function RaceDetailPage({
 
   return (
     <div className="space-y-8">
-      <section className="glass-border rounded-[28px] bg-slate-950 p-6 text-white shadow-panel">
-        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-blue-200">
+      <section className="surface-card-strong rounded-[28px] p-6 text-white">
+        <p className="app-kicker">
           Race Detail
         </p>
         <h1 className="mt-4 text-4xl font-bold tracking-tight">{race.name}</h1>
-        <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-300">{race.summary}</p>
+        <p className="mt-4 max-w-2xl text-sm leading-7 text-zinc-300">{race.summary}</p>
         <div className="mt-6 flex flex-wrap gap-3">
-          <span className="rounded-full bg-white/10 px-4 py-2 text-sm">{race.championshipName}</span>
-          <span className="rounded-full bg-white/10 px-4 py-2 text-sm">{race.trackName}</span>
-          <span className="rounded-full bg-white/10 px-4 py-2 text-sm">{race.status}</span>
+          <span className="app-pill px-4 py-2 text-sm">{race.championshipName}</span>
+          <span className="app-pill px-4 py-2 text-sm">{race.trackName}</span>
+          <span className="app-pill px-4 py-2 text-sm">{race.status}</span>
         </div>
         <div className="mt-6">
           <TrackRaceButton raceId={race.id} initialTracked={race.isTracked} />
@@ -90,23 +90,23 @@ export default async function RaceDetailPage({
           />
         )}
 
-        <div className="glass-border rounded-[28px] bg-white/80 p-6 shadow-panel">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-apex-muted">
+        <div className="app-panel rounded-[28px] p-6">
+          <p className="app-kicker">
             Race Location
           </p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-apex-slate">Where this race happens</h2>
-          <p className="mt-3 text-sm leading-7 text-apex-muted">
+          <h2 className="mt-3 text-3xl font-bold tracking-tight text-zinc-50">Where this race happens</h2>
+          <p className="mt-3 text-sm leading-7 text-zinc-300">
             Keep the weekend grounded in a real venue so it is easier to plan what to watch and follow.
           </p>
-          <div className="mt-5 flex flex-wrap gap-3 text-sm text-apex-slate">
-            <span className="rounded-full bg-slate-100 px-3 py-2">{race.trackName}</span>
-            <span className="rounded-full bg-slate-100 px-3 py-2">{race.location}</span>
+          <div className="mt-5 flex flex-wrap gap-3 text-sm text-zinc-200">
+            <span className="app-pill px-3 py-2">{race.trackName}</span>
+            <span className="app-pill px-3 py-2">{race.location}</span>
             {race.mapCoordinates ? (
-              <span className="rounded-full bg-slate-100 px-3 py-2">
+              <span className="app-pill px-3 py-2">
                 {race.mapCoordinates.lat.toFixed(4)}, {race.mapCoordinates.lng.toFixed(4)}
               </span>
             ) : (
-              <span className="rounded-full bg-amber-50 px-3 py-2 text-amber-800">
+              <span className="rounded-full border border-zinc-600 bg-zinc-800 px-3 py-2 text-zinc-300">
                 Coordinates pending
               </span>
             )}
